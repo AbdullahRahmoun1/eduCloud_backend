@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class AbilityTest extends Model
 {
     use HasFactory;
+    protected $hidden=['created_at','updated_at'];
     public function subject()
     {
         //TODO :REPLACE WITH CLASS PATH

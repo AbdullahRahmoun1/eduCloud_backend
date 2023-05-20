@@ -14,7 +14,9 @@ class Account extends User
 {
     use HasApiTokens, HasFactory, Notifiable ,HasRoles;
     protected $hidden=[
-        'password'
+        'password',
+        'created_at'
+        ,'updated_at'
     ];
     protected $guarded = [];
     public function setPasswordAttribute($password){

@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Models\AbilityTest;
 use App\Models\Account;
 use App\Models\AtMark;
+use App\Models\AtMarkSection;
 use App\Models\AtSection;
 use App\Models\Number;
 use Illuminate\Database\Seeder;
@@ -26,7 +27,8 @@ class DatabaseSeeder extends Seeder
         ]);
         Number::factory(100)->create();
         AbilityTest::factory(50)->create();
-        AtSection::factory(100)->create();
+        AtSection::factory(200)->create();
         AtMark::factory(300)->create();
+        AtMarkSection::factory(300)->create();
     }
 }
