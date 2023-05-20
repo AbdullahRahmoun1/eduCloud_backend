@@ -3,6 +3,11 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\AbilityTest;
+use App\Models\Account;
+use App\Models\AtSection;
+use App\Models\Number;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +17,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        Account::create([
+            'password'=>'12345',
+            'user_name'=>'admin',
+            'owner_id'=>'101010101',
+            'owner_type'=>'the best of the best',
+        ]);
+        Number::factory(100)->create();
+        AbilityTest::factory(10)->create();
+        AtSection::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }

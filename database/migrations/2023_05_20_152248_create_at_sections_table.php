@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\AbilityTest;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,21 +12,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('accounts', function (Blueprint $table) {
+        Schema::create('at_sections', function (Blueprint $table) {
             $table->id();
-            $table->string('user_name',80)->unique();
-            $table->string('password',80);
-            $table->string('owner_type');
-            $table->integer('owner_id');
+            $table->string('name',45);
+            $table->foreignIdFor(AbilityTest::class)->nullable();
+            $table->tinyInteger('max_mark');
             $table->timestamps();
+            $table->unique(['ability_test_id','name']);
         });
     }
-
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('accounts');
+        Schema::dropIfExists('at_sections');
     }
 };

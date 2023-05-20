@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('accounts', function (Blueprint $table) {
+        Schema::create('ability_tests', function (Blueprint $table) {
             $table->id();
-            $table->string('user_name',80)->unique();
-            $table->string('password',80);
-            $table->string('owner_type');
-            $table->integer('owner_id');
+            $table->string('title')->default('NONE');
+            //  TODO : REPLACE WITH CLASS NAME
+            // $table->foreignIdFor('subject model');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('accounts');
+        Schema::dropIfExists('ability_tests');
     }
 };

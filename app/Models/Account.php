@@ -13,8 +13,12 @@ use Spatie\Permission\Traits\HasRoles;
 class Account extends User
 {
     use HasApiTokens, HasFactory, Notifiable ,HasRoles;
+    protected $hidden=[
+        'password'
+    ];
+    protected $guarded = [];
     public function setPasswordAttribute($password){
-        $this->password=bcrypt($password);
+        $this->attributes['password']=bcrypt($password);
     }
     public function passwordCheck($pass):bool {
         return Hash::check($pass, $this->password);
