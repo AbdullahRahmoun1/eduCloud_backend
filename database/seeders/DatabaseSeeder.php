@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\AbilityTest;
 use App\Models\Account;
+use App\Models\AtMark;
 use App\Models\AtSection;
 use App\Models\Number;
 use Illuminate\Database\Seeder;
@@ -24,8 +25,8 @@ class DatabaseSeeder extends Seeder
             'owner_type'=>'the best of the best',
         ]);
         Number::factory(100)->create();
-        AbilityTest::factory(10)->create();
-        AtSection::factory(10)->create();
-
+        AbilityTest::factory(50)->create();
+        AtSection::factory(100)->create();
+        AtMark::factory(300)->create();
     }
 }
