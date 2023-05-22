@@ -12,6 +12,10 @@ use App\Models\AtSection;
 use App\Models\Number;
 use App\Models\Grade;
 use App\Models\GClass;
+use App\Models\Mark;
+use App\Models\Test;
+use App\Models\Type;
+use Exception;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -27,6 +31,7 @@ class DatabaseSeeder extends Seeder
             'owner_id'=>'101010101',
             'owner_type'=>'the best of the best',
         ]);
+        
         Grade::create(['name' => 'السابع']);
         Grade::create(['name' => 'الثامن']);
         Grade::create(['name' => 'التاسع']);
@@ -35,10 +40,27 @@ class DatabaseSeeder extends Seeder
         GClass::create(['grade_id' => 1, 'name' => 'الاولى', 'max_number' => 26]);
         GClass::create(['grade_id' => 1, 'name' => 'الثانية', 'max_number' => 30]);
         GClass::create(['grade_id' => 3, 'name' => 'الاولى', 'max_number' => 28]);
+
+        Type::create(['name'=>'سبر']);
+        Type::create(['name'=>'امتحان']);
+        Type::create(['name'=>'تسميع']);
+        Type::create(['name'=>'مذاكرة']);
+
         Number::factory(100)->create();
+
         AbilityTest::factory(50)->create();
+
         AtSection::factory(200)->create();
+
         AtMark::factory(300)->create();
+
         AtMarkSection::factory(300)->create();
+
+        Test::factory(100)->create();
+
+        try{Mark::factory(100)->create();}
+        catch(Exception $e){
+
+        }
     }
 }
