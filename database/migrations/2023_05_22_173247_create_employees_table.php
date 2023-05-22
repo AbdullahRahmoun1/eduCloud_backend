@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Student;
-use App\Models\Test;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('marks', function (Blueprint $table) {
+        Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->integer('mark');
-            $table->foreignIdFor(Student::class);
-            $table->foreignIdFor(Test::class);
-            $table->unique(['student_id','test_id']);
             $table->timestamps();
         });
     }
@@ -28,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('marks');
+        Schema::dropIfExists('employees');
     }
 };

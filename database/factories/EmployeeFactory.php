@@ -2,13 +2,12 @@
 
 namespace Database\Factories;
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AbilityTest>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Employee>
  */
-class AbilityTestFactory extends Factory
+class EmployeeFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,7 +17,7 @@ class AbilityTestFactory extends Factory
     public function definition(): array
     {
         return [
-            'subject_id'=>random_int(1,20),
+            //
         ];
     }
 }

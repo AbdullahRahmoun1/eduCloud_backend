@@ -1,7 +1,7 @@
 <?php
 
+use App\Models\Category;
 use App\Models\Student;
-use App\Models\Test;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('marks', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->integer('mark');
-            $table->foreignIdFor(Student::class);
-            $table->foreignIdFor(Test::class);
-            $table->unique(['student_id','test_id']);
+            $table->string('body',300);
+            $table->boolean('sent_successfully')->default(true);
+            $table->integer('owner_id');
+            $table->string('owner_type',60);
+            $table->foreignIdFor(Category::class);
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('marks');
+        Schema::dropIfExists('notifications');
     }
 };

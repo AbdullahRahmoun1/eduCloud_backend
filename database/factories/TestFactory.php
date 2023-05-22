@@ -25,7 +25,7 @@ class TestFactory extends Factory
             'subject_id'=>random_int(1,10),
             'g_class_id'=>random_int(1,3),
             'type_id'=>random_int(1,4),
-            'progress_calendar_id'=>random_int(1,20),
+            'progress_calendar_id'=>fake()->unique()->numberBetween(1,100),
         ];
     }
 }

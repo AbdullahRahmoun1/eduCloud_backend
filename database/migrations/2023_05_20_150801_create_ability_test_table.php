@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Subject;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,8 +15,7 @@ return new class extends Migration
         Schema::create('ability_tests', function (Blueprint $table) {
             $table->id();
             $table->string('title')->default('NONE');
-            //  TODO : REPLACE WITH CLASS NAME
-            // $table->foreignIdFor('subject model');
+            $table->foreignIdFor(Subject::class);
             $table->timestamps();
         });
     }

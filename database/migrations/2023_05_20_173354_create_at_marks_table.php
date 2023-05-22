@@ -14,11 +14,11 @@ return new class extends Migration
     {
         Schema::create('at_marks', function (Blueprint $table) {
             $table->id();
+            $table->integer('full_mark');
+            $table->date('date');
             $table->integer('student_id');
             $table->string('student_type',45);
             $table->foreignIdFor(AbilityTest::class);
-            $table->integer('full_mark');
-            $table->date('date');
             $table->timestamps();
         });
     }

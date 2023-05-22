@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('at_mark_sections', function (Blueprint $table) {
             $table->id();
             $table->integer('mark');
-            $table->foreignIdFor(AtMark::class);
-            //FIXME :atsection relation can be removed if its unessecery
+            $table->foreignIdFor(AtMark::class);    
             $table->foreignIdFor(AtSection::class);
+            $table->unique(['at_mark_id','at_section_id']);
             $table->timestamps();
         });
     }

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->foreignIdFor(Subject::class);
             $table->foreignIdFor(GClass::class);
             $table->foreignIdFor(Type::class);
-            $table->foreignIdFor(ProgressCalendar::class);
+            $table->foreignIdFor(ProgressCalendar::class)->unique()->nullable(true);
             $table->timestamps();
         });
     }

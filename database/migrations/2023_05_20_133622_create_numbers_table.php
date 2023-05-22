@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('numbers', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('number',20);
             $table->string('owner_type',60);
             $table->integer('owner_id');
             $table->unique(['number','owner_type','owner_id']);
+            $table->timestamps();
         });
     }
 

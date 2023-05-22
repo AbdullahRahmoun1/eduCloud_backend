@@ -15,8 +15,8 @@ return new class extends Migration
         Schema::create('at_sections', function (Blueprint $table) {
             $table->id();
             $table->string('name',45);
-            $table->foreignIdFor(AbilityTest::class)->nullable();
             $table->tinyInteger('max_mark');
+            $table->foreignIdFor(AbilityTest::class)->nullable();
             $table->timestamps();
             $table->unique(['ability_test_id','name']);
         });

@@ -18,7 +18,7 @@ class AtMarkSectionFactory extends Factory
     {
         return [
             'mark'=>random_int(1,100),
-            'at_mark_id'=>random_int(1,90),
+            'at_mark_id'=>random_int(1,300),
             'at_section_id'=>random_int(1,40),
         ];
     }

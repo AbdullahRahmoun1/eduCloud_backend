@@ -9,10 +9,12 @@ use App\Models\Account;
 use App\Models\AtMark;
 use App\Models\AtMarkSection;
 use App\Models\AtSection;
+use App\Models\Category;
 use App\Models\Number;
 use App\Models\Grade;
 use App\Models\GClass;
 use App\Models\Mark;
+use App\Models\Notification;
 use App\Models\Test;
 use App\Models\Type;
 use Exception;
@@ -54,13 +56,13 @@ class DatabaseSeeder extends Seeder
 
         AtMark::factory(300)->create();
 
-        AtMarkSection::factory(300)->create();
+        AtMarkSection::factory(50)->create();
 
         Test::factory(100)->create();
 
         try{Mark::factory(100)->create();}
-        catch(Exception $e){
-
-        }
+        catch(Exception $e){}
+        Category::factory(30)->create();
+        Notification::factory(100)->create();
     }
 }
