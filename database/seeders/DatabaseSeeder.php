@@ -10,8 +10,10 @@ use App\Models\AtMark;
 use App\Models\AtMarkSection;
 use App\Models\AtSection;
 use App\Models\Category;
+use App\Models\Employee;
 use App\Models\Number;
 use App\Models\Grade;
+use App\Models\Subject;
 use App\Models\GClass;
 use App\Models\Mark;
 use App\Models\Notification;
@@ -34,14 +36,20 @@ class DatabaseSeeder extends Seeder
             'owner_type'=>'the best of the best',
         ]);
         
+        Employee::create();
+
         Grade::create(['name' => 'السابع']);
         Grade::create(['name' => 'الثامن']);
         Grade::create(['name' => 'التاسع']);
         Grade::factory(2)->create();
         
+        Subject::create(['name' => 'فيزيا', 'grade_id' => 1]);
+        Subject::factory(9)->create();
+
         GClass::create(['grade_id' => 1, 'name' => 'الاولى', 'max_number' => 26]);
         GClass::create(['grade_id' => 1, 'name' => 'الثانية', 'max_number' => 30]);
         GClass::create(['grade_id' => 3, 'name' => 'الاولى', 'max_number' => 28]);
+        GClass::factory(2)->create();
 
         Type::create(['name'=>'سبر']);
         Type::create(['name'=>'امتحان']);
