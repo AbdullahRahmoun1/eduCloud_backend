@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('class_supervisor', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name',20);
-            $table->string('last_name',20);
-            //temp-keep or delete?
-            $table->enum('role',['teacher', 'supervisor', 'ceo']);
-            $table->unique(['first_name', 'last_name']);
+            $table->foreignId('employee_id')->constrained();
+            $table->foreignId('g_class_id')->constrained();
             $table->timestamps();
+            $table->unique(['employee_id', 'g_class_id']);
         });
     }
 
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('class_supervisor');
     }
 };

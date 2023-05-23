@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('subject_id')->constrained();
             $table->foreignId('g_class_id')->constrained();
             $table->timestamps();
+            $table->unique(['employee_id', 'g_class_id', 'subject_id']);
         });
     }
 
