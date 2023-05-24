@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subjects', function (Blueprint $table) {
+        Schema::create('class_supervisor', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('grade_id')->constrained();
-            $table->string('name',30)->unique();
-            $table->integer('min_mark')->default(60);
-            $table->integer('max_mark')->default(100);
+            $table->foreignId('employee_id')->constrained();
+            $table->foreignId('g_class_id')->constrained();
             $table->timestamps();
+            $table->unique(['employee_id', 'g_class_id']);
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subjects');
+        Schema::dropIfExists('class_supervisor');
     }
 };

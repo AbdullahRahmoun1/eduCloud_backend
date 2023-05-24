@@ -17,7 +17,11 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'g_class_id' => random_int(1,5),
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'father_name' => fake()->firstNameMale(),
+            'mother_name' => fake()->firstNameFemale(),
         ];
     }
 }

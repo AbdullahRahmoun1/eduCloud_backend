@@ -2,8 +2,9 @@
 
 namespace Database\Factories;
 
+use Faker\Provider\ar_EG\Text;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use Illuminate\Support\Str;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Subject>
  */
@@ -17,7 +18,10 @@ class SubjectFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => Str::random(10),
+            'min_mark' => random_int(20,40),
+            'max_mark' => random_int(50,100),
+            'grade_id' => random_int(2,5)
         ];
     }
 }

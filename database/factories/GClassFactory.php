@@ -17,8 +17,8 @@ class GClassFactory extends Factory
     public function definition(): array
     {
         return [
-            'grade_id' => random_int(1,3),
-            'name' => Str::random(5),
+            'grade_id' => random_int(1,5),
+            'name' => fake()->randomElement(['الاولى','السادسة','الخامسة','الرابعة','الثالثة','الثانية']),
             'max_number' => random_int(25,30),
         ];
     }
