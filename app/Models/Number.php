@@ -12,12 +12,11 @@ class Number extends Model
     public function owner(){
         return $this->morphTo();
     }
-    //TODO : REPLACE 'CANDIDATE' AND 'STUDENT' WITH ACTUALL CLASS PATHS
-    public static function addNumbersToStudent($nums,$student_id,$studentType='candidate'){
+    public static function addNumbersToStudent($nums,$student_id,$studentType=CandidateStudent::class){
         $nums=array_map(fn($number)=>[
             'number'=>$number,
             'owner_id'=>$student_id,
-            'owner_type'=>$studentType,
+            'owner_type'=> $studentType,
             'created_at'=>now(),
             'updated_at'=>now(),
         ],$nums);

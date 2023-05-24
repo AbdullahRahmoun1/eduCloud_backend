@@ -73,6 +73,4 @@ class GClass extends Model
     {
         return $this->belongsToMany(Subject::class, 'class_teacher_subject', 'g_class_id', 'subject_id');
     }
-
-    //TODO:Progres calendar relation!
 }

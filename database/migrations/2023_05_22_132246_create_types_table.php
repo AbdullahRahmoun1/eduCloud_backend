@@ -9,8 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
+    public function up(): void{
         Schema::create('types', function (Blueprint $table) {
             $table->id();
             //TODO: add a "avg" attribute or something like it 

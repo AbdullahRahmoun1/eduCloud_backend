@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call([RolesAndPermissionsSeeder::class]);
         Account::create([
             'password'=>'12345',
             'user_name'=>'admin',

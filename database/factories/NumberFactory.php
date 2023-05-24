@@ -14,13 +14,11 @@ class NumberFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
-    {
+    public function definition(): array{
         return [
             'number'=>fake()->phoneNumber,
             'owner_id'=>random_int(1,100),
-            //TODO : REPLACE 'CANDIDATE' AND 'STUDENT' WITH ACTUALL CLASS PATHS
-            'owner_type'=>random_int(1,2)==1?'candidate':'student',
+            'owner_type'=>random_int(1,2)==2?Student::class:CandidateStudent::class,
         ];
     }
 }

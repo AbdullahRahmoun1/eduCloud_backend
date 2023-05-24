@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\AbilityTest;
+use App\Models\CandidateStudent;
+use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,8 +22,7 @@ class AtMarkFactory extends Factory
     {
         return [
             'student_id'=>random_int(1,100),
-            //TODO: replace with path
-            'student_type'=>random_int(1,2)==2?'student':'candidate',
+            'student_type'=>random_int(1,2)==2?Student::class:CandidateStudent::class,
             'ability_test_id'=>random_int(1,50),
             'full_mark'=>random_int(1,100),
             'date'=>fake()->date(),
