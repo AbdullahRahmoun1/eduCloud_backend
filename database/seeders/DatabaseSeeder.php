@@ -4,27 +4,28 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\AbilityTest;
-use App\Models\Account;
-use App\Models\AtMark;
-use App\Models\AtMarkSection;
-use App\Models\AtSection;
-use App\Models\CandidateStudent;
-use App\Models\Category;
-use App\Models\Employee;
-use App\Models\Number;
-use App\Models\Grade;
-use App\Models\Subject;
-use App\Models\GClass;
+use Exception;
 use App\Models\Mark;
-use App\Models\Notification;
 use App\Models\Test;
 use App\Models\Type;
-use App\Models\ClassTeacherSubject;
-use App\Models\ClassSupervisor;
+use App\Models\User;
+use App\Models\Grade;
+use App\Models\AtMark;
+use App\Models\GClass;
+use App\Models\Number;
+use App\Models\Account;
 use App\Models\Student;
-use Exception;
+use App\Models\Subject;
+use App\Models\Category;
+use App\Models\Employee;
+use App\Models\AtSection;
+use App\Models\AbilityTest;
+use App\Models\Notification;
+use App\Models\AtMarkSection;
+use App\Models\ClassSupervisor;
 use Illuminate\Database\Seeder;
+use App\Models\CandidateStudent;
+use App\Models\ClassTeacherSubject;
 
 class DatabaseSeeder extends Seeder
 {
@@ -34,12 +35,27 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([RolesAndPermissionsSeeder::class]);
-        Account::create([
+        $account=Account::create([
             'password'=>'12345',
             'user_name'=>'admin',
             'owner_id'=>'1',
             'owner_type'=>Employee::class,
         ]);
+        $account->assignRole(config('roles.admin'));
+        $account=Account::create([
+            'password'=>'12345',
+            'user_name'=>'student',
+            'owner_id'=>'5',
+            'owner_type'=>Student::class,
+        ]);
+        $account->assignRole(config('roles.student'));
+        $account=Account::create([
+            'password'=>'12345',
+            'user_name'=>'moajeh',
+            'owner_id'=>'5',
+            'owner_type'=>Employee::class,
+        ]);
+        $account->assignRole(config('roles.supervisor'));
         
         Employee::factory(5)->create();
 

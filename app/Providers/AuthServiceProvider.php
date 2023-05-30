@@ -3,6 +3,14 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+
+use App\Models\Number;
+use App\Models\Test;
+use App\Models\Type;
+use App\Policies\NumberPolicy;
+use App\Policies\TestPolicy;
+use App\Policies\TypePolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -13,7 +21,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        Test::class=>TestPolicy::class
     ];
 
     /**
@@ -21,6 +29,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
+        // Gate::before(fn($user)=>$user->hasRole('admin'));
+
     }
 }

@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Laravel\Sanctum\HasApiTokens;
+
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\Permission\Traits\HasRoles;
 
 class Account extends User
 {

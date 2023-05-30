@@ -43,6 +43,10 @@ class Student extends Model
     {
         return $this->morphOne(Account::class,'owner');
     }
+    public function user(): MorphOne
+    {
+        return $this->morphOne(Account::class,'owner');
+    }
 
     public function numbers(): MorphMany
     {

@@ -16,6 +16,11 @@ class Employee extends Model
     {
         return $this->morphOne(Account::class,'owner');
     }
+    public function user()
+    {
+        return $this->morphOne(Account::class,'owner');
+    }
+
     /**
      * The g_classes_sup that belong to the Employee
      *
