@@ -15,17 +15,30 @@ class AccountSeeder extends Seeder
      */
     public function run(): void
     {
+        $account=
         Account::create([
             'password'=>'12345',
             'user_name'=>'admin',
             'owner_id'=>'1',
             'owner_type'=>Employee::class,
         ]);
+        $account->assignRole(config('roles.admin'));
+        $account=
+        Account::create([
+            'password'=>'12345',
+            'user_name'=>'moajeh',
+            'owner_id'=>'2',
+            'owner_type'=>Employee::class,
+        ]);
+        $account->assignRole(config('roles.supervisor'));
+        $account=
         Account::create([
             'password'=>'12345',
             'user_name'=>'student',
             'owner_id'=>'2',
             'owner_type'=>Student::class,
         ]);
+        $account->assignRole(config('roles.student'));
+        
     }
 }

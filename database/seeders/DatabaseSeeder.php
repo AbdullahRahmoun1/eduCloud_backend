@@ -43,10 +43,10 @@ class DatabaseSeeder extends Seeder
         GClass::create(['grade_id' => 3, 'name' => 'الاولى', 'max_number' => 28]);
         Employee::factory(5)->create();
         Student::factory(50)->create();
+        $this->call(RolesAndPermissionsSeeder::class);
         $this->call(AccountSeeder::class);
         Subject::create(['name' => 'فيزيا', 'grade_id' => 1]);
         Subject::factory(9)->create();
-
         try{
             GClass::factory(10)->create();
         }
