@@ -34,29 +34,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([RolesAndPermissionsSeeder::class]);
-        $account=Account::create([
-            'password'=>'12345',
-            'user_name'=>'admin',
-            'owner_id'=>'1',
-            'owner_type'=>Employee::class,
-        ]);
-        $account->assignRole(config('roles.admin'));
-        $account=Account::create([
-            'password'=>'12345',
-            'user_name'=>'student',
-            'owner_id'=>'5',
-            'owner_type'=>Student::class,
-        ]);
-        $account->assignRole(config('roles.student'));
-        $account=Account::create([
-            'password'=>'12345',
-            'user_name'=>'moajeh',
-            'owner_id'=>'5',
-            'owner_type'=>Employee::class,
-        ]);
-        $account->assignRole(config('roles.supervisor'));
-        
+        $this->call(AccountSeeder::class);
+
         Employee::factory(5)->create();
 
         Grade::create(['name' => 'السابع']);
@@ -71,7 +50,12 @@ class DatabaseSeeder extends Seeder
         GClass::create(['grade_id' => 1, 'name' => 'الاولى', 'max_number' => 26]);
         GClass::create(['grade_id' => 1, 'name' => 'الثانية', 'max_number' => 30]);
         GClass::create(['grade_id' => 3, 'name' => 'الاولى', 'max_number' => 28]);
-        GClass::factory(2)->create();
+        try{
+            GClass::factory(10)->create();
+        }
+        catch(Exception $e){
+
+        }
         
         Student::factory(50)->create();
         CandidateStudent::factory(30)->create();
@@ -105,5 +89,6 @@ class DatabaseSeeder extends Seeder
         catch(Exception $e){}
         Category::factory(30)->create();
         Notification::factory(100)->create();
+        Notification::factory(3)->create(['owner_id' => 1, 'owner_type' => Student::class]);
     }
 }
