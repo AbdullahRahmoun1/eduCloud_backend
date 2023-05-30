@@ -24,7 +24,7 @@ class AccountSeeder extends Seeder
         Account::create([
             'password'=>'12345',
             'user_name'=>'student',
-            'owner_id'=>'1',
+            'owner_id'=>'2',
             'owner_type'=>Student::class,
         ]);
     }

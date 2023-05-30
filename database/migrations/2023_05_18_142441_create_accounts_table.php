@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('password',80);
             $table->string('owner_type');
             $table->integer('owner_id');
+            $table->unique(['user_name','owner_type','owner_id']);
             $table->timestamps();
         });
     }

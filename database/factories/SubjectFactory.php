@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Grade;
 use Faker\Provider\ar_EG\Text;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -21,7 +22,7 @@ class SubjectFactory extends Factory
             'name' => Str::random(10),
             'min_mark' => random_int(20,40),
             'max_mark' => random_int(50,100),
-            'grade_id' => random_int(2,5)
+            'grade_id' => Grade::all()->random()->id
         ];
     }
 }

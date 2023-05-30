@@ -34,40 +34,32 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(AccountSeeder::class);
-
-        Employee::factory(5)->create();
-
         Grade::create(['name' => 'السابع']);
         Grade::create(['name' => 'الثامن']);
         Grade::create(['name' => 'التاسع']);
-        Grade::factory(2)->create();
-        
-        Subject::create(['name' => 'فيزيا', 'grade_id' => 1]);
-        Subject::factory(9)->create();
-        
-        
+        Grade::factory(2)->create();        
         GClass::create(['grade_id' => 1, 'name' => 'الاولى', 'max_number' => 26]);
         GClass::create(['grade_id' => 1, 'name' => 'الثانية', 'max_number' => 30]);
         GClass::create(['grade_id' => 3, 'name' => 'الاولى', 'max_number' => 28]);
+        Employee::factory(5)->create();
+        Student::factory(50)->create();
+        $this->call(AccountSeeder::class);
+        Subject::create(['name' => 'فيزيا', 'grade_id' => 1]);
+        Subject::factory(9)->create();
+
         try{
             GClass::factory(10)->create();
         }
         catch(Exception $e){
 
         }
-        
-        Student::factory(50)->create();
         CandidateStudent::factory(30)->create();
-        
         ClassSupervisor::create(['employee_id' => 3, 'g_class_id' => 1]);
         ClassSupervisor::create(['employee_id' => 3, 'g_class_id' => 2]);
         ClassSupervisor::create(['employee_id' => 3, 'g_class_id' => 3]);
-        
         ClassTeacherSubject::create(['employee_id' => 1, 'subject_id' => 1, 'g_class_id' => 2]);
         ClassTeacherSubject::create(['employee_id' => 1, 'subject_id' => 1, 'g_class_id' => 1]);
         ClassTeacherSubject::create(['employee_id' => 2, 'subject_id' => 2, 'g_class_id' => 1]);
-
         Type::create(['name'=>'سبر']);
         Type::create(['name'=>'امتحان']);
         Type::create(['name'=>'تسميع']);

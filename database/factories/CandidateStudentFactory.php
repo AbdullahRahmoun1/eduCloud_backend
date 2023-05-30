@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Grade;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,7 @@ class CandidateStudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'grade_id' => random_int(1,5),
+            'grade_id' => Grade::all()->random()->id,
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'father_name' => fake()->firstNameMale(),
