@@ -21,7 +21,7 @@ class AtSectionFactory extends Factory
         return [
             'name'=>Str::random(20),
             'max_mark'=>random_int(30,60),
-            'ability_test_id'=>random_int(1,50),
+            'ability_test_id'=>AbilityTest::all()->random()->id,
         ];
     }
 }

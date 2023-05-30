@@ -21,9 +21,9 @@ class AtMarkFactory extends Factory
     public function definition(): array
     {
         return [
-            'student_id'=>random_int(1,100),
+            'student_id'=>Student::all()->random()->id,
             'student_type'=>random_int(1,2)==2?Student::class:CandidateStudent::class,
-            'ability_test_id'=>random_int(1,50),
+            'ability_test_id'=>AbilityTest::all()->random()->id,
             'full_mark'=>random_int(1,100),
             'date'=>fake()->date(),
         ];

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use App\Models\Employee;
 use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -18,11 +19,12 @@ class NotificationFactory extends Factory
      */
     public function definition(): array
     {
+        $type=random_int(1,2);
         return [
             'body'=>fake()->realTextBetween(20,100),
-            'owner_id'=>random_int(1,100),
-            'owner_type'=>random_int(1,2)==1?Student::class:Employee::class,
-            'category_id'=>random_int(1,30)
+            'owner_id'=>$type==1?Student::all()->random()->id:Employee::all()->random()->id,
+            'owner_type'=>$type==1?Student::class:Employee::class,
+            'category_id'=>Category::all()->random()->id
         ];
     }
 }

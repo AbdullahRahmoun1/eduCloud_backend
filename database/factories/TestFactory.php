@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\GClass;
+use App\Models\Subject;
+use App\Models\Type;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,9 +25,9 @@ class TestFactory extends Factory
             'min_mark'=>random_int(1,30),
             'max_mark'=>random_int(31,200),
             'date'=>now()->addDays(random_int(5,50)),
-            'subject_id'=>random_int(1,10),
-            'g_class_id'=>random_int(1,3),
-            'type_id'=>random_int(1,4),
+            'subject_id'=>Subject::all()->random()->id,
+            'g_class_id'=>GClass::all()->random()->id,
+            'type_id'=>Type::all()->random()->id,
             'progress_calendar_id'=>fake()->unique()->numberBetween(1,100),
         ];
     }

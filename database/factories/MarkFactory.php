@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Student;
+use App\Models\Test;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,8 +20,8 @@ class MarkFactory extends Factory
     {
         return [
             'mark'=>random_int(1,100),
-            'student_id'=>random_int(1,100),
-            'test_id'=>random_int(1,100),            
+            'student_id'=>Student::all()->random()->id,
+            'test_id'=>Test::all()->random()->id,            
         ];
     }
 }

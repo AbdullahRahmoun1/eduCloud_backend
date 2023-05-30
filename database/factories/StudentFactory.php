@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\GClass;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,7 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'g_class_id' => random_int(1,5),
+            'g_class_id' => GClass::all()->random()->id,
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'father_name' => fake()->firstNameMale(),

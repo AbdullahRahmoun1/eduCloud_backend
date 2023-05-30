@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Subject;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +19,7 @@ class AbilityTestFactory extends Factory
     public function definition(): array
     {
         return [
-            'subject_id'=>random_int(1,20),
+            'subject_id'=>Subject::all()->random()->id,
         ];
     }
 }
