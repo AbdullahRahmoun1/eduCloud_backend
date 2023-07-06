@@ -7,6 +7,7 @@ use App\Models\GClass;
 use App\Models\Number;
 use App\Models\Absence;
 use App\Models\Account;
+use App\Models\MoneyRequest;
 use App\Models\Notification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -62,6 +63,10 @@ class Student extends Model
     public function absences(): HasMany
     {
         return $this->hasMany(Absence::class);
+    }
+
+    public function moneyRequests(): HasMany{
+        return $this->hasMany(MoneyRequest::class);
     }
 
 }

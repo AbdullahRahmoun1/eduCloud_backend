@@ -27,6 +27,7 @@ use App\Models\ClassSupervisor;
 use Illuminate\Database\Seeder;
 use App\Models\CandidateStudent;
 use App\Models\ClassTeacherSubject;
+use App\Models\MoneyRequest;
 use PhpParser\Node\Stmt\Catch_;
 
 class DatabaseSeeder extends Seeder
@@ -84,6 +85,10 @@ class DatabaseSeeder extends Seeder
         Category::factory(30)->create();
         Notification::factory(100)->create();
         Notification::factory(3)->create(['owner_id' => 1, 'owner_type' => Student::class]);
+
+        MoneyRequest::factory(100)->create();
+
+
     }
     private function try($toTry){
         try{
