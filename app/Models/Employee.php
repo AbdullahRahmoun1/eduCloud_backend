@@ -4,13 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Account;
+use App\Models\Number;
+use App\Models\GClass;
+use App\Models\Subject;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 class Employee extends Model
 {
     use HasFactory;
     protected $hidden=['created_at','updated_at'];
-
-    //TODO: Morph relations
+    protected $fillable = ['first_name', 'last_name'];
 
     public function account()
     {
@@ -19,6 +23,10 @@ class Employee extends Model
     public function user()
     {
         return $this->morphOne(Account::class,'owner');
+    }
+    public function number()
+    {
+        return $this->morphOne(Number::class,'owner');
     }
 
     /**
@@ -48,7 +56,6 @@ class Employee extends Model
      */
     public function g_classes_teacher(): BelongsToMany
     {
-        if($this->account())
         return $this->belongsToMany(GClass::class, 'class_teacher_subject', 'employee_id', 'g_class_id');
     }
 }

@@ -4,6 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\AbilityTest;
+USE App\Models\Test;
+use App\Models\Employee;
+use App\Models\GClass;
+use App\Models\Grade;
+//TODO: USE BASECALeNDaR
+
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +18,13 @@ class Subject extends Model
 {
     use HasFactory;
     protected $hidden=['created_at','updated_at'];
-
+    protected $fillable = [
+        'grade_id',
+        'name',
+        'notes',
+        'min_mark',
+        'max_mark',
+    ];
     /**
      * Get all of the ability_tests for the Subject
      *

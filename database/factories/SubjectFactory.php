@@ -22,6 +22,7 @@ class SubjectFactory extends Factory
             'name' => Str::random(10),
             'min_mark' => random_int(20,40),
             'max_mark' => random_int(50,100),
+            'notes' => fake()->text(40),
             'grade_id' => Grade::all()->random()->id
         ];
     }

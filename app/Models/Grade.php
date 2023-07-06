@@ -4,13 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\CandidateStudent;
+use App\Models\GClass;
+use App\Models\Subject;
+use App\Models\BaseCalendar;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Grade extends Model
 {
     use HasFactory;
     protected $hidden=['created_at','updated_at'];
-
+    protected $fillable=['name'];
     /**
      * Get all of the candidates for the Grade
      *

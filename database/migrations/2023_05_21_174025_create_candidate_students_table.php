@@ -18,10 +18,12 @@ return new class extends Migration
             $table->string('last_name',20);
             $table->string('father_name',20);
             $table->string('mother_name',30);
-            $table->string('place_of_living',50)->default('smwere');
+            $table->string('place_of_living',50)->nullable();
             $table->date('birth_date')->default(now());
             $table->float('6th_grade_avg')->default(10);
-            $table->unique(['first_name', 'last_name', 'father_name']);
+            $table->boolean('rejected')->nullable();
+            $table->string('reason',100)->nullable();
+            $table->unique(['first_name', 'last_name', 'father_name',]);
             $table->timestamps();
 
         });
