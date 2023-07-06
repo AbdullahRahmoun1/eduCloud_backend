@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Student;
+use App\Models\Grade;
+use App\Models\Test;
+use App\Models\Employee;
+use App\Models\Subject;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +18,11 @@ class GClass extends Model
 {
     use HasFactory;
     protected $hidden=['created_at','updated_at'];
-
+    protected $fillable=[
+    'grade_id',
+    'name',
+    'max_number',
+];
     /**
      * Get the grade that owns the GClass
      *
@@ -73,4 +82,6 @@ class GClass extends Model
     {
         return $this->belongsToMany(Subject::class, 'class_teacher_subject', 'g_class_id', 'subject_id');
     }
+
+    //TODO: add progress calendar relation
 }

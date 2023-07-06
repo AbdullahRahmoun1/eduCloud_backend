@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('grade_id')->constrained();
             $table->string('name',30);
             $table->integer('max_number')->unsigned();
-            $table->timestamps();
             $table->unique(['grade_id', 'name']);
+            $table->timestamps();
         });
     }
 
