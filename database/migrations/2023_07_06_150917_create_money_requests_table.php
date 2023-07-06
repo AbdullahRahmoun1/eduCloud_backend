@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('money_requests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedFloat('value');
+            $table->unsignedInteger('value');
             $table->string('notes',70);
             $table->enum('type',['school','bus']);
             $table->foreignIdFor(Student::class);

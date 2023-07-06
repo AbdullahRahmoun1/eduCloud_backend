@@ -10,6 +10,7 @@ class AbilityTest extends Model
 {
     use HasFactory;
     protected $hidden=['created_at','updated_at'];
+    protected $guarded =['created_at','updated_at'];
     public function subject()
     {
         return $this->belongsTo(Subject::class);

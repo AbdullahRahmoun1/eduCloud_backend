@@ -9,6 +9,7 @@ class Notification extends Model
 {
     use HasFactory;
     protected $hidden=['created_at','updated_at'];
+    protected $guarded =['created_at','updated_at'];
     public function owner()
     {
         return $this->morphTo();

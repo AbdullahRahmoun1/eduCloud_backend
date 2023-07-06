@@ -20,8 +20,7 @@ class MoneyRequestFactory extends Factory
     {
         $sc=random_int(0,1)==1;
         return [
-            'value'=>fake()
-            ->randomFloat(min:$sc?100000:50000,max:$sc?500000:200000),
+            'value'=>random_int(min:$sc?1000000:500000,max:$sc?5000000:2000000),
             'notes'=>fake()->text(40),
             'type'=>$sc?MoneyRequest::SCHOOL:MoneyRequest::BUS,
             'student_id'=>Student::all()->random()->id,

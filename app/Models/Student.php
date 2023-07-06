@@ -94,4 +94,9 @@ class Student extends Model
         return $this->hasMany(MoneyRequest::class);
     }
 
+    public function incomes(): HasMany
+    {
+        return $this->hasMany(Income::class);
+    }
+
 }

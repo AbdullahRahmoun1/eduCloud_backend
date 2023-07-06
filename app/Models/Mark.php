@@ -9,6 +9,7 @@ class Mark extends Model
 {
     use HasFactory;
     protected $hidden=['created_at','updated_at'];
+    protected $guarded =['created_at','updated_at'];
     public function test()
     {
         return $this->belongsTo(Test::class);
