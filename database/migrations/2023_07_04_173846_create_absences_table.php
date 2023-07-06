@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Category;
 use App\Models\Student;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -13,14 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notifications', function (Blueprint $table) {
+        Schema::create('absences', function (Blueprint $table) {
             $table->id();
-            $table->integer('owner_id');
-            $table->string('owner_type',60);
-            $table->string('body',300);
-            $table->boolean('sent_successfully')->default(true);    
+            $table->boolean('justified');
+            $table->string('justification',100)->nullable();
             $table->date('date');
-            $table->foreignIdFor(Category::class);  
+            $table->foreignIdFor(Student::class);
+            $table->unique(['date','student_id']);
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notifications');
+        Schema::dropIfExists('absences');
     }
 };

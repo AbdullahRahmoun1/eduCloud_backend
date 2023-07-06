@@ -16,11 +16,16 @@ return new class extends Migration
             $table->string('number',20);
             $table->string('owner_type',60);
             $table->integer('owner_id');
+            $table->enum('type',[
+                'father', 'mother', 'home',
+                'sms', 'telegrame',
+                'extra', 'other'
+            ]);
+            $table->string('relationship',50)->nullable();
             $table->unique(['number','owner_type','owner_id']);
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */

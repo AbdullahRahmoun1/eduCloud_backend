@@ -10,7 +10,7 @@ class TestingController extends Controller
 {
     public function test()
     {
-        $this->authorize('canEditClassInfo',[GClass::class,3]);
+        $this->authorize('EditClassInfo',[GClass::class,3]);
         return 'good';
     }
 }

@@ -20,12 +20,14 @@ use App\Models\Category;
 use App\Models\Employee;
 use App\Models\AtSection;
 use App\Models\AbilityTest;
+use App\Models\Absence;
 use App\Models\Notification;
 use App\Models\AtMarkSection;
 use App\Models\ClassSupervisor;
 use Illuminate\Database\Seeder;
 use App\Models\CandidateStudent;
 use App\Models\ClassTeacherSubject;
+use PhpParser\Node\Stmt\Catch_;
 
 class DatabaseSeeder extends Seeder
 {
@@ -47,12 +49,8 @@ class DatabaseSeeder extends Seeder
         $this->call(AccountSeeder::class);
         Subject::create(['name' => 'فيزيا', 'grade_id' => 1]);
         Subject::factory(9)->create();
-        try{
-            GClass::factory(10)->create();
-        }
-        catch(Exception $e){
-
-        }
+        $this
+        ->try(fn()=>GClass::factory(10)->create());
         CandidateStudent::factory(30)->create();
         ClassSupervisor::create(['employee_id' => 3, 'g_class_id' => 1]);
         ClassSupervisor::create(['employee_id' => 3, 'g_class_id' => 2]);
@@ -67,6 +65,9 @@ class DatabaseSeeder extends Seeder
 
         Number::factory(100)->create();
 
+        $this
+        ->try(fn()=>Absence::factory(50)->create());
+        
         AbilityTest::factory(50)->create();
 
         AtSection::factory(200)->create();
@@ -77,10 +78,18 @@ class DatabaseSeeder extends Seeder
 
         Test::factory(100)->create();
 
-        try{Mark::factory(100)->create();}
-        catch(Exception $e){}
+        $this
+        ->try(fn()=>Mark::factory(100)->create());
+
         Category::factory(30)->create();
         Notification::factory(100)->create();
         Notification::factory(3)->create(['owner_id' => 1, 'owner_type' => Student::class]);
+    }
+    private function try($toTry){
+        try{
+            $toTry();
+        }catch(Exception $e){
+            logger($e->getMessage().'  in Database seeder');
+        }
     }
 }

@@ -7,7 +7,7 @@ use App\Models\Account;
 class ClassPolicy
 {
     
-    public function canViewClassInfo(Account $account, $class_id): bool
+    public function viewClassInfo(Account $account, $class_id): bool
     {
         $owner=$account->owner;
         return $account->hasRole(config('roles.student'))
@@ -20,7 +20,7 @@ class ClassPolicy
     // /**
     //  * Determine whether the Account can create models.
     //  */
-    public function canEditClassInfo(Account $account,$class_id): bool
+    public function editClassInfo(Account $account,$class_id): bool
     {
         $owner=$account->owner;
         return $account->hasRole(config('roles.supervisor'))
