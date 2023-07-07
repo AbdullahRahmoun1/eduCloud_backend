@@ -46,11 +46,11 @@ class Grade extends Model
     }
 
     /**
-     * Get all of the base_calendar for the Grade
+     * Get all of the base_calendars for the Grade
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function base_calendar(): HasMany
+    public function base_calendars(): HasMany
     {
         return $this->hasMany(BaseCalendar::class);
     }

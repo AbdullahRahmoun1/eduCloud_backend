@@ -9,6 +9,7 @@ use App\Models\Absence;
 use App\Models\Account;
 use App\Models\MoneyRequest;
 use App\Models\Notification;
+use App\Models\Complaint;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -99,4 +100,8 @@ class Student extends Model
         return $this->hasMany(Income::class);
     }
 
+    public function complaints(): HasMany
+    {
+        return $this->hasMany(Complaint::class);
+    }
 }

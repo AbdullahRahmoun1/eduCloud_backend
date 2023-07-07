@@ -27,6 +27,8 @@ use App\Models\ClassSupervisor;
 use Illuminate\Database\Seeder;
 use App\Models\CandidateStudent;
 use App\Models\ClassTeacherSubject;
+use App\Models\BaseCalendar;
+use App\Models\Complaint;
 use App\Models\Income;
 use App\Models\MoneyRequest;
 use App\Models\MoneySubRequest;
@@ -61,6 +63,13 @@ class DatabaseSeeder extends Seeder
         ClassTeacherSubject::create(['employee_id' => 1, 'subject_id' => 1, 'g_class_id' => 2]);
         ClassTeacherSubject::create(['employee_id' => 1, 'subject_id' => 1, 'g_class_id' => 1]);
         ClassTeacherSubject::create(['employee_id' => 2, 'subject_id' => 2, 'g_class_id' => 1]);
+
+        BaseCalendar::create(['subject_id' => 1, 'grade_id' => 1, 'title' => 'first chapter', 'is_test' => 0, 'date' => now()]);
+        BaseCalendar::create(['subject_id' => 1, 'grade_id' => 1, 'title' => 'second chapter', 'is_test' => 0, 'date' => now()->addDay(4)]);
+        BaseCalendar::factory(5)->create();
+
+        Complaint::factory(30)->create();
+        
         Type::create(['name'=>'سبر']);
         Type::create(['name'=>'امتحان']);
         Type::create(['name'=>'تسميع']);
