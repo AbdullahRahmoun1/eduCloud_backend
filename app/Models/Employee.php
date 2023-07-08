@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Account;
-use App\Models\Number;
 use App\Models\GClass;
+use App\Models\Number;
+use App\Models\Account;
 use App\Models\Subject;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 class Employee extends Model
 {
-    use HasFactory;
+    use HasFactory,HasRoles;
     protected $hidden=['created_at','updated_at'];
     protected $fillable = ['first_name', 'last_name'];
-
+    protected $guard_name = 'web';
     public function account()
     {
         return $this->morphOne(Account::class,'owner');
