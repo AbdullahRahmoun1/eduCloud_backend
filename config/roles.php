@@ -1,5 +1,6 @@
 <?php
 return [
+    'principal'=>'principal',
     'admin'=>'admin',
     'secretary'=>'secretary',
     'supervisor'=>'supervisor',
