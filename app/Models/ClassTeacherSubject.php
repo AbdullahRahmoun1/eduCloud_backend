@@ -9,5 +9,6 @@ class ClassTeacherSubject extends Model
 {
     use HasFactory;
     protected $hidden=['created_at','updated_at'];
+    protected $guarded=[];
     protected $table = 'class_teacher_subject';
 }

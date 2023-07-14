@@ -18,16 +18,13 @@ class Employee extends Model
     protected $hidden=['created_at','updated_at'];
     protected $fillable = ['first_name', 'last_name'];
     protected $guard_name = 'web';
-    public function account()
-    {
+    public function account(){
         return $this->morphOne(Account::class,'owner');
     }
-    public function user()
-    {
+    public function user(){
         return $this->morphOne(Account::class,'owner');
     }
-    public function number()
-    {
+    public function number(){
         return $this->morphOne(Number::class,'owner');
     }
 
