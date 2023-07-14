@@ -32,10 +32,10 @@ class EmployeeController extends Controller
         array_map(fn($role)=>$emp->assignRole($role)
         ,$data['roles']);
         //now create an account for him :)  
-        $acc=Account::createEmployeeAccount($emp);
+        $acc=Account::createAccount($emp, 1);
         //.................
         return [
-            'message'=>'Employee added successfully',
+            'message'=>'Employee was added successfully',
             'account info'=>$acc
         ];
 

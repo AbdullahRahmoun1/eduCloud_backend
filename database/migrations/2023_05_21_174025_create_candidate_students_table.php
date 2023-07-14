@@ -23,7 +23,7 @@ return new class extends Migration
             $table->float('6th_grade_avg')->default(10);
             $table->boolean('rejected')->nullable();
             $table->string('reason',100)->nullable();
-            $table->unique(['first_name', 'last_name', 'father_name',]);
+            $table->unique(['first_name', 'last_name', 'father_name', 'mother_name'], 'unique student');
             $table->timestamps();
 
         });

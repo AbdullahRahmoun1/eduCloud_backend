@@ -22,20 +22,18 @@ return new class extends Migration
             $table->date('birth_date')->default(now());
             $table->string('birth_place',45)->nullable();
             $table->float('6th_grade_avg')->nullable()->default(10);
-            //TODO: social should be string or enum???
-            $table->enum('social_description',['متزوجين','مطلقين','أرمل'])->default('متزوجين');
+            $table->string('social_description', 65)->nullable();
             $table->string('grand_father_name',30)->nullable();
             $table->string('mother_last_name',30)->nullable();
-            $table->integer('public_record')->nullable();
+            $table->string('public_record', 30)->nullable();
             $table->boolean('father_alive')->nullable();
             $table->boolean('mother_alive')->nullable();
             $table->string('father_profession',30)->nullable();
             $table->string('previous_school',30)->nullable();
-            //TODO: address id should be foreign key
-            $table->integer('address_id')->nullable();
+            $table->foreignId('address_id')->nullable()->constrained();
             $table->boolean('transportation_subscriber')->nullable();
             $table->string('registration_place',40)->nullable();
-            $table->integer('registration_number')->nullable();
+            $table->string('registration_number',30)->nullable();
             $table->date('registration_date')->nullable();
             $table->string('notes',200)->nullable();
             $table->unique(['first_name', 'last_name', 'father_name', 'mother_name']);

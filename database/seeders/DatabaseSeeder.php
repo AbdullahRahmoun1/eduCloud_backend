@@ -32,6 +32,7 @@ use App\Models\Complaint;
 use App\Models\Income;
 use App\Models\MoneyRequest;
 use App\Models\MoneySubRequest;
+use App\Models\Address;
 use PhpParser\Node\Stmt\Catch_;
 
 class DatabaseSeeder extends Seeder
@@ -41,6 +42,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        Address::create(['name' => 'syria']);
+
         Grade::create(['name' => 'السابع']);
         Grade::create(['name' => 'الثامن']);
         Grade::create(['name' => 'التاسع']);

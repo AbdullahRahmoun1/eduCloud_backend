@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Exception;
 use App\Models\Employee;
+use App\Models\Student;
 
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
@@ -33,17 +34,19 @@ class Account extends User
     public function owner(){
         return $this->morphTo();
     }
-    public static function createEmployeeAccount($emp){
-        $name=$emp->first_name.'_'.$emp->last_name;
-        $pass=Str::random(7);
+    public static function createAccount($owner, $is_emp){
+        $name=$owner->first_name.'_'.$owner->last_name;
+        $pass=Str::lower(Str::random(7));
         try{
             $acc=Account::create([
                 'user_name'=>$name,
                 'password'=>$pass,
-                'owner_type'=>Employee::class,
-                'owner_id'=>$emp->id
+                'owner_type'=> $is_emp ? Employee::class : Student::class,
+                'owner_id'=>$owner->id
             ]);
-            Account::addEmployeesRolesToAccount($emp,$acc);
+            $is_emp ? Account::addEmployeesRolesToAccount($owner,$acc) :
+                $acc->assignRole(config('roles.student'));
+
         }catch(QueryException $e){
             abort(400,'failed to create the account!!'
             .',this username is already taken');

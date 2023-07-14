@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
-
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Handler extends ExceptionHandler
 {
     /**
@@ -23,8 +23,17 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        // $this->reportable(function (Throwable $e) {
+            
+        // });
+
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            if ($request->is('V1.0/secretary/getAllClassesOfGrade/*')) {
+                return response()->json([
+                    'message' => 'the grade id is not valid.',
+                    'error' => $e->getMessage()
+                ], 404);
+            }
         });
     }
 }
