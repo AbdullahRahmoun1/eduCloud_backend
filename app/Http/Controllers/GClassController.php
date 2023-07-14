@@ -7,7 +7,5 @@ use Illuminate\Http\Request;
 
 class GClassController extends Controller
 {
-    public function getAllClasses(Grade $grade) {
-        return $grade->g_classes()->get();
-    }
+
 }
