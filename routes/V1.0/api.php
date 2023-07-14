@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\NumberController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TestingController;
 use App\Http\Controllers\TypeController;
 
@@ -23,5 +24,5 @@ use App\Http\Controllers\TypeController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('test',[TestingController::class,'test'])
+Route::post('test',[TestController::class,'test'])
 ->middleware('auth:sanctum');
