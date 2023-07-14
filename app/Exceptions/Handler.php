@@ -28,7 +28,7 @@ class Handler extends ExceptionHandler
         // });
 
         $this->renderable(function (NotFoundHttpException $e, $request) {
-            if ($request->is('V1.0/secretary/getAllClassesOfGrade/*')) {
+            if ($request->is('V1.0/general/getAllClassesAndSubjectsOfGrade/*')) {
                 return response()->json([
                     'message' => 'the grade id is not valid.',
                     'error' => $e->getMessage()
