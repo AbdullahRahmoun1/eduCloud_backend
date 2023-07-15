@@ -18,7 +18,7 @@ use Illuminate\Database\QueryException;
 
 class Account extends User
 {
-    use HasApiTokens, HasFactory, Notifiable ,HasRoles;
+    use HasApiTokens, HasFactory, Notifiable ;
     protected $hidden=[
         'password',
         'created_at'
@@ -44,9 +44,6 @@ class Account extends User
                 'owner_type'=> $is_emp ? Employee::class : Student::class,
                 'owner_id'=>$owner->id
             ]);
-            $is_emp ? Account::addEmployeesRolesToAccount($owner,$acc) :
-                $acc->assignRole(config('roles.student'));
-
         }catch(QueryException $e){
             abort(400,'failed to create the account!!'
             .',this username is already taken');
@@ -58,11 +55,5 @@ class Account extends User
             'user_name'=>$name,
             'password'=>$pass
         ];
-    }
-    private static function addEmployeesRolesToAccount($emp,$acc) {
-        $roles=$emp->getRoleNames();
-        foreach($roles as $role){
-            $acc->assignRole($role);
-        }
     }
 }

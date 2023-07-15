@@ -13,7 +13,8 @@ class AccountController extends Controller
             'user_name'=>[
                 'required',
                 'between:1,80',
-                'exists:accounts,user_name'
+                'exists:accounts,user_name',
+                'required_if:anotherfield,value',                
             ],
             'password'=>[
                 'required'
@@ -22,13 +23,13 @@ class AccountController extends Controller
         ]);
         $account=Account::where('user_name',$info['user_name'])
         ->first();
+        
         if(!$account->passwordCheck($info['password']))
-        abort(403,'wrong password');
+        abort(403,'Wrong password');
         $token=$account->createToken(request()->ip());
         return [
             'token'=>$token->plainTextToken,
-            'roles'=>$account->getRoleNames(),
-            'permissions'=>$account->permissions
+            'roles'=>$account->owner->getRoleNames(),
         ];
     }
 }

@@ -5,7 +5,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum','role:'.config('roles.principal'))->group(function () {
+Route::middleware('auth:sanctum','hasRoles:'.config('roles.principal'))->group(function () {
  //Employees
      Route::post('addEmployee',[EmployeeController::class,'add']);    
      Route::post('editEmployee/{employee}',[EmployeeController::class,'edit']);    

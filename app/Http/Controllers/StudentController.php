@@ -46,6 +46,7 @@ class StudentController extends Controller
             'registration_number' => ['string', 'max:30'],
             'registration_date' => 'date',
             'notes' => ['string', 'max:200'],
+            
 
         ], ['mother_name.unique' => 'this student is already in the system']);
 
@@ -55,6 +56,7 @@ class StudentController extends Controller
 
         //account creation
         if($is_direct){
+            $student->assignRole(config('roles.student'));
             $acc = Account::createAccount($student, 0);
         }
         //.............

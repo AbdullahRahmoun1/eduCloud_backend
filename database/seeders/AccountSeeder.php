@@ -17,41 +17,41 @@ class AccountSeeder extends Seeder
     {
         $emp=Employee::create([
             'first_name'=>'malath',
-            'last_name'=>'',
+            'last_name'=>'_principal',
         ]);
         $emp->assignRole(config('roles.principal'));
-        $account=
         Account::create([
             'password'=>'12345',
-            'user_name'=>'malath',
+            'user_name'=>'principal',
             'owner_id'=>$emp->id,
             'owner_type'=>Employee::class,
         ]);
-        $account->assignRole(config('roles.principal'));
-        $account=
+
+        $emp=Employee::create([
+            'first_name'=>'daudosh',
+            'last_name'=>'_secretary',
+        ]);
+        $emp->assignRole(config('roles.secretary'));
         Account::create([
             'password'=>'12345',
-            'user_name'=>'admin',
-            'owner_id'=>'1',
+            'user_name'=>'secretary',
+            'owner_id'=>$emp->id,
             'owner_type'=>Employee::class,
         ]);
-        $account->assignRole(config('roles.admin'));
-        $account=
+
+        $emp=Employee::create([
+            'first_name'=>'ahmad',
+            'last_name'=>'_supervisor',
+        ]);
+        $emp->assignRole(config('roles.supervisor'));
         Account::create([
             'password'=>'12345',
-            'user_name'=>'moajeh',
-            'owner_id'=>'2',
+            'user_name'=>'supervisor',
+            'owner_id'=>$emp->id,
             'owner_type'=>Employee::class,
         ]);
-        $account->assignRole(config('roles.supervisor'));
-        $account=
-        Account::create([
-            'password'=>'12345',
-            'user_name'=>'student',
-            'owner_id'=>'2',
-            'owner_type'=>Student::class,
-        ]);
-        $account->assignRole(config('roles.student'));
+        
+        
         
     }
 }
