@@ -45,13 +45,8 @@ class Account extends User
                 'owner_id'=>$owner->id
             ]);
         }catch(QueryException $e){
-<<<<<<< HEAD
-            $info=$e->errorInfo;
-            if($info[1]==1062)
-=======
             $code = $e->errorInfo[1];
             if($code[1]==1062)
->>>>>>> 0df10059e283f898ffdda5383e0381b3c3c7b93c
             return Account::createAccount($owner,$is_emp);
             else throw new Exception('Something went wrong in creating account..INFO: '
             .$e->getMessage());
