@@ -26,16 +26,12 @@ class AccountController extends Controller
         ->first();
         
         if(!$account->passwordCheck($info['password']))
-            return ResponseFormatter::error(null,'Wrong password',403);
-        //abort(403,'Wrong password');
+            return ResponseFormatter::error('Wrong password', null, 403);
+
         $token=$account->createToken(request()->ip());
-        return ResponseFormatter::success([
+        return ResponseFormatter::success('logged in successfully', [
             'token'=>$token->plainTextToken,
             'roles'=>$account->owner->getRoleNames(),
-        ], 'logged in successfully');
-        // return [
-        //     'token'=>$token->plainTextToken,
-        //     'roles'=>$account->owner->getRoleNames(),
-        // ];
+        ]);
     }
 }
