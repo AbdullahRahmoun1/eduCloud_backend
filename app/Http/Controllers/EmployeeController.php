@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Helper;
 use Exception;
-use App\Models\Account;
-use App\Models\Employee;
-use App\Models\ClassSupervisor;
-use App\Models\ClassTeacherSubject;
 use App\Models\GClass;
+use App\Helpers\Helper;
+use App\Models\Account;
 use App\Models\Subject;
-use Illuminate\Database\QueryException;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
+use App\Models\Employee;
 use PHPUnit\TextUI\Help;
+use App\Models\ClassSupervisor;
+use Illuminate\Validation\Rule;
+use App\Helpers\ResponseFormatter as res;
+use Illuminate\Support\Facades\DB;
+use App\Models\ClassTeacherSubject;
 
 use function PHPUnit\Framework\isEmpty;
+use Illuminate\Database\QueryException;
+use LDAP\Result;
 
 class EmployeeController extends Controller
-{
-    
+{   
     public function add(){
         //Validation
         $f=['required','string','between:5,25'];
@@ -36,20 +37,25 @@ class EmployeeController extends Controller
         //check if roles are valid
         foreach($data['roles'] as $role)
             if(config('roles.'.$role,-1)==-1)
-                abort(422,"Role $role isn't an actual role..");
-        //create the employee
-        $emp=Employee::create($data);
-        //assign the roles to him
-        array_map(fn($role)=>$emp->assignRole($role)
-        ,$data['roles']);
-        //now create an account for him :)  
-        $acc=Account::createAccount($emp, 1);
+                return res::error("Role $role isn't an actual role..",code:422);
+     //create employee & account                
+        DB::beginTransaction();
+        try{
+            //create the employee
+            $emp=Employee::create($data);
+            //assign the roles to him
+            array_map(fn($role)=>$emp->assignRole($role)
+            ,$data['roles']);
+            //now create an account for him :)  
+            $acc=Account::createAccount($emp, 1);
+        }catch(Exception $e){
+            DB::rollBack();
+            return res::error('Something went wrong..INFO:'
+            .$e->getMessage());
+        }
+        DB::commit();
         //.................
-        return [
-            'message'=>'Employee was added successfully',
-            'account info'=>$acc
-        ];
-
+        return res::success('Employee was added successfully',['account info'=>$acc]);
     }
     public function edit(Employee $employee){
      //Validation
@@ -74,7 +80,6 @@ class EmployeeController extends Controller
         $data=request()->validate([
             'classes'=>['required','array','min:1'],
             'classes.*'=>['numeric','exists:g_classes,id'],
-            'supervisor_id'=>['required','numeric','exists:employees,id']
         ]);
      //Is he a supervisor?
         if(!$sup->hasRole(config('roles.supervisor')))
@@ -156,19 +161,72 @@ class EmployeeController extends Controller
      //Success!! Return response
         return Helper::success();
     }
-    public function assignRoles(Employee $employee) {
-        $data=request()->validate([
-            'roles'=>['min:1','required','array']
-        ]);
-        Helper::assignRoles($employee,$data['roles']);
-        return Helper::success();
+    public function employeesWithRole($role){
+        abort_if(config("roles.$role",-1)==-1,
+            422,
+            "This role isn't an actual role!"
+        );
+        $emps=Employee::whereHas("roles", 
+        fn($q)=>$q->where("name", $role))
+        ->get();
+        return res::success('Success!',$emps);
     }
-    public function removeRoles(Employee $employee) {
-        $data=request()->validate([
-            'roles'=>['min:1','required','array']
-        ]);
-        Helper::removeRoles($employee,$data['roles']);
-        return Helper::success();
-        //TODO: apply results of revoking the role
+    public function search($query){
+        $page=request('page');
+        return Employee::where('first_name','like',"%$query%")
+        ->orWhere('last_name','like',"%$query%")
+        ->simplePaginate(10);
+    }
+    public function viewEmployee(Employee $employee){
+     //Roles....
+        $roles=$employee->getRoleNames()->toArray();
+        $employee->makeHidden('roles');
+        $currentRoles=[];
+        foreach($roles as $role){
+            $currentRoles[$role]=[];
+        }
+     //Supervisor data...
+        $role=config('roles.supervisor');
+        if($employee->hasRole($role)){
+            //get the classes he is sup on them
+            $employee->load(['g_classes_sup:id,name,grade_id','g_classes_sup.grade']);
+            $employee->makeHidden('g_classes_sup');
+            //fix data representation
+            $ofClasses=$employee->g_classes_sup->map(function($class){
+                $class->grade_name=$class->grade->name;
+                $class->makeHidden('grade');
+                return $class;
+            });
+            //set the new data to "ofClasses" field
+            $currentRoles[$role]['ofClasses']=$ofClasses;
+        }
+     //Teacher data
+        $role=config('roles.teacher');
+        if($employee->hasRole($role)){
+            $aha=DB::table('class_teacher_subject AS cts')
+            ->join('employees AS e','e.id','=','cts.employee_id')
+            ->join('subjects AS s','s.id','=','cts.subject_id')
+            ->join('g_classes AS c','c.id','=','cts.g_class_id')
+            ->join('grades AS g','g.id','=','c.grade_id')
+            ->select('s.name AS subject_name',
+            's.id AS subject_id',
+            'g.name AS grade_name',
+            'g.id AS grade_id',
+            'c.name AS class_name',
+            'c.id AS class_id',)
+            ->where('e.id',$employee->id)
+            ->get();
+            $currentRoles[$role]['teaches']=$aha;
+        }
+     //Bus Admin data...
+        $role=config('roles.busAdmin');
+        if($employee->hasRole($role)){
+            $currentRoles[$role]['message']='sooooooooooon';
+        }
+        
+     //Response
+        $employee->cuurentRoles=$currentRoles;
+        return $employee;
+        
     }
 }

@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Employee extends Model
 {
     use HasFactory,HasRoles;
-    protected $hidden=['created_at','updated_at'];
+    protected $hidden=['created_at','updated_at','pivot'];
     protected $fillable = ['first_name', 'last_name'];
     protected $guard_name = 'web';
     public function account(){

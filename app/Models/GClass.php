@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class GClass extends Model
 {
     use HasFactory;
-    protected $hidden=['created_at','updated_at'];
+    protected $hidden=['created_at','updated_at','pivot'];
     protected $fillable=[
     'grade_id',
     'name',

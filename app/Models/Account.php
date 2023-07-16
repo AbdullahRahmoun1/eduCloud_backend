@@ -5,7 +5,6 @@ namespace App\Models;
 use Exception;
 use App\Models\Employee;
 use App\Models\Student;
-
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Foundation\Auth\User;
@@ -45,11 +44,11 @@ class Account extends User
                 'owner_id'=>$owner->id
             ]);
         }catch(QueryException $e){
-            abort(400,'failed to create the account!!'
-            .',this username is already taken');
-        }
-        catch(Exception $e){
-            abort(400,'something went wrong..'.$e->getMessage());
+            $info=$e->errorInfo;
+            if($info[1]==1062)
+            return Account::createAccount($owner,$is_emp);
+            else throw new Exception('Something went wrong in creating account..INFO: '
+            .$e->getMessage());
         }
         return [
             'user_name'=>$name,
