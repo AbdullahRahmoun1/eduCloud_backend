@@ -47,7 +47,7 @@ class EmployeeController extends Controller
         //.................
         return [
             'message'=>'Employee was added successfully',
-            'account info'=>$acc
+            'data' => $acc
         ];
 
     }

@@ -35,7 +35,8 @@ class Account extends User
         return $this->morphTo();
     }
     public static function createAccount($owner, $is_emp){
-        $name=$owner->first_name.'_'.$owner->last_name;
+        $suffix = sprintf('%04d', random_int(0,9999));
+        $name=$owner->first_name.'_'.$owner->last_name.'_'.$suffix;
         $pass=Str::lower(Str::random(7));
         try{
             $acc=Account::create([
@@ -45,12 +46,13 @@ class Account extends User
                 'owner_id'=>$owner->id
             ]);
         }catch(QueryException $e){
-            abort(400,'failed to create the account!!'
-            .',this username is already taken');
+            $code = $e->errorInfo[1];
+            if($code[1]==1062)
+            return Account::createAccount($owner,$is_emp);
+            else throw new Exception('Something went wrong in creating account..INFO: '
+            .$e->getMessage());
         }
-        catch(Exception $e){
-            abort(400,'something went wrong..'.$e->getMessage());
-        }
+
         return [
             'user_name'=>$name,
             'password'=>$pass

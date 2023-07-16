@@ -7,4 +7,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum', 'hasRoles:'.config('roles.secretary'))->group(function(){
     Route::post('addStudentOrCandidate/{is_direct}', [StudentController::class, 'add']);
+    Route::post('editStudentOrCandidate/{id}/{is_candidate}', [StudentController::class, 'edit']);
 });
