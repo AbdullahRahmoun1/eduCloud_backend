@@ -15,6 +15,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\TextUI\Help;
 
+use function PHPUnit\Framework\isEmpty;
+
 class EmployeeController extends Controller
 {
     
@@ -113,6 +115,8 @@ class EmployeeController extends Controller
             '*.classes'=>['min:1','required','array'],
             '*.classes.*'=>['required','numeric','exists:g_classes,id'],
         ]);
+        if(empty(request()->all()))
+        abort(422,'wth?..Empty body');
      //Is he a teacher?
         if(!$teacher->hasRole(config('roles.teacher')))
         abort(422,'This employee isn\'t a teacher');
