@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseFormatter;
 use App\Models\Account;
 use Illuminate\Http\Request;
 
@@ -25,11 +26,16 @@ class AccountController extends Controller
         ->first();
         
         if(!$account->passwordCheck($info['password']))
-        abort(403,'Wrong password');
+            return ResponseFormatter::error(null,'Wrong password',403);
+        //abort(403,'Wrong password');
         $token=$account->createToken(request()->ip());
-        return [
+        return ResponseFormatter::success([
             'token'=>$token->plainTextToken,
             'roles'=>$account->owner->getRoleNames(),
-        ];
+        ], 'logged in successfully');
+        // return [
+        //     'token'=>$token->plainTextToken,
+        //     'roles'=>$account->owner->getRoleNames(),
+        // ];
     }
 }

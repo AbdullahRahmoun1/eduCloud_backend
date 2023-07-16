@@ -18,33 +18,33 @@ class StudentController extends Controller
         $uniqueStu[] = Rule::unique('students', 'mother_name')->where('first_name',$r['first_name'])->where('last_name', $r['last_name'])->where('father_name', $r['father_name']); 
         $uniqueCand = $namesV; 
         $uniqueCand[] = Rule::unique('candidate_students', 'mother_name')->where('first_name',$r['first_name'])->where('last_name', $r['last_name'])->where('father_name', $r['father_name']); 
-        $namesV30 = ['string', 'max:30']; 
+        $namesV30 = ['string', 'max:30', 'nullable']; 
         
         $candidateRules = [ 
             'first_name' => $namesV, 
             'last_name' => $namesV, 
             'father_name' => $namesV, 
-            'place_of_living' => ['string', 'max:45'], 
+            'place_of_living' => ['string', 'min:3', 'max:45', 'nullable'], 
             'birth_date' => ['required', 'date'], 
-            '6th_grade_avg' => 'numeric', 
+            '6th_grade_avg' => ['numeric', 'nullable'] 
         ]; 
         
         $studentRules = array_merge($candidateRules, [ 
-            'birth_place' => ['string','max:45'], 
-            'social_description' => ['string', 'max:65'], 
+            'birth_place' => ['string', 'min:3', 'max:45', 'nullable'], 
+            'social_description' => ['string' , 'min:3', 'max:65', 'nullable'], 
             'grand_father_name' => $namesV30, 
             'mother_last_name' => $namesV30, 
-            'public_record' => ['string', 'max:30'], 
+            'public_record' => ['string', 'max:30', 'nullable'], 
             'father_alive' => 'boolean', 
             'mother_alive' => 'boolean', 
             'father_profession' => $namesV30, 
             'previous_school' => $namesV30, 
             'address_id' => ['exists:addresses,id'], 
             'transportation_subscriber' => 'boolean', 
-            'registration_place' => ['string', 'max:40'], 
-            'registration_number' => ['string', 'max:30'], 
-            'registration_date' => 'date', 
-            'notes' => ['string', 'max:200'], 
+            'registration_place' => ['string', 'min:3', 'max:40', 'nullable'], 
+            'registration_number' => ['string', 'min:1', 'max:30', 'nullable'], 
+            'registration_date' => ['date', 'nullable'], 
+            'notes' => ['string', 'min:1', 'max:200', 'nullable'], 
         ]); 
         $candidateRules['grade_id'] = ['required', 'exists:grades,id']; 
         $candidateRules['mother_name'] = $uniqueCand; 
