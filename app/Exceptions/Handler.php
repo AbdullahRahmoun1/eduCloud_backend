@@ -30,7 +30,15 @@ class Handler extends ExceptionHandler
         $this->renderable(function (NotFoundHttpException $e, $request) {
             if ($request->is('V1.0/general/getAllClassesAndSubjectsOfGrade/*')) {
                 return response()->json([
-                    'message' => 'the grade id is not valid.',
+                    'message' => 'this grade id is not valid.',
+                    'error' => $e->getMessage()
+                ], 404);
+            }
+
+            if ($request->is('V1.0/principal/assignClassesToSupervisor/*') ||
+                $request->is('V1.0/principal/assign_Class_Subject_ToTeacher/*')) {
+                return response()->json([
+                    'message' => 'this employee id is not valid.',
                     'error' => $e->getMessage()
                 ], 404);
             }

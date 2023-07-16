@@ -48,7 +48,6 @@ class Helper {
         $account=$emp->account;
         foreach($roles as $role){
             $emp->assignRole($role);
-            $account->assignRole($role);
         }
     }
     public static function removeRoles($emp,$roles){
@@ -56,7 +55,6 @@ class Helper {
         $account=$emp->account;
         foreach($roles as $role){
             $emp->removeRole($role);
-            $account->removeRole($role);
         }
     }
 

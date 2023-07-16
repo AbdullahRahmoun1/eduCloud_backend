@@ -56,7 +56,7 @@ class EmployeeController extends Controller
         $l=Rule::unique('employees','last_name')
         ->where('first_name',request('first_name'));
         $data=request()->validate([
-            'first_name'=>['required_with:last_name','string','between:5,25'],
+            'first_name'=>['required','string','between:5,25'],
             'last_name'=>['required_with:first_name','string','between:5,25',$l],
         ],[
             'last_name.unique'=>'Unable to update employee information.'.
