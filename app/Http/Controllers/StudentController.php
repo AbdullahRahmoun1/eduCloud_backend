@@ -9,6 +9,7 @@ use App\Models\CandidateStudent;
 use App\Models\Student;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
@@ -61,20 +62,29 @@ class StudentController extends Controller
             $is_direct ? $studentRules : $candidateRules, 
             ['mother_name.unique' => 'this student is already in the system']);
 
-        //model creation
-        $student = $is_direct ? Student::create($data) :
-            CandidateStudent::create($data);
+        DB::beginTransaction();
+        try{
+            //model creation
+            $student = $is_direct ? Student::create($data) :
+                CandidateStudent::create($data);
 
-        //account creation
-        if($is_direct){
-            $student->assignRole(config('roles.student'));
-            $acc = Account::createAccount($student, 0);
+            //account creation
+            if($is_direct){
+                $student->assignRole(config('roles.student'));
+                $acc = Account::createAccount($student, 0);
+            }
         }
+        catch(Exception $e){
+            DB::rollBack();
+            return ResponseFormatter::error('something went wrong', $e->getMessage());
+        }
+        DB::commit();
         //.............
         return $is_direct ? [
             'message' => 'Student was added successfully.',
             'data' => $acc] :
             ['message' => 'Was successfully added as a Candidate student.'];
+        
     }
 
     public function edit($id,$is_candidate, Request $r) {
@@ -138,5 +148,25 @@ class StudentController extends Controller
         return ResponseFormatter::success('student info was updated successfully.', $data);
         
 
+    }
+
+    public function regeneratePassword(Student $student){
+
+        $account = $student->account;
+        if(!isset($account)){
+            return ResponseFormatter::error('this student does not have an account',null,422);
+        }
+
+        try{
+            $new_password = Account::changePassword($account);
+        }
+        catch(Exception $e){
+            return ResponseFormatter::error('something went wrong', $e->getMessage());
+        }
+
+        return ResponseFormatter::success('password changed successfully.',[
+            'account' => $account['user_name'],
+            'new password' => $new_password
+        ]);
     }
 }

@@ -42,6 +42,13 @@ class Handler extends ExceptionHandler
                     'error' => $e->getMessage()
                 ], 404);
             }
+
+            if ($request->is('V1.0/secretary/*')) {
+                return response()->json([
+                    'message' => 'this student id is not valid.',
+                    'error' => $e->getMessage()
+                ], 404);
+            }
         });
     }
 }

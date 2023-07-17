@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\ResponseFormatter;
 use Exception;
 use App\Models\Employee;
 use App\Models\Student;
@@ -56,5 +57,20 @@ class Account extends User
             'user_name'=>$name,
             'password'=>$pass
         ];
+    }
+
+    public static function changePassword(Account $account, $new_pass = null){
+
+        if(!isset($new_pass)){
+            $new_pass = Str::lower(Str::random(7));
+        }
+
+        $len = Str::length($new_pass);
+        if($len > 80 || $len < 1){
+            throw new Exception('password must be less than 80 character and at least 1 character');
+        }
+        
+        $account->update(['password' => $new_pass]);
+        return $new_pass;
     }
 }
