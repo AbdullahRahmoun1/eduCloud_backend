@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('g_classes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('grade_id')->constrained();
             $table->string('name',30);
             $table->integer('max_number')->unsigned();
+            $table->foreignId('grade_id')->constrained();
             $table->unique(['grade_id', 'name']);
             $table->timestamps();
         });

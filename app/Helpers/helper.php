@@ -2,30 +2,18 @@
 namespace App\Helpers;
 
 use Exception;
-use Illuminate\Database\QueryException;
+use App\Helpers\ResponseFormatter as res;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 
 class Helper {
     public static function lazyQueryTry($toTry){
-        DB::beginTransaction();
         try{
-            $toTry();
+            $result=$toTry();
         }catch(QueryException $e){
-            $code=$e->errorInfo[1];
-            if($code==1062){
-                //$msg="Duplicate error..ErrorInfo:{$e->errorInfo[2]}";
-                $msg = "Duplicate error";
-                $data = $e->errorInfo[2];
-            }else{
-                //$msg='Something went Wrong...error:'.$e->getMessage();
-                $msg = 'Something went Wrong';
-                $data = $e->errorInfo[2];
-            }
-            DB::rollBack();
-            return ResponseFormatter::error('Duplicate error', $e->errorInfo[2],422);
-            //abort(400,$msg);
+            res::queryError($e);
         }
-        DB::commit();
+        return $result;
     }
     public static function success(){
         return [

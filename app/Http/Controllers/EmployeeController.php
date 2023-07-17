@@ -48,14 +48,12 @@ class EmployeeController extends Controller
             ,$data['roles']);
             //now create an account for him :)  
             $acc=Account::createAccount($emp, 1);
-        }catch(Exception $e){
-            DB::rollBack();
-            return res::error('Something went wrong..INFO:'
-            .$e->getMessage());
+        }catch(QueryException $e){
+            res::queryError($e,rollback:true);
         }
         DB::commit();
         //.................
-        return res::success('Employee was added successfully',['account info'=>$acc]);
+        res::success('Employee was added successfully',['account info'=>$acc]);
     }
     public function edit(Employee $employee){
      //Validation
@@ -96,21 +94,13 @@ class EmployeeController extends Controller
                 $ctr++;
             }
         }catch(QueryException $e){
-            $code=$e->errorInfo[1];
-            if($code==1062){
-                $msg="The employee is already assigned as ".
-                "a supervisor for the class with ID : {$data['classes'][$ctr]}";
-            }else{
-                $msg='Something went Wrong...error:'.$e->getMessage();
-            }
-            DB::rollBack();
-            abort(400,$msg);
+            $dupMsg="The employee is already assigned as ".
+            "a supervisor for the class with ID : {$data['classes'][$ctr]}";
+            res::queryError($e,$dupMsg,rollback:true);
         }
      //Success!!, return message   
         DB::commit();
-        return [
-            'message'=>'Success!'
-        ];
+        res::success();
     }
     public function assign_Class_Subject_ToTeacher(Employee $teacher) {
      //Validation
@@ -121,10 +111,10 @@ class EmployeeController extends Controller
             '*.classes.*'=>['required','numeric','exists:g_classes,id'],
         ]);
         if(empty(request()->all()))
-        abort(422,'wth?..Empty body');
+        res::error('wth?..Empty body',code:422);
      //Is he a teacher?
         if(!$teacher->hasRole(config('roles.teacher')))
-        abort(422,'This employee isn\'t a teacher');
+        res::error('This employee isn\'t a teacher',code:422);
      //Assign values to DB
         DB::beginTransaction();
         $it=0;
@@ -132,44 +122,36 @@ class EmployeeController extends Controller
         try{
             foreach($data as $item){
                 foreach($item['classes'] as $class){
-                    $cls++;
                     ClassTeacherSubject::create([
                         'employee_id'=>$teacher->id,
                         'subject_id'=>$item['subject_id'],
                         'g_class_id'=>$class
                     ]);
+                    $cls++;
                 }
                 $cls=0;
                 $it++;
             }
         }catch(QueryException $e){
      //Error :( , return response
-            $code=$e->errorInfo[1];
             $sub=Subject::find($data[$it]['subject_id'])->name;
             $class =GClass::find($data[$it]['classes'][$cls])->name;
-            if($code==1062){
-                $msg="This employee is already assigned as a ".
-                "teacher for Subject ( ".$sub
-                ." ) in Class ( ".$class." ).";
-            }else{
-                $msg='Something went Wrong...error:'.$e->getMessage();
-            }
-            DB::rollBack();
-            abort(400,$msg);
+            $dupMsg = "This employee is already assigned as a ".
+            "teacher for Subject ( ".$sub
+            ." ) in Class ( ".$class." ).";
+            res::queryError($e,$dupMsg,rollback:true);
         }
         DB::commit();
      //Success!! Return response
-        return Helper::success();
+        res::success();
     }
     public function employeesWithRole($role){
-        abort_if(config("roles.$role",-1)==-1,
-            422,
-            "This role isn't an actual role!"
-        );
+        if(config("roles.$role",-1)==-1)
+        res::error("This role isn't an actual role!",code:422);
         $emps=Employee::whereHas("roles", 
         fn($q)=>$q->where("name", $role))
         ->get();
-        return res::success('Success!',$emps);
+        res::success(data:$emps);
     }
     public function search($query){
         $page=request('page');
@@ -223,7 +205,6 @@ class EmployeeController extends Controller
         if($employee->hasRole($role)){
             $currentRoles[$role]['message']='sooooooooooon';
         }
-        
      //Response
         $employee->cuurentRoles=$currentRoles;
         return $employee;

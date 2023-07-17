@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('grade_id')->constrained();
-            $table->string('name',45)->unique();
+            $table->string('name',45);
             $table->string('notes',100)->nullable();
             $table->integer('min_mark')->default(60);
             $table->integer('max_mark')->default(100);
+            $table->foreignId('grade_id')->constrained();
+            $table->unique(['name','grade_id'],'name_grade_unique');
             $table->timestamps();
+            
         });
     }
 
