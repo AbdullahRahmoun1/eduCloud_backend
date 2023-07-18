@@ -185,10 +185,7 @@ class EmployeeController extends Controller
      //Teacher data
         $role=config('roles.teacher');
         if($employee->hasRole($role)){
-            $aha=DB::table('class_teacher_subject AS cts')
-            ->join('employees AS e','e.id','=','cts.employee_id')
-            ->join('subjects AS s','s.id','=','cts.subject_id')
-            ->join('g_classes AS c','c.id','=','cts.g_class_id')
+            $aha=ClassTeacherSubject::joins()
             ->join('grades AS g','g.id','=','c.grade_id')
             ->select('s.name AS subject_name',
             's.id AS subject_id',
