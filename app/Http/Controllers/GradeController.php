@@ -38,7 +38,7 @@ class GradeController extends Controller
         ]);
         return $grade;
     }
-    public function getAllClassesAndSubjects(Grade $grade) {
+    public function getAllGradesWithClassesAndSubjects(Grade $grade) {
         return $grade->with('g_classes', 'subjects')->get();
     }
 }
