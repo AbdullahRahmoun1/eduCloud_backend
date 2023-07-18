@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
-use App\Helpers\ResponseFormatter;
+use App\Helpers\ResponseFormatter as response;
 use App\Models\Account;
 use App\Models\CandidateStudent;
+use App\Models\GClass;
 use App\Models\Student;
 use Exception;
 use Illuminate\Http\Request;
@@ -76,7 +77,7 @@ class StudentController extends Controller
         }
         catch(Exception $e){
             DB::rollBack();
-            return ResponseFormatter::error('something went wrong', $e->getMessage());
+            return response::error('something went wrong', $e->getMessage());
         }
         DB::commit();
         //.............
@@ -92,7 +93,7 @@ class StudentController extends Controller
         //initialize the rules for validation 
         $student = $is_candidate ? CandidateStudent::find($id) : Student::find($id);
         if(!isset($student))
-            return ResponseFormatter::error('this student id is invalid.', null, 422);
+            return response::error('this student id is invalid.', null, 422);
 
         $first_n = $r['first_name'] ? $r['first_name'] : $student['first_name'];
         $last_n = $r['last_name'] ? $r['last_name'] : $student['last_name'];
@@ -145,7 +146,7 @@ class StudentController extends Controller
         
         //update the student
         Helper::lazyQueryTry(fn()=> $student->update($data));
-        return ResponseFormatter::success('student info was updated successfully.', $data);
+        return response::success('student info was updated successfully.', $data);
         
 
     }
@@ -154,19 +155,60 @@ class StudentController extends Controller
 
         $account = $student->account;
         if(!isset($account)){
-            return ResponseFormatter::error('this student does not have an account',null,422);
+            return response::error('this student does not have an account',null,422);
         }
 
         try{
             $new_password = Account::changePassword($account);
         }
         catch(Exception $e){
-            return ResponseFormatter::error('something went wrong', $e->getMessage());
+            return response::error('something went wrong', $e->getMessage());
         }
 
-        return ResponseFormatter::success('password changed successfully.',[
+        return response::success('password changed successfully.',[
             'account' => $account['user_name'],
             'new password' => $new_password
         ]);
     }
+
+    public function search(){
+        $correctClass = Rule::exists('g_classes','id')->where(function($query){
+            $query->where('grade_id',request()->grade_id);
+        });
+        $data = request()->validate([
+            'grade_id' => ['required_with:class_id', 'exists:grades,id'],
+            'class_id' => [$correctClass]
+        ],[
+            "class_id.exists" => 'this grade doesn\'t have this class_id.'
+        ]);
+
+        $employee = auth()->user()->owner;
+        $search=request()->search;
+        $searchable_classes = $employee->hasRole(config('roles.supervisor')) &&
+            !($employee->hasRole('roles.secretary') || $employee->hasRole('roles.principal')) ?
+            $employee->g_classes_sup : GClass::all();
+        
+        $result = Student::query()
+        ->where(function($query) use ($search){
+            $query->where(DB::raw('CONCAT(first_name," ",last_name)'),'like',"%$search%");
+        })
+        ->whereIn('g_class_id', $searchable_classes->pluck('id'));
+
+        if(isset(request()->grade_id)){
+            $result->whereHas('g_class.grade', function($query){
+                $query->where('id',request()->grade_id);
+            });
+        }
+
+        if(isset(request()->class_id)){
+            $result->where('g_class_id',request()->class_id);
+        }
+
+        $result = $result->simplePaginate(10);
+
+        isset($result[0]) ?
+        response::success('results found successfully', $result) :
+        response::error('no results found.', [],404);
+    }
+    
 }
