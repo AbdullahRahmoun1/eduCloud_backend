@@ -24,13 +24,12 @@ class Student extends Model
     protected $hidden=['created_at','updated_at'];
     protected $guarded=[];
     protected $guard_name='web';
-    /**
+/**
      * Get all of the marks for the Student
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function marks(): HasMany
-    {
+    public function marks(): HasMany{
         return $this->hasMany(Mark::class);
     }
 
@@ -80,5 +79,13 @@ class Student extends Model
     public function complaints(): HasMany
     {
         return $this->hasMany(Complaint::class);
+    }
+
+    public function address(){
+        return $this->belongsTo(Address::class);
+    }
+
+    public function bus(){
+        return $this->belongsToMany(Bus::class, 'student_bus', 'student_id', 'bus_id');
     }
 }

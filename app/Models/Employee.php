@@ -37,7 +37,10 @@ class Employee extends Model
     {
         return $this->belongsToMany(GClass::class, 'class_supervisor', 'employee_id', 'g_class_id');
     }
-
+    
+    public function buses(){
+        return $this->belongsToMany(Bus::class, 'supervisor_of_bus', 'employee_Id', 'bus_id');
+    }
     /**
      * The subjects that belong to the Employee
      *

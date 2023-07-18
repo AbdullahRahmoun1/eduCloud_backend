@@ -8,12 +8,10 @@ use Exception;
 use App\Models\Mark;
 use App\Models\Test;
 use App\Models\Type;
-use App\Models\User;
 use App\Models\Grade;
 use App\Models\AtMark;
 use App\Models\GClass;
 use App\Models\Number;
-use App\Models\Account;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Category;
@@ -33,7 +31,10 @@ use App\Models\Income;
 use App\Models\MoneyRequest;
 use App\Models\MoneySubRequest;
 use App\Models\Address;
-use PhpParser\Node\Stmt\Catch_;
+use App\Models\Bus;
+use App\Models\BusAddress;
+use App\Models\StudentBus;
+use App\Models\SupervisorOfBus;
 
 class DatabaseSeeder extends Seeder
 {
@@ -42,8 +43,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Address::create(['name' => 'syria']);
 
+        $this
+        ->try(fn()=>Address::factory(50)->create());
+        
         Grade::create(['name' => 'السابع']);
         Grade::create(['name' => 'الثامن']);
         Grade::create(['name' => 'التاسع']);
@@ -78,7 +81,6 @@ class DatabaseSeeder extends Seeder
         Type::create(['name'=>'تسميع']);
         Type::create(['name'=>'مذاكرة']);
 
-        Number::factory(100)->create();
 
         $this
         ->try(fn()=>Absence::factory(50)->create());
@@ -103,6 +105,21 @@ class DatabaseSeeder extends Seeder
         MoneyRequest::factory(100)->create();
         MoneySubRequest::factory(300)->create();
         Income::factory(500)->create();
+
+        $this
+        ->try(fn()=>Bus::factory(50)->create());
+        
+        $this
+        ->try(fn()=>BusAddress::factory(40)->create());
+
+        $this
+        ->try(fn()=>StudentBus::factory(50)->create());
+
+        $this
+        ->try(fn()=>SupervisorOfBus::factory(50)->create());
+        
+        Number::factory(100)->create();
+        
 
     }
     private function try($toTry){

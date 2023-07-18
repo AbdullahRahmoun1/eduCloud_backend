@@ -21,6 +21,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'teacher',
             'student',
             'busAdmin',
+            'busSupervisor',
             'accountant',
             'kioskAdmin',
             'guest',

@@ -6,9 +6,9 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Address>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Bus>
  */
-class AddressFactory extends Factory
+class BusFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,8 +18,9 @@ class AddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'=>Str::random(7),
-            'description'=>fake()->text(random_int(10,45))
+            'name'=>Str::random(3),
+            'driver_name'=>fake()->name('male'),
+            'max_load'=>random_int(20,35),
         ];
     }
 }
