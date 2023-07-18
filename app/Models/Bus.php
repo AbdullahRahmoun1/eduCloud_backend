@@ -10,7 +10,8 @@ class Bus extends Model
     use HasFactory;
     protected $hidden=[
         'created_at',
-        'updated_at'
+        'updated_at',
+        'pivot'
     ];
     protected $guarded = [];
     public function driver_numbers() {

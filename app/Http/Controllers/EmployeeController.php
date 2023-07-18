@@ -201,9 +201,12 @@ class EmployeeController extends Controller
             $currentRoles[$role]['teaches']=$aha;
         }
      //Bus Admin data...
-        $role=config('roles.busAdmin');
+        $role=config('roles.busSupervisor');
         if($employee->hasRole($role)){
-            $currentRoles[$role]['message']='sooooooooooon';
+            $employee->load('buses');
+            $employee->makeHidden('buses');
+            $buses=$employee->buses;
+            $currentRoles[$role]['supervisesBuses']=$buses;
         }
      //Response
         $employee->cuurentRoles=$currentRoles;
