@@ -7,6 +7,7 @@ return [
     'teacher'=>'teacher',
     'student'=>'student',
     'busAdmin'=>'busAdmin',
+    'busSupervisor'=>'busSupervisor',
     'accountant'=>'accountant',
     'kioskAdmin'=>'kioskAdmin',
     'guest'=>'guest',

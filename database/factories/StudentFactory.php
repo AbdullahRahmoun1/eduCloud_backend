@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Address;
 use App\Models\GClass;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,6 +24,7 @@ class StudentFactory extends Factory
             'last_name' => fake()->lastName(),
             'father_name' => fake()->firstNameMale(),
             'mother_name' => fake()->firstNameFemale(),
+            'address_id'=>Address::all()->random()->id
         ];
     }
 }

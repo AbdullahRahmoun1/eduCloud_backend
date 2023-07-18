@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Bus;
+use App\Models\Student;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,10 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('addresses', function (Blueprint $table) {
+        Schema::create('student_bus', function (Blueprint $table) {
             $table->id();
-            $table->string('name',45)->unique();
-            $table->string('description',100);
+            $table->foreignIdFor(Student::class)->unique();
+            $table->foreignIdFor(Bus::class);
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('addresses');
+        Schema::dropIfExists('student_buses');
     }
 };
