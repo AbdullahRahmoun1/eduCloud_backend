@@ -9,4 +9,5 @@ Route::middleware('auth:sanctum', 'hasRoles:'.config('roles.secretary'))->group(
     Route::post('addStudentOrCandidate/{is_direct}', [StudentController::class, 'add']);
     Route::post('editStudentOrCandidate/{id}/{is_candidate}', [StudentController::class, 'edit']);
     Route::get('regeneratePassword/{student}', [StudentController::class, 'regeneratePassword']);
+    Route::get('studentSearch', [StudentController::class, 'search']);
 });
