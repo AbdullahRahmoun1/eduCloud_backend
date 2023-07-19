@@ -23,7 +23,7 @@ class EmployeeController extends Controller
 {   
     public function add(){
         //Validation
-        $f=['required','string','between:5,25'];
+        $f=['required','string','between:2,25'];
         $l=$f;
         $l[]=Rule::unique('employees','last_name')
         ->where('first_name',request('first_name'));
@@ -53,15 +53,15 @@ class EmployeeController extends Controller
         }
         DB::commit();
         //.................
-        res::success('Employee was added successfully',['account info'=>$acc]);
+        res::success('Employee was added successfully',['account info'=>$acc, 'id' => $emp->id]);
     }
     public function edit(Employee $employee){
      //Validation
         $l=Rule::unique('employees','last_name')
         ->where('first_name',request('first_name'));
         $data=request()->validate([
-            'first_name'=>['required','string','between:5,25'],
-            'last_name'=>['required_with:first_name','string','between:5,25',$l],
+            'first_name'=>['required','string','between:2,25'],
+            'last_name'=>['required_with:first_name','string','between:2,25',$l],
         ],[
             'last_name.unique'=>'Unable to update employee information.'.
             ' This employee\'s name already exists in the system.'
