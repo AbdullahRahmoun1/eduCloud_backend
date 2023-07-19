@@ -19,7 +19,7 @@ class StudentController extends Controller
     public function add($is_direct, Request $r) {
 
         //initialize the rules for validation 
-        $namesV = ['required', 'string', 'between:3,20']; 
+        $namesV = ['required', 'string', 'between:2,20']; 
         $uniqueStu = $namesV; 
         $uniqueStu[] = Rule::unique('students', 'mother_name')->where('first_name',$r['first_name'])->where('last_name', $r['last_name'])->where('father_name', $r['father_name']); 
         $uniqueCand = $namesV; 
@@ -100,7 +100,7 @@ class StudentController extends Controller
         $father_n = $r['father_name'] ? $r['father_name'] : $student['father_name'];
         $mother_n = $r['mother_name'] ? $r['mother_name'] : $student['mother_name'];
 
-        $namesV = ['string', 'between:3,20', 'nullable']; 
+        $namesV = ['string', 'between:2,20', 'nullable']; 
         $uniqueStu = $namesV; 
         $uniqueStu[] = Rule::unique('students', 'mother_name')->where('first_name',$first_n)->where('last_name', $last_n)->where('father_name', $father_n); 
         $uniqueCand = $namesV; 
