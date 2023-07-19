@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name',45);
             $table->tinyInteger('max_mark');
+            $table->tinyInteger('min_mark');
             $table->foreignIdFor(AbilityTest::class)->nullable();
             $table->timestamps();
             $table->unique(['ability_test_id','name']);

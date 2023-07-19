@@ -85,7 +85,9 @@ class DatabaseSeeder extends Seeder
         $this
         ->try(fn()=>Absence::factory(50)->create());
         
-        AbilityTest::factory(50)->create();
+        $this
+        ->try(fn()=>AbilityTest::factory(50)->create());
+        ;
 
         AtSection::factory(200)->create();
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbilityTestController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\GClassController;
 use App\Http\Controllers\GradeController;
@@ -23,9 +24,13 @@ Route::middleware('auth:sanctum','hasRoles:'.config('roles.principal'))->group(f
     Route::post('editClass/{class}',[GClassController::class,'edit']);    
     Route::post('addSubjectsToGrade/{grade}',[SubjectController::class,'addSubjectsToGrade']);    
     Route::post('editSubject/{subject}',[SubjectController::class,'edit']);
+
+    Route::post('addAbilityTestForm/{subject}',[AbilityTestController::class,'add']);
+    
+
+
+
     Route::get('viewSubject/{subject}',[SubjectController::class,'view']);
-
-
     Route::get('viewGrade/{grade}',[GradeController::class,'view']);    
     Route::get('possibleRolesForEmps',[RoleController::class,'rolesForEmployees']);
     Route::get('employeesWithRole/{role}',[EmployeeController::class,'employeesWithRole']);

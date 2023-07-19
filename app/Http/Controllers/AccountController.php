@@ -13,13 +13,13 @@ class AccountController extends Controller
         $info=request()->validate([
             'user_name'=>[
                 'required',
-                'between:1,80',
+                'between:2,45',
                 'exists:accounts,user_name',
                 'required_if:anotherfield,value',                
             ],
             'password'=>[
                 'required'
-                ,'between:1,80'
+                ,'between:5,45'
             ],
         ]);
         $account=Account::where('user_name',$info['user_name'])
