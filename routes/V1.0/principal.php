@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\AbilityTestController;
+use App\Http\Controllers\AtMarkController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\GClassController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
+use App\Models\AtMark;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum','hasRoles:'.config('roles.principal'))->group(function () {
@@ -26,6 +28,7 @@ Route::middleware('auth:sanctum','hasRoles:'.config('roles.principal'))->group(f
     Route::post('editSubject/{subject}',[SubjectController::class,'edit']);
 
     Route::post('addAbilityTestForm/{subject}',[AbilityTestController::class,'add']);
+    Route::post('addAbilityTestMark',[AtMarkController::class,'add']);
     
 
 

@@ -24,7 +24,6 @@ class AtMarkFactory extends Factory
             'student_id'=>Student::all()->random()->id,
             'student_type'=>random_int(1,2)==2?Student::class:CandidateStudent::class,
             'ability_test_id'=>AbilityTest::all()->random()->id,
-            'full_mark'=>random_int(1,100),
             'date'=>fake()->date(),
         ];
     }

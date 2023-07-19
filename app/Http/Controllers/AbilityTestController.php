@@ -11,13 +11,16 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use PHPUnit\TextUI\Help;
 
 class AbilityTestController extends Controller
 {
     public function add(Subject $subject) {
      //Validation..
+        $unique=Rule::unique('ability_tests','title')
+        ->where('subject_id',$subject->id);
         $data=request()->validate([
-            'title'=>['required','string','min:2','unique:ability_tests,title'],
+            'title'=>['required','string','min:2',$unique],
             'is_entry_test'=>['required','boolean'],
             'sections'=>['array','required','min:1'],
             'sections.*.name'=>['required','between:2,45','string'],
@@ -37,7 +40,7 @@ class AbilityTestController extends Controller
         $ctr=0;
         try {
             $data['subject_id']=$subject->id;
-            $at=AbilityTest::create($data);    
+            $at=AbilityTest::create($data);
             $sections=[];
             foreach ($data['sections'] as $section) {
                 $section['ability_test_id']=$at->id;
@@ -45,13 +48,17 @@ class AbilityTestController extends Controller
                 $ctr++;
             }
         } catch (QueryException $e) {
-            $dupMsg="Duplicate error.. \"{$data[$ctr]['name']}\" is duplicated in input";
+            $dupMsg="Duplicate error.. \"{$data['sections'][$ctr]['name']}\" is duplicated in input";
             res::queryError($e,$dupMsg,rollback:true);
         }
         DB::commit();
         res::success(data:[
-            'ability_test_id'=>$at,
+            'ability_test'=>$at,
             'sections'=>$sections
         ]);
     }
+    public function viewSubjectsAbilityTests(Subject $subject){
+        return $subject->ability_tests;
+    }
+    
 }
