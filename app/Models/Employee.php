@@ -60,4 +60,8 @@ class Employee extends Model
     {
         return $this->belongsToMany(GClass::class, 'class_teacher_subject', 'employee_id', 'g_class_id');
     }
+
+    public function get_roles(){
+        return $this->getRoleNames();
+    }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('types', function (Blueprint $table) {
             $table->id();
             //TODO: add a "avg" attribute or something like it 
-            $table->string('name')->unique();
+            $table->string('name',20)->unique();
             $table->timestamps();
         });
     }
