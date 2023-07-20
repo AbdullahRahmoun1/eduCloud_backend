@@ -73,11 +73,11 @@ class TestController extends Controller
     
     public function test(Request $request)
     {   
-        $val = Validator::make($request, [
-            'n' => [['required', 'max:7'], 'min:5'],
-            'm' => 'integer|nullable'
-        ]);
+        // $val = Validator::make($request, [
+        //     'n' => [['required', 'max:7'], 'min:5'],
+        //     'm' => 'integer|nullable'
+        // ]);
         
-        return response::error(null, 'shit' , 512);
+        return ( request()->user()->owner->roles()->select('id')->get()->makeHidden('pivot'));
     }
 }
