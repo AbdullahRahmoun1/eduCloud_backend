@@ -156,12 +156,28 @@ class EmployeeController extends Controller
         ->get();
         res::success(data:$emps);
     }
-    public function search($query){
-        $page=request('page');
-        return Employee::where('first_name','like',"%$query%")
-        ->orWhere('last_name','like',"%$query%")
-        ->simplePaginate(10);
+
+    public function search($search){
+
+        $role=request('role');
+        if(isset($role) && config("roles.$role",-1)==-1)
+        res::error("This role isn't an actual role!",code:422);
+
+        $result = Employee::query()
+        ->where(DB::raw('CONCAT(first_name," ",last_name)'),'like',"%$search%");
+
+        if(isset($role)){
+            $result->whereHas('roles', function($query) use ($role){
+                $query->where('name',$role);
+            });
+        }
+
+        $result = $result->with('roles')->simplePaginate(10);
+
+        !isset($result[0]) ? res::error('no results found',null,404) :
+        res::success('results found successfully.', $result);
     }
+    
     public function viewEmployee(Employee $employee){
      //Roles....
         $roles=$employee->getRoleNames()->toArray();

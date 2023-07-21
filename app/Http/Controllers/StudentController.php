@@ -189,9 +189,7 @@ class StudentController extends Controller
             $employee->g_classes_sup : GClass::all();
         
         $result = Student::query()
-        ->where(function($query) use ($search){
-            $query->where(DB::raw('CONCAT(first_name," ",last_name)'),'like',"%$search%");
-        })
+        ->where(DB::raw('CONCAT(first_name," ",last_name)'),'like',"%$search%")
         ->whereIn('g_class_id', $searchable_classes->pluck('id'));
 
         if(isset(request()->grade_id)){

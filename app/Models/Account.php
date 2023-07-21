@@ -66,8 +66,8 @@ class Account extends User
         }
 
         $len = Str::length($new_pass);
-        if($len > 80 || $len < 1){
-            throw new Exception('password must be less than 80 character and at least 1 character');
+        if($len > 45 || $len < 5){
+            throw new Exception('password must be less than 45 character and at least 5 character');
         }
         
         $account->update(['password' => $new_pass]);
