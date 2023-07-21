@@ -53,7 +53,10 @@ class EmployeeController extends Controller
         }
         DB::commit();
         //.................
-        res::success('Employee was added successfully',['account info'=>$acc, 'id' => $emp->id]);
+        res::success('Employee was added successfully',[
+            'account info'=>$acc,
+            'employee' => $emp
+        ]);
     }
     public function edit(Employee $employee){
      //Validation
