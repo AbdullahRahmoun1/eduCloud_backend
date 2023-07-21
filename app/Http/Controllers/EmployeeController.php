@@ -171,7 +171,7 @@ class EmployeeController extends Controller
                 $query->where('name',$role);
             });
         }
-z`
+
         $result = $result->with('roles:id,name')->simplePaginate(10);
 
         !isset($result[0]) ? res::error('no results found',null,404) :
