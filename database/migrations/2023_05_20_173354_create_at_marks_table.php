@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('student_id');
             $table->string('student_type',45)->default(Student::class);
             $table->foreignIdFor(AbilityTest::class);
+            $table->unique(['date','student_id','student_type']);
             $table->timestamps();
         });
     }
