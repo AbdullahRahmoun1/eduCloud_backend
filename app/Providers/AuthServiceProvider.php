@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Models\GClass;
 use App\Models\Account;
+use App\Models\Test;
 use App\Policies\ClassPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -28,8 +29,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         Gate::before(function(Account $account){
-            if($account->hasRole('admin')||
-                $account->hasRole('admin'))
+            if($account->owner->hasRole('admin')||
+                $account->owner->hasRole('principal'))
             return true;
         });
         

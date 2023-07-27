@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MarkController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TypeController;
@@ -12,4 +13,5 @@ Route::middleware('auth:sanctum', 'hasRoles:'.config('roles.supervisor'))->group
     Route::post('editTestType/{type}', [TypeController::class, 'edit']);
     Route::post('addTest', [TestController::class, 'add']);
     Route::post('editTest/{test}', [TestController::class, 'edit']);
+    Route::post('addTestMarks/{test}', [MarkController::class, 'addTestMarks']);
 });

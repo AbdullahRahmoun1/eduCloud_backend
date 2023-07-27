@@ -19,6 +19,11 @@ class Test extends Model
     {
         return $this->belongsTo(Subject::class);
     }
+    public function g_class()
+    {
+        return $this->class();
+    }
+
     public function class()
     {
         return $this->belongsTo(GClass::class,'g_class_id');
