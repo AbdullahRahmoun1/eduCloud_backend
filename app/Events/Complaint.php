@@ -4,11 +4,12 @@ namespace App\Events;
 
 use App\Helpers\Helper;
 use App\Models\Student;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
-use Illuminate\Foundation\Events\Dispatchable;
+use App\Models\Complaint as ModelsComplaint;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 class Complaint implements ShouldBroadcastNow
 {
@@ -20,7 +21,7 @@ class Complaint implements ShouldBroadcastNow
     public $student;
     public function __construct(
         $studnet_id,
-        public Complaint $complaint
+        public ModelsComplaint $complaint
         ){
         $student = Student::find($studnet_id);
         $student->load(['g_class','grade']);

@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\Helper;
 use App\Models\Account;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -18,4 +19,10 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 Broadcast::channel('private_user_{userid}',fn(Account $user,$userId)=>true);
+Broadcast::channel(Helper::getStudentChannel("{student_id}")
+,fn($student_id)=>true
+);
+Broadcast::channel(Helper::getEmployeeChannel("{employee_id}")
+,fn($employee_id)=>true
+);
 

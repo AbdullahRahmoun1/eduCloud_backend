@@ -33,7 +33,7 @@ class ChatController extends Controller
                 fn()=>Complaint::create([
                     'body'=>$data['message'],
                     'date_time'=>now(),
-                    'sutdent_id'=>$student->id
+                    'student_id'=>$student->id
                 ])    
             );
             event(new EventsComplaint($student->id,$comp));
