@@ -91,7 +91,8 @@ class DatabaseSeeder extends Seeder
 
         AtSection::factory(200)->create();
 
-        AtMark::factory(300)->create();
+        $this
+        ->try(fn()=>AtMark::factory(300)->create());
 
         AtMarkSection::factory(50)->create();
 

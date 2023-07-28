@@ -172,7 +172,8 @@ class EmployeeController extends Controller
             });
         }
 
-        $result = $result->with('roles:id,name')->simplePaginate(10);
+        $result = $result->with('roles:id,name')
+        ->orderByDesc('id')->simplePaginate(10);
 
         !isset($result[0]) ? res::error('no results found',null,404) :
         res::success('results found successfully.', $result);

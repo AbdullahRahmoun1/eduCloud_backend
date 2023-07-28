@@ -16,6 +16,7 @@ class TestController extends Controller
 
     private function validateTestInfo(){
 
+        $this->authorize('editClassInfo', [request()['g_class_id']]);
         $emp = request()->user()->owner;
         $supHasClass = Rule::exists('class_supervisor','g_class_id')
         ->where(function($query) use ($emp){
@@ -37,7 +38,7 @@ class TestController extends Controller
         });
 
         $data = request()->validate([
-            'title' => ['required', 'min:2', 'max:25'],
+            'title' => ['required', 'min:2', 'max:25', 'unique:tests'],
             'image_url' => 'required',
             'min_mark' => ['required', 'numeric', 'gt:0'],
             'max_mark' => ['required', 'numeric', 'gt:min_mark'],
@@ -47,7 +48,7 @@ class TestController extends Controller
             'type_id' => ['required', 'exists:types,id'],
             'progress_calendar_id' => ['exists:progress_calendars,id', 'unique:tests'],
         ] ,[
-            'class_id.exists' => 'this class id is invalid',
+            'class_id.exists' => 'this class id is invalid or this employee does not supervise it',
             'subject_id.exists' => 'this class is not studying this subject'
         ]);
 
@@ -77,7 +78,9 @@ class TestController extends Controller
         //     'n' => [['required', 'max:7'], 'min:5'],
         //     'm' => 'integer|nullable'
         // ]);
-        
+        return ( Student::find(1)->grade);
+        if(Gate::denies('editClassInfo',[Test::class,3]))
+        return 'hhhh';
         return ( request()->user()->owner->roles()->select('id')->get()->makeHidden('pivot'));
     }
 }

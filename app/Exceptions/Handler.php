@@ -56,6 +56,13 @@ class Handler extends ExceptionHandler
                     'error' => $e->getMessage()
                 ], 404);
             }
+
+            if ($request->is('V1.0/supervisor/addTestMarks/*')) {
+                return response()->json([
+                    'message' => 'this test id is not valid.',
+                    'error' => $e->getMessage()
+                ], 404);
+            }
         });
     }
 }
