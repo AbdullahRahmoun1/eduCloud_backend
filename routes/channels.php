@@ -20,9 +20,9 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 Broadcast::channel('private_user_{userid}',fn(Account $user,$userId)=>true);
 Broadcast::channel(Helper::getStudentChannel("{student_id}")
-,fn($student_id)=>true
+,fn($student_id)=>['hello']
 );
 Broadcast::channel(Helper::getEmployeeChannel("{employee_id}")
-,fn($employee_id)=>true
+,fn($student_id)=>true
 );
 

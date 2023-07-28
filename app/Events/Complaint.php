@@ -4,9 +4,10 @@ namespace App\Events;
 
 use App\Helpers\Helper;
 use App\Models\Student;
-use App\Models\Complaint as ModelsComplaint;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
+use App\Models\Complaint as ModelsComplaint;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -42,7 +43,7 @@ class Complaint implements ShouldBroadcastNow
     {
         $ids=$this->student->g_class->supervisors->pluck('id');
         return $ids->map(
-            fn($id)=>new PrivateChannel(
+            fn($id)=>new Channel(
                 Helper::getEmployeeChannel($id)
             )
         );
