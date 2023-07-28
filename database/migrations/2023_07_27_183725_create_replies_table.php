@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Employee;
+use App\Models\Student;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,9 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('complaints', function (Blueprint $table) {
+        Schema::create('replies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained();
+            $table->foreignIdFor(Student::class)->constrained();
+            $table->foreignIdFor(Employee::class)->constrained();
             $table->string('body',250);
             $table->dateTime('date_time');
             $table->timestamps();
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('complaints');
+        Schema::dropIfExists('replies');
     }
 };
