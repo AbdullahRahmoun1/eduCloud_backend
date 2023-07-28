@@ -2,13 +2,14 @@
 
 namespace Database\Factories;
 
+use App\Models\Employee;
 use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Complaint>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Reply>
  */
-class ComplaintFactory extends Factory
+class ReplyFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,6 +20,7 @@ class ComplaintFactory extends Factory
     {
         return [
             'student_id' => Student::all()->random()->id,
+            'employee_id' => Employee::all()->random()->id,
             'body' => fake()->text(250),
             'date_time' => now()->addDay(random_int(1,200))
         ];

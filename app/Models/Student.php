@@ -76,16 +76,45 @@ class Student extends Model
         return $this->hasMany(Income::class);
     }
 
-    public function complaints(): HasMany
-    {
-        return $this->hasMany(Complaint::class);
-    }
-
     public function address(){
         return $this->belongsTo(Address::class);
     }
 
     public function bus(){
         return $this->belongsToMany(Bus::class, 'student_bus', 'student_id', 'bus_id');
+    }
+
+    public function replies() {
+        return $this->hasMany(Reply::class);
+    }
+
+    public function complaints() {
+        return $this->hasMany(Complaint::class);
+    }
+
+    public function getComplaintChat (){
+        $comp=$this->complaints;
+        $reps=$this->replies;
+        $reps->load(['employee']);
+        $result=$comp->merge($reps);
+        $result=$result->sortBy('date_time');
+        
+        
+        foreach ($result as $r) {
+            $r->makeHidden([
+                'id','student_id','employee_id',
+                'created_at','updated_at']);
+            $r->complaint=$r instanceof Complaint;
+            if(!$r->complaint){
+                $r->employee->makeHidden('roles');
+                if($r->employee->hasRole(config('roles.supervisor')))
+                $role=config('roles.supervisor');
+                if($r->employee->hasRole(config('roles.principal')))
+                $role=config('roles.principal');
+                $r->employee->role=$role;   
+            }
+            
+        }
+        return $result;
     }
 }

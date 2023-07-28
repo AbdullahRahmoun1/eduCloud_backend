@@ -51,4 +51,12 @@ class Helper {
         }
     }
 
+    public static function getEmployeeChannel($employee_id) {
+        return "employee-$employee_id";
+    }
+
+    public static function getStudentChannel($student_id) {
+        return "student-$student_id";
+    }
+
 }
