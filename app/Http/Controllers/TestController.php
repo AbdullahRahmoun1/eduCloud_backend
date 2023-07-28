@@ -37,8 +37,13 @@ class TestController extends Controller
             $query->where('id',request()->subject_id)->where('grade_id',$grade);
         });
 
+        $unique = Rule::unique('tests','title')->where(function($query){
+            $query->where('subject_id',request()->subject_id)
+            ->where('g_class_id', request()->g_class_id);
+        });
+
         $data = request()->validate([
-            'title' => ['required', 'min:2', 'max:25', 'unique:tests'],
+            'title' => ['required', 'min:2', 'max:25', $unique],
             'image_url' => 'required',
             'min_mark' => ['required', 'numeric', 'gt:0'],
             'max_mark' => ['required', 'numeric', 'gt:min_mark'],
@@ -48,7 +53,8 @@ class TestController extends Controller
             'type_id' => ['required', 'exists:types,id'],
             'progress_calendar_id' => ['exists:progress_calendars,id', 'unique:tests'],
         ] ,[
-            'class_id.exists' => 'this class id is invalid or this employee does not supervise it',
+            'title.unique' => 'this title is already in use for this subject and class',
+            'g_class_id.exists' => 'this class id is invalid or this employee does not supervise it',
             'subject_id.exists' => 'this class is not studying this subject'
         ]);
 
@@ -59,17 +65,31 @@ class TestController extends Controller
 
         $data = $this->validateTestInfo();
 
-        Test::create($data);
+        $test = Test::create($data);
 
-        response::success('test created successfully', $data);
+        response::success('test created successfully', $test);
     }
 
     public function edit(Test $test){
-        $data = $this->validateTestInfo();
 
-        $test->update($data);
+        $unique = Rule::unique('tests','title')->where(function($query){
+            $query->where('subject_id',request()->subject_id)
+            ->where('g_class_id', request()->g_class_id);
+        });
 
-        response::success('test info updated successfully', $data);
+        $data = request()->validate([
+            'title' => ['required', 'min:2', 'max:25', $unique],
+            'image_url' => 'required',
+            'min_mark' => ['required', 'numeric', 'gt:0'],
+            'max_mark' => ['required', 'numeric', 'gt:min_mark'],
+            'date' => ['required', 'date'],
+            'type_id' => ['required', 'exists:types,id'],
+            'progress_calendar_id' => ['exists:progress_calendars,id', 'unique:tests'],
+        ]);
+
+        $test->update(array_diff_key($data,['subject_id' => '', 'g_class_id' => '']));
+
+        response::success('test info updated successfully', $test);
     }
     
     public function test(Request $request)
