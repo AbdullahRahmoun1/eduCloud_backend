@@ -43,7 +43,7 @@ class Complaint implements ShouldBroadcastNow
     {
         $ids=$this->student->g_class->supervisors->pluck('id');
         return $ids->map(
-            fn($id)=>new Channel(
+            fn($id)=>new PrivateChannel(
                 Helper::getEmployeeChannel($id)
             )
         );

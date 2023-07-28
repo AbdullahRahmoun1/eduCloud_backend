@@ -42,7 +42,7 @@ class Reply implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel(
+            new PrivateChannel(
                 Helper::getStudentChannel($this->student_id)
             ),
         ];
