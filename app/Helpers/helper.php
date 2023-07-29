@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
 use App\Helpers\ResponseFormatter as res;
+use App\Models\GClass;
+use App\Models\Student;
 
 class Helper {
     public static function lazyQueryTry($toTry){
@@ -70,10 +72,16 @@ class Helper {
         res::error("You dont have the permission to read this class's data.",
         code:403);
     }
+    
     public static function tryToEdit($class_id){
         if(Gate::denies('editClassInfo',[GClass::class,$class_id]))
         res::error("You dont have the permission to edit this class's data.",
         code:403);
     }
 
+    public static function tryToReadStudent($student_id){
+        if(Gate::denies('viewStudent',[Student::class,$student_id]))
+        res::error("You dont have the permission to read this student's data.",
+        code:403);
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\MarkController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TestController;
@@ -15,4 +16,7 @@ Route::middleware('auth:sanctum', 'hasRoles:'.config('roles.supervisor'))->group
     Route::post('editTest/{test}', [TestController::class, 'edit']);
     Route::post('addTestMarks/{test}', [MarkController::class, 'addTestMarks']);
     Route::get('testMarks/{test}',[TestController::class,'getTestMarks']);
+    Route::post('todaysAbsences',[AbsenceController::class,'addAbsences']);
+    Route::post('justifyAbsence/{absence}',[AbsenceController::class,'justifyAbsence']);
+    Route::post('editAbsenceJustification/{absence}',[AbsenceController::class,'editJustification']);
 });

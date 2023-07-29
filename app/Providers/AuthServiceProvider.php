@@ -6,8 +6,10 @@ namespace App\Providers;
 
 use App\Models\GClass;
 use App\Models\Account;
+use App\Models\Student;
 use App\Models\Test;
 use App\Policies\ClassPolicy;
+use App\Policies\StudentPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -19,7 +21,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        GClass::class=>ClassPolicy::class
+        GClass::class=>ClassPolicy::class,
+        Student::class=>StudentPolicy::class
     ];
 
     /**

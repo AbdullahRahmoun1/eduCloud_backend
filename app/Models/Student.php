@@ -92,4 +92,8 @@ class Student extends Model
         return $this->hasMany(Complaint::class);
     }
 
+    public function full_name(){
+        return $this->first_name.' '.$this->last_name;
+    }
+
 }

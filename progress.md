@@ -11,6 +11,7 @@ add temp role ❌
     ‾‾‾‾‾‾‾‾‾‾‾‾
     add classes to supervisor ✅
     remove classes from supervisor ❌
+
     add test_form ✅
     edit test_form ✅
     maybe: remove test_form with good care ❌
@@ -18,16 +19,21 @@ add temp role ❌
     edit test of a class ✅
     add test marks of a class ✅
     edit test marks of a class  ❌
-    add daily absences of students ❌ (ra:in progress)
-    edit an absence of a student ❌
+
+    add daily absences of students ✅  (you can call it multiple times if you want to add more)
+    get student's absences ✅  
+    justify student's absence ✅   (an absence is justified only when a justification is provided)
+    edit absence justification ✅  (just provide the new justification)
+
     add notes on a student ( like : bad behavior,bad mark,good mark,good behavior,etc..) ❌
+
     send cutome messages to parents ❌
+
     add subjects_progress daily ❌
+
     get the students in a class ✅
+    
     get the test marks of a class ✅
-
-
-
 
     ___________
     |secretary|

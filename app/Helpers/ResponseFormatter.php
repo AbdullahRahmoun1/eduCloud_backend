@@ -14,10 +14,12 @@ class ResponseFormatter{
     /**
      * Give success response.
      */
-    public static function success($message = 'Success!', $data = null)
+    public static function success($message = 'Success!', $data = null,$commit=false)
     {
         self::$response['message'] = $message;
         self::$response['data'] = $data;
+        if($commit)
+        DB::commit();
         abort(response()->json(self::$response,200));
     }
 
