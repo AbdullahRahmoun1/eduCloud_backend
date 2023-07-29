@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Helpers\ResponseFormatter as response;
 use App\Models\GClass;
 use App\Models\Student;
@@ -102,5 +103,28 @@ class TestController extends Controller
         if(Gate::denies('editClassInfo',[Test::class,3]))
         return 'hhhh';
         return ( request()->user()->owner->roles()->select('id')->get()->makeHidden('pivot'));
+    }
+
+    public function getTestMarks(Test $test){
+        Helper::tryToRead($test->g_class_id);
+        $marks= $test->marks;
+        $marks->load([
+            'student:id,first_name,last_name',
+        ]);
+        $marks->makeHidden([
+            'test_id','student_id',
+            'student.first_name',
+            'student.last_name'
+        ]);
+        foreach($marks as $mark){
+            $student=$mark->student;
+            $student->full_name =$student->first_name.
+            ' '.$student->last_name;
+            $student->makeHidden([
+                'first_name',
+                'last_name'
+            ]);
+        }
+        return $marks;
     }
 }

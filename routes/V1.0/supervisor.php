@@ -14,4 +14,5 @@ Route::middleware('auth:sanctum', 'hasRoles:'.config('roles.supervisor'))->group
     Route::post('addTest', [TestController::class, 'add']);
     Route::post('editTest/{test}', [TestController::class, 'edit']);
     Route::post('addTestMarks/{test}', [MarkController::class, 'addTestMarks']);
+    Route::get('testMarks/{test}',[TestController::class,'getTestMarks']);
 });

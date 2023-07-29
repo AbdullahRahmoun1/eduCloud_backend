@@ -30,7 +30,7 @@ class Complaint implements ShouldBroadcast
         $student->load(['g_class','g_class.grade']);
         $student->class=$student->g_class->name;
         $student->grade=$student->g_class->grade->name;
-        $student->onlyKeepAttributes([
+        Helper::onlyKeepAttributes($student,[
             'id',
             'first_name','last_name',
             'grade','class'

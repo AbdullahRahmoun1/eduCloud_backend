@@ -2,9 +2,10 @@
 namespace App\Helpers;
 
 use Exception;
-use App\Helpers\ResponseFormatter as res;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
+use App\Helpers\ResponseFormatter as res;
 
 class Helper {
     public static function lazyQueryTry($toTry){
@@ -57,6 +58,22 @@ class Helper {
 
     public static function getStudentChannel($student_id) {
         return "student-$student_id";
+    }
+
+    public static function onlyKeepAttributes(&$model,$wantedAttribs){
+        $allAttribs=array_keys($model->getAttributes());
+        $hiddenAttribs=array_diff($allAttribs,$wantedAttribs);
+        $model->makeHidden($hiddenAttribs);
+    }
+    public static function tryToRead($class_id){
+        if(Gate::denies('viewClassInfo',[GClass::class,$class_id]))
+        res::error("You dont have the permission to read this class's data.",
+        code:403);
+    }
+    public static function tryToEdit($class_id){
+        if(Gate::denies('editClassInfo',[GClass::class,$class_id]))
+        res::error("You dont have the permission to edit this class's data.",
+        code:403);
     }
 
 }

@@ -67,4 +67,5 @@ class GClassController extends Controller
         Helper::lazyQueryTry(fn()=>$class->save());
         response::success();
     }
+    
 }

@@ -18,13 +18,14 @@ add temp role ❌
     edit test of a class ✅
     add test marks of a class ✅
     edit test marks of a class  ❌
-    add daily absences of students ✅
+    add daily absences of students ❌ (ra:in progress)
     edit an absence of a student ❌
     add notes on a student ( like : bad behavior,bad mark,good mark,good behavior,etc..) ❌
     send cutome messages to parents ❌
     add subjects_progress daily ❌
-    get the students in a class ❌
-    
+    get the students in a class ✅
+    get the test marks of a class ✅
+
 
 
 

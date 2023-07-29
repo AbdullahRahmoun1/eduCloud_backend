@@ -92,9 +92,4 @@ class Student extends Model
         return $this->hasMany(Complaint::class);
     }
 
-    public function onlyKeepAttributes($wantedAttribs){
-        $allAttribs=array_keys($this->getAttributes());
-        $hiddenAttribs=array_diff($allAttribs,$wantedAttribs);
-        $this->makeHidden($hiddenAttribs);
-    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\ResponseFormatter;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +26,7 @@ class RoleChecking
         if($result)
         return $next($request);
         else
-        return response()->json([
-            'message'=>'User does not have the right roles.'
-        ],403);
-        
+        ResponseFormatter::error('User does not have the right roles.'
+        ,code:403);
     }
 }
