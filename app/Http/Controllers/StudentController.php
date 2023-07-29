@@ -204,9 +204,7 @@ class StudentController extends Controller
 
         $result = $result->simplePaginate(10);
 
-        isset($result[0]) ?
-        response::success('results found successfully', $result) :
-        response::error('no results found.', [],404);
+        response::success('results found successfully', $result);
     }
     
 }
