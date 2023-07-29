@@ -8,11 +8,13 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
 use App\Models\Complaint as ModelsComplaint;
+use App\Models\Employee;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class Complaint implements ShouldBroadcastNow
+class Complaint implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -25,13 +27,15 @@ class Complaint implements ShouldBroadcastNow
         public ModelsComplaint $complaint
         ){
         $student = Student::find($studnet_id);
-        $student->load(['g_class','grade']);
-        // $this->student=[
-        //     'first_name'=>$student->name,
-        //     'last_name'=>$student->last_name,
-        //     'grade'=>$student->garde->name,
-        //     'class'=>$student->g_class->name,
-        // ];
+        $student->load(['g_class','g_class.grade']);
+        $student->class=$student->g_class->name;
+        $student->grade=$student->g_class->grade->name;
+        $student->onlyKeepAttributes([
+            'id',
+            'first_name','last_name',
+            'grade','class'
+        ]);
+        $this->student=$student;
     }
 
     /**
@@ -41,12 +45,17 @@ class Complaint implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
-        $ids=$this->student->g_class->supervisors->pluck('id');
-        return $ids->map(
-            fn($id)=>new PrivateChannel(
+        $sups=$this->student->g_class->supervisors->pluck('id');
+        $prins=Employee::whereHas(
+            'roles',
+            fn($query)=>$query->whereName(config('roles.principal'))
+        )->get()->pluck('id');
+        $ids=array_unique(array_merge($prins->toArray(),$sups->toArray()));
+        return array_map(
+            fn($id)=>new Channel(
                 Helper::getEmployeeChannel($id)
-            )
-        );
+            ),$ids
+        );;
     }
     public function broadcastAs() {
         return 'new_student_complaint';

@@ -7,12 +7,11 @@ use App\Models\Employee;
 use App\Models\Reply as ModelsReply;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class Reply implements ShouldBroadcastNow
+class Reply implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -42,7 +41,7 @@ class Reply implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel(
+            new Channel(
                 Helper::getStudentChannel($this->student_id)
             ),
         ];
