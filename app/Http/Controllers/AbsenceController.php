@@ -61,6 +61,7 @@ class AbsenceController extends Controller
         return $student->absences;
     }
     public function justifyAbsence(Absence $absence) {
+        return public_path();
         $data=request()->validate([
             'justification'=>['required','string','between:1,100']
         ]);
@@ -70,6 +71,7 @@ class AbsenceController extends Controller
         $data['justified']=true;
         $absence->update($data);
         res::success();
+        
     }
 
     public function editJustification(Absence $absence) {

@@ -41,7 +41,7 @@ add temp role ❌
     add a direct or candidate student ✅
     edit a direct or candidate student ✅
     regenerate account password of a student ✅
-    get candidate students from a grade with their ability test 
+    get candidate students from a grade with their ability test  ❌
     result (sorted on at) ❌
     send the last student number that sould become an official student ❌
     search for a student ✅

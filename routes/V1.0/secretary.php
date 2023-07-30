@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CandidateStudentController;
 use App\Http\Controllers\GClassController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\StudentController;
@@ -10,4 +11,6 @@ Route::middleware('auth:sanctum', 'hasRoles:'.config('roles.secretary'))->group(
     Route::post('editStudentOrCandidate/{id}/{is_candidate}', [StudentController::class, 'edit']);
     Route::get('regeneratePassword/{student}', [StudentController::class, 'regeneratePassword']);
     Route::get('studentSearch', [StudentController::class, 'search']);
+    Route::get('candidateStudents/{grade}', [CandidateStudentController::class, 'all']);
+
 });

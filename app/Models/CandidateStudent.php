@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Notification;
-use App\Models\Number;
 use App\Models\Grade;
+use App\Models\AtMark;
+use App\Models\Number;
+use App\Models\Notification;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CandidateStudent extends Model
 {
@@ -33,5 +34,10 @@ class CandidateStudent extends Model
     public function numbers(): MorphMany
     {
         return $this->morphMany(Number::class, 'owner');
+    }
+
+    public function atMarks(): MorphMany
+    {
+        return $this->morphMany(AtMark::class, 'student');
     }
 }
