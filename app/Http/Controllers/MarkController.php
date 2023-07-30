@@ -71,12 +71,7 @@ class MarkController extends Controller
     public function getRemainingStudents(Test $test){
 
         $g_class_id= $test->g_class_id;
-        $students = Student::where('g_class_id',$g_class_id)->with('g_class:id,name,grade_id', 'g_class.grade:id,name')->select('id','g_class_id')->get();
-        return $students;
-        $students = array_map(fn($s)=>[
-            'id' => $s['id'],
-            'full_name' => $s['first_name'].' '.$s['last_name'],
-
-        ],$students);
+        $students = Student::where('g_class_id',$g_class_id)->get();
+        var_dump($students);
     }
 }

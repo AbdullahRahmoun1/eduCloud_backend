@@ -38,6 +38,6 @@ class TypeController extends Controller
         $type = Type::find($id);
         if(!$type)
         response::error('this type id is not valid');
-        return $type;
+        response::success(data:$type);
     }
 }

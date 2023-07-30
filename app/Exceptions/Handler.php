@@ -5,6 +5,8 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Helpers\ResponseFormatter as res;
+
 class Handler extends ExceptionHandler
 {
     /**
@@ -31,7 +33,7 @@ class Handler extends ExceptionHandler
             if ($request->is('V1.0/general/getAllClassesAndSubjectsOfGrade/*')) {
                 return response()->json([
                     'message' => 'this grade id is not valid.',
-                    'error' => $e->getMessage()
+                    'data' => $e->getMessage()
                 ], 404);
             }
 
@@ -39,21 +41,21 @@ class Handler extends ExceptionHandler
                 $request->is('V1.0/principal/assign_Class_Subject_ToTeacher/*')) {
                 return response()->json([
                     'message' => 'this employee id is not valid.',
-                    'error' => $e->getMessage()
+                    'data' => $e->getMessage()
                 ], 404);
             }
 
             if ($request->is('V1.0/secretary/*')) {
                 return response()->json([
                     'message' => 'this student id is not valid.',
-                    'error' => $e->getMessage()
+                    'data' => $e->getMessage()
                 ], 404);
             }
 
             if ($request->is('V1.0/supervisor/editTestType/*')) {
                 return response()->json([
                     'message' => 'this type id is not valid.',
-                    'error' => $e->getMessage()
+                    'data' => $e->getMessage()
                 ], 404);
             }
 
@@ -62,7 +64,7 @@ class Handler extends ExceptionHandler
                 $request->is('V1.0/general/getTypeOfTest/*')) {
                 return response()->json([
                     'message' => 'this test id is not valid.',
-                    'error' => $e->getMessage()
+                    'data' => $e->getMessage()
                 ], 404);
             }
         });

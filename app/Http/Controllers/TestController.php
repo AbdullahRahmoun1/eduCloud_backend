@@ -129,6 +129,6 @@ class TestController extends Controller
     }
 
     public function getTypeOfTest(Test $test){
-        return $test->type;
+        response::success(data:$test->type);
     }
 }
