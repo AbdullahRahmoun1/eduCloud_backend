@@ -33,4 +33,11 @@ class TypeController extends Controller
         isset($types[0]) ? response::success(data:$types) :
             response::error('no types found.');
     }
+
+    public function getNameOfType($id){
+        $type = Type::find($id);
+        if(!$type)
+        response::error('this type id is not valid');
+        return $type;
+    }
 }

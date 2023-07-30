@@ -36,6 +36,12 @@ add temp role ❌
     get the test marks of a class ✅
 
     get test type from id ✅
+
+    view test marks ❌
+
+    view test info ❌
+
+    view all tests (list) ❌
     ___________
     |secretary|
     ‾‾‾‾‾‾‾‾‾‾‾
