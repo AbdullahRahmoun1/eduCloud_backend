@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Models\Test;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -71,7 +72,13 @@ class MarkController extends Controller
     public function getRemainingStudents(Test $test){
 
         $g_class_id= $test->g_class_id;
-        $students = Student::where('g_class_id',$g_class_id)->get();
-        var_dump($students);
+        $students1 = Student::where('g_class_id',$g_class_id)->get();
+        $students2 = Student::where('g_class_id',$g_class_id)
+        ->whereHas('marks', function($query) use($test){
+            $query->where('test_id',$test->id);
+        })->get();
+
+        $result = $students1->diff($students2);
+        res::success('here are the students who\'s mark was\'t inserted yet:', $result);
     }
 }
