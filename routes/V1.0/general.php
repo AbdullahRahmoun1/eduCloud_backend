@@ -3,6 +3,7 @@
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function(){
@@ -11,4 +12,5 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('message/{student_id}',[ChatController::class,'post']);
     Route::get('complaintChat/{student_id}',[ChatController::class,'getChat']);
     Route::get('studentAbsences/{student_id}',[AbsenceController::class,'studentAbsences']);
+    Route::get('getTypeOfTest/{test}', [TestController::class, 'getTypeOfTest']);
 });

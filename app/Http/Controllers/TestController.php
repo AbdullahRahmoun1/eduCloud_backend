@@ -128,4 +128,7 @@ class TestController extends Controller
         return $marks;
     }
 
+    public function getTypeOfTest(Test $test){
+        return $test->type;
+    }
 }

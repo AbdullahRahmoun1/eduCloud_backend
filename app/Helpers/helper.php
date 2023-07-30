@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
 use App\Helpers\ResponseFormatter as res;
+use App\Models\ClassSupervisor;
+use App\Models\ClassTeacherSubject;
 use App\Models\GClass;
 use App\Models\Student;
 
@@ -50,8 +52,20 @@ class Helper {
         Helper::checkRoles($roles,$emp,true);
         $account=$emp->account;
         foreach($roles as $role){
+            Helper::removeRoleDependencies($emp,$role);
             $emp->removeRole($role);
         }
+    }
+
+    public static function removeRoleDependencies($emp,$role){
+
+        $id = $emp->id;
+        if($role == config('roles.supervisor'))
+            $dependencies = ClassSupervisor::where('employee_id',$id);
+        else if($role == config('roles.teacher'))
+            $dependencies = ClassTeacherSubject::where('employee_id', $id);
+        //TODO: add bus dependencies when done
+        $dependencies->delete();
     }
 
     public static function getEmployeeChannel($employee_id) {

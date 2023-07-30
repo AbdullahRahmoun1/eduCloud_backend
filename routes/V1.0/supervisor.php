@@ -19,4 +19,5 @@ Route::middleware('auth:sanctum', 'hasRoles:'.config('roles.supervisor'))->group
     Route::post('todaysAbsences',[AbsenceController::class,'addAbsences']);
     Route::post('justifyAbsence/{absence}',[AbsenceController::class,'justifyAbsence']);
     Route::post('editAbsenceJustification/{absence}',[AbsenceController::class,'editJustification']);
+    Route::get('getRemainingStudentsForTest/{test}', [MarkController::class, 'getRemainingStudents']);
 });

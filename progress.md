@@ -35,6 +35,7 @@ add temp role ❌
     
     get the test marks of a class ✅
 
+    get test type from id ✅
     ___________
     |secretary|
     ‾‾‾‾‾‾‾‾‾‾‾
