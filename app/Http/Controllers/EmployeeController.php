@@ -88,6 +88,8 @@ class EmployeeController extends Controller
      //Assign Classes to him in the DB
         $ctr=0;
         DB::beginTransaction();
+        $old_data = ClassSupervisor::where('employee_id',$sup->id);
+        $old_data->delete();
         try{
             foreach($data['classes'] as $class){
                 ClassSupervisor::create([
@@ -122,6 +124,8 @@ class EmployeeController extends Controller
         DB::beginTransaction();
         $it=0;
         $cls=0;
+        $old_data = ClassTeacherSubject::where('employee_id',$teacher->id);
+        $old_data->delete();
         try{
             foreach($data as $item){
                 foreach($item['classes'] as $class){

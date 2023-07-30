@@ -150,6 +150,7 @@ class AtMarkController extends Controller
                 'at_mark_sections'=>$result
             ];
             $count++;
+            $entryNum++;
         }
         DB::commit();   
         res::success(data:$finalResult);

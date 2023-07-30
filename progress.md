@@ -10,7 +10,7 @@ add temp role ❌
     |supervisor|
     ‾‾‾‾‾‾‾‾‾‾‾‾
     add classes to supervisor ✅
-    remove classes from supervisor ❌
+    remove classes from supervisor ✅ (merged with the add classes route)
 
     add test_form ✅
     edit test_form ✅
@@ -50,7 +50,7 @@ add temp role ❌
     |teacher|
     ‾‾‾‾‾‾‾‾‾
     add subjects and classes to teacher ✅
-    remove subjects and classes from teacher ❌
+    remove subjects and classes from teacher ✅ (merged with add route)
     send an advice to a student ❌
 
     ________________
