@@ -15,7 +15,6 @@ return new class extends Migration
         Schema::create('ability_tests', function (Blueprint $table) {
             $table->id();
             $table->string('title')->default('NONE');
-            $table->boolean('is_entry_test')->default(false);
             $table->foreignIdFor(Subject::class);
             $table->unique(['title','subject_id']);
             $table->timestamps();

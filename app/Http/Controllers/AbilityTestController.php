@@ -30,11 +30,12 @@ class AbilityTestController extends Controller
             'title.unique'=>'This subject already has an ability test called ":input"'
         ]);
      //Check that it wont make duplicate entryTests 
-        $count=$subject->ability_tests()
-        ->where('is_entry_test',true)
-        ->count();
-        if($data['is_entry_test']&&$count>0)
-        res::error("This subject already has an entry test form");
+        // $count=$subject->ability_tests()
+        // ->where('is_entry_test',true)
+        // ->count();
+        // if($data['is_entry_test']&&$count>0)
+        // res::error("This subject already has an entry test form");
+        
      //try inserting the data
         DB::beginTransaction();
         $ctr=0;

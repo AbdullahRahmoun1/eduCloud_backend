@@ -26,10 +26,12 @@ class ResponseFormatter{
     /**
      * Give error response.
      */
-    public static function error($message = null, $data = null, $code = 400)
+    public static function error($message = null, $data = null, $code = 400,$rollback=false)
     {
         self::$response['message'] = $message;
         self::$response['data'] = $data;
+        if($rollback)
+        DB::rollBack();
         abort(response()->json(self::$response, $code));
     }
 

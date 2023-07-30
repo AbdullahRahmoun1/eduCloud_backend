@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('date');
             $table->integer('student_id');
             $table->string('student_type',45)->default(Student::class);
+            $table->boolean('is_entry_mark')->default(false);
             $table->foreignIdFor(AbilityTest::class);
             $table->unique(['date','student_id','student_type']);
             $table->timestamps();

@@ -18,8 +18,7 @@ use Illuminate\Validation\Rule;
 class AtMarkController extends Controller
 {
     public function add(){
-     //Request Validation...
-
+        //Request Validation...
         $data=request()->validate([
             '*.student_id'=>['required'],
             '*.is_candidate' => ['required', 'boolean'],
@@ -27,14 +26,14 @@ class AtMarkController extends Controller
             '*.date'=>['required','date'],
             '*.sections_marks'=>['required','min:1','array'],
             '*.sections_marks.*.at_section_id'=>['required','numeric','exists:at_sections,id'],
-            '*.sections_marks.*.mark'=>['required','numeric','min:0']
+            '*.sections_marks.*.mark'=>['required','numeric','min:0'],
+            '*.is_entry_mark'=>['required','boolean']
         ]);
 
         $finalResult = [];
         $entryNum = 0;
         DB::beginTransaction();
         foreach($data as $entry){
-            $entryNum++;
             $is_cand = $entry['is_candidate'];
             $student = $is_cand ?
                 CandidateStudent::find($entry['student_id']) :
@@ -55,6 +54,25 @@ class AtMarkController extends Controller
                 res::error("in entry number: $entryNum ... This ability test is intended for grade ({$abilityTestsGrade->name})"
                 .", while this student belongs to grade ({$studentsGrade->name}).");
             }
+        //if he is a candidate then the mark should be an entry mark
+        if($is_cand&&!$entry['is_entry_mark']){
+            res::error("Candidate student {$student->full_name()} can only have entry test marks.",code:422,rollback:true);
+        }
+        //if he is a direct then the mark shouldn't be an entry mark
+        if(!$is_cand&&$entry['is_entry_mark']){
+            res::error("Direct student {$student->full_name()} can't  have entry test marks.",code:422,rollback:true);
+        }
+        //if this is an entry mark..does he have another entry mark?
+        if($entry['is_entry_mark']){
+            $count=AtMark::where('student_id',$student->id)
+            ->where('student_type',$is_cand?CandidateStudent::class:Student::class)
+            ->where('is_entry_mark',false)
+            ->count();
+            if($count!=0){
+                res::error("Student {$student->full_name()} already has an entry mark.",
+                code:422,rollback:true);
+            }
+        }
         //Are the sections provided correct?
         //bring helper data
             $at_sections_ids=$at->sections()->pluck('id');
@@ -83,7 +101,7 @@ class AtMarkController extends Controller
                 DB::rollBack();
                 res::error("in entry number: $entryNum ... Please include the missing sections and then attempt again.",code:422);
             }
-            //is there any duplicate sectoins?     
+            //is there any duplicate sections?     
             if(count(array_unique($req_sections_ids))
             !=count($req_sections_ids)){
                 DB::rollBack();
@@ -131,9 +149,9 @@ class AtMarkController extends Controller
                 'at_mark'=>$at_mark,
                 'at_mark_sections'=>$result
             ];
+            $count++;
         }
-        DB::commit();
-        
+        DB::commit();   
         res::success(data:$finalResult);
     }
 }

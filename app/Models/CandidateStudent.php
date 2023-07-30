@@ -40,4 +40,7 @@ class CandidateStudent extends Model
     {
         return $this->morphMany(AtMark::class, 'student');
     }
+    public function full_name(){
+        return $this->first_name.' '.$this->last_name;
+    }
 }
