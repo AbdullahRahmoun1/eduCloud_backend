@@ -87,7 +87,7 @@ class CandidateStudentController extends Controller
 
     }
     public function a(){
-        
+            
     }
     
 }
