@@ -10,8 +10,9 @@ use Illuminate\Http\Request;
 class GradeController extends Controller
 {
     public function getAllGrades() {
-        return Grade::all();
+        res::success(data:Grade::all());
     }
+
     public function add(){
         $data=request()->validate([
             'name'=>['required','unique:grades,name'],
@@ -36,9 +37,10 @@ class GradeController extends Controller
             'g_classes:id,name,grade_id',
             'subjects:id,name,grade_id'
         ]);
-        return $grade;
+        res::success(data:$grade);
     }
     public function getAllGradesWithClassesAndSubjects(Grade $grade) {
-        return $grade->with('g_classes', 'subjects')->get();
+        $result = $grade->with('g_classes', 'subjects')->get();
+        res::success(data:$result);
     }
 }
