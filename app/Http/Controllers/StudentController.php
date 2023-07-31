@@ -202,11 +202,11 @@ class StudentController extends Controller
             $result->where('g_class_id',request()->class_id);
         }
 
+        $result = $result->orderBy('first_name')->orderBy('last_name');
+
         if(isset(request()->page))
             $result = $result->simplePaginate(10);
-        else
-            $result = $result->get();
-            
+        
         response::success('results found successfully', $result);
     }
     

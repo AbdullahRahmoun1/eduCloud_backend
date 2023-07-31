@@ -69,6 +69,26 @@ class MarkController extends Controller
         res::success('marks added successfully', $finlaResult);
     }
 
+    public function editMark($mark_id){
+
+        $mark = Mark::find($mark_id);
+        if(!$mark){
+            res::error('this mark id is not valid', code:422);
+        }
+        
+        $limit = $mark->test->max_mark;
+        if(!request()->mark){
+            res::error('the mark field is required', code:422);
+        }
+        if(request()->mark > $limit){
+            res::error("the mark must not be greater than $limit");
+        }
+
+        $mark['mark'] = request()->mark;
+        $mark->save();
+
+        res::success('mark changed successfully',$mark->makeHidden('test'));
+    }
     public function getRemainingStudents(Test $test){
 
         $g_class_id= $test->g_class_id;
