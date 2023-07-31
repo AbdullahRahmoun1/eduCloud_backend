@@ -86,6 +86,8 @@ class CandidateStudentController extends Controller
         res::success(data:$candidates);
 
     }
-
-    public 
+    public function a(){
+        
+    }
+    
 }
