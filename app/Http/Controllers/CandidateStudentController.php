@@ -11,7 +11,11 @@ use Illuminate\Http\Request;
 class CandidateStudentController extends Controller
 {
     public function all(Grade $grade){
-        $min_percentage=request()->min_percentage??0.2;
+        $min_percentage= request()->validate([
+            'min_percentage'=>['required','numeric','between:0.01,1']
+        ]);
+        $min_percentage=$min_percentage['min_percentage'];
+        return $min_percentage;
         $grade->load(['candidates:id,first_name,last_name,grade_id']);
         $candidates=$grade->candidates;
         $candidates->load([
@@ -52,7 +56,12 @@ class CandidateStudentController extends Controller
             sort($failed_subjects);
             $candidate->full_name=$candidate->full_name();  
             $have_one_test=$max>0;
-            $candidate->final_result=$have_one_test?$got/($max*1.0):"N/A";
+            if($have_one_test){
+                $f=$got/($max*1.0)*100;
+                $candidate->final_result=number_format($f, 2);
+            }else {
+                $candidate->final_result="N/A";
+            }
             $candidate->succeeded=$have_one_test?
                 $candidate->final_result>=$min_percentage:"N/A";
             $candidate->succeeded_in=$succeeded_subjects;
@@ -77,4 +86,6 @@ class CandidateStudentController extends Controller
         res::success(data:$candidates);
 
     }
+
+    public 
 }

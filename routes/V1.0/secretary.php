@@ -12,5 +12,5 @@ Route::middleware('auth:sanctum', 'hasRoles:'.config('roles.secretary'))->group(
     Route::get('regeneratePassword/{student}', [StudentController::class, 'regeneratePassword']);
     Route::get('studentSearch', [StudentController::class, 'search']);
     Route::get('candidateToOfficial/view/{grade}', [CandidateStudentController::class, 'all']);
-
+    Route::get('candidateToOfficial/perform/{grade}', [CandidateStudentController::class, 'all']);
 });
