@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('ability_tests', function (Blueprint $table) {
             $table->id();
             $table->string('title')->default('NONE');
+            $table->float('minimum_success_percentage',unsigned:true)->default(0.2);
             $table->foreignIdFor(Subject::class);
             $table->unique(['title','subject_id']);
             $table->timestamps();

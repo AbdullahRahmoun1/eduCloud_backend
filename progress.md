@@ -51,9 +51,8 @@ add temp role ❌
     add a direct or candidate student ✅
     edit a direct or candidate student ✅
     regenerate account password of a student ✅
-    get candidate students from a grade with their ability test  ❌  (abd:working on this)
-    result (sorted on at) ❌ 
-    send the last student number that sould become an official student ❌
+    get candidates of some grade with their final_result_percentage to determin who can be registered as student  ✅ (can be called multiple times) 
+    Using previous route, give me the ids of the candidates that should become students  ❌  (abd:working on this);
     search for a student ✅
      
     _________

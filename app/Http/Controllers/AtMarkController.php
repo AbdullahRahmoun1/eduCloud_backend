@@ -62,10 +62,11 @@ class AtMarkController extends Controller
         if(!$is_cand&&$entry['is_entry_mark']){
             res::error("Direct student {$student->full_name()} can't  have entry test marks.",code:422,rollback:true);
         }
-        //if this is an entry mark..does he have another entry mark?
+        //if this is an entry mark..does he have another entry mark for the same subject?
         if($entry['is_entry_mark']){
             $count=AtMark::where('student_id',$student->id)
             ->where('student_type',$is_cand?CandidateStudent::class:Student::class)
+            ->where('subject_id',AbilityTest::find($entry['ability_test_id'])->subject_id)
             ->where('is_entry_mark',false)
             ->count();
             if($count!=0){

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('student_type',45)->default(Student::class);
             $table->boolean('is_entry_mark')->default(false);
             $table->foreignIdFor(AbilityTest::class);
-            $table->unique(['date','student_id','student_type']);
+            $table->unique(['date','student_id','student_type','ability_test_id']);
             $table->timestamps();
         });
     }
