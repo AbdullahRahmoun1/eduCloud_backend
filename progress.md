@@ -18,7 +18,7 @@ add temp role ❌
     add test for a class ✅
     edit test of a class ✅
     add test marks of a class ✅
-    edit test marks of a class  ❌
+    edit test marks of a class  ✅
 
     add daily absences of students ✅  (you can call it multiple times if you want to add more)
     get student's absences ✅  
