@@ -1,11 +1,15 @@
-__________
-|Employee|
-‾‾‾‾‾‾‾‾‾‾
+__________     __________
+|Employee| Or   principal
+‾‾‾‾‾‾‾‾‾‾     ‾‾‾‾‾‾‾‾‾‾
 add  ✅
 edit ✅
 add roles ✅
 remove roles ✅
 add temp role ❌
+
+    add base calendar ✅
+    edit base calendar ✅
+
     ____________
     |supervisor|
     ‾‾‾‾‾‾‾‾‾‾‾‾
@@ -40,11 +44,11 @@ add temp role ❌
     get the remaining students who's marks wasn't inserted yet for this test ✅
     (will be used when getting the students names to insert their marks)
 
-    view test marks ❌
+    view test marks ✅
 
     view test info ❌
 
-    view all tests (list) ❌
+    view all tests (search + filters) ✅
     ___________
     |secretary|
     ‾‾‾‾‾‾‾‾‾‾‾

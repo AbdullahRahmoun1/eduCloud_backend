@@ -76,6 +76,12 @@ class MarkController extends Controller
             res::error('this mark id is not valid', code:422);
         }
         
+        $class = $mark->test->g_class;
+        //is this employee allowed to add marks for this class?
+        if(Gate::denies('editClassInfo', [GClass::class, $class->id])){
+            res::error('you are not a supervisor of the class that took this test',403);
+        }
+
         $limit = $mark->test->max_mark;
         if(!request()->mark){
             res::error('the mark field is required', code:422);

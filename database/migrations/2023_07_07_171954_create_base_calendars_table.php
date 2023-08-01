@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title', 30);
             $table->boolean('is_test');
             $table->date('date');
+            $table->unique(['subject_id', 'grade_id', 'title']);
             $table->timestamps();
         });
     }
