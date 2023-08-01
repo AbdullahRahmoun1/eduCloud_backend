@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Type;
 use Illuminate\Http\Request;
-use App\Helpers\ResponseFormatter as response;
+use App\Helpers\ResponseFormatter as res;
 class TypeController extends Controller
 {
     public function add() {
@@ -14,7 +14,7 @@ class TypeController extends Controller
 
         $type = Type::create($data);
         
-        response::success('type added successfully', $type);
+        res::success('type added successfully', $type);
     }
 
     public function edit(Type $type){
@@ -22,22 +22,27 @@ class TypeController extends Controller
             'name' => ['required','min:2', 'max:20', 'unique:types,name']
         ]);
 
+        $type_id = $type->id;
+        if(in_array($type_id, [1,2,3])){
+            res::error('you can not edit this type, it is in the system in default');
+        }
+
         $type->update($data);
 
-        response::success('type edited successfully', $type);
+        res::success('type edited successfully', $type);
     }
 
     public function getAllTypes(){
         $types = Type::all();
 
-        isset($types[0]) ? response::success(data:$types) :
-            response::error('no types found.');
+        isset($types[0]) ? res::success(data:$types) :
+            res::error('no types found.');
     }
 
     public function getNameOfType($id){
         $type = Type::find($id);
         if(!$type)
-        response::error('this type id is not valid');
-        response::success(data:$type);
+            res::error('this type id is not valid');
+        res::success(data:$type);
     }
 }

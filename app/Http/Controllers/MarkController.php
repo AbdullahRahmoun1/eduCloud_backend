@@ -22,7 +22,7 @@ class MarkController extends Controller
         $max_mark = $test->max_mark;
         //is this employee allowed to add marks for this class?
         if(Gate::denies('editClassInfo', [GClass::class, $class->id])){
-            res::error('you are not a supervisor of the class that took this test',403);
+            res::error('you are not a supervisor of the class that took this test',code:403);
         }
         
         $data = request()->validate([
@@ -79,7 +79,7 @@ class MarkController extends Controller
         $class = $mark->test->g_class;
         //is this employee allowed to add marks for this class?
         if(Gate::denies('editClassInfo', [GClass::class, $class->id])){
-            res::error('you are not a supervisor of the class that took this test',403);
+            res::error('you are not a supervisor of this student',code:403);
         }
 
         $limit = $mark->test->max_mark;

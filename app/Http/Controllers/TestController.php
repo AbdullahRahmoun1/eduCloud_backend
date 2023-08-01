@@ -17,7 +17,10 @@ class TestController extends Controller
 
     private function validateTestInfo(){
 
-        $this->authorize('editClassInfo', [request()['g_class_id']]);
+        if(Gate::denies('editClassInfo',[GClass::class, request()['g_class_id']])){
+            res::error('you are not a supervisor of this class', code:403);
+        }
+
         $emp = request()->user()->owner;
         $supHasClass = Rule::exists('class_supervisor','g_class_id')
         ->where(function($query) use ($emp){
@@ -66,13 +69,17 @@ class TestController extends Controller
 
         $data = $this->validateTestInfo();
 
-        $test = Test::create($data);
+        $test = Helper::lazyQueryTry(fn()=>Test::create($data));
 
         res::success('test created successfully', $test);
     }
 
     public function edit(Test $test){
 
+        if(Gate::denies('editClassInfo',[GClass::class, request()['g_class_id']])){
+            res::error('you are not a supervisor of the class that took this test',code:403);
+        }
+        
         $unique = Rule::unique('tests','title')->where(function($query){
             $query->where('subject_id',request()->subject_id)
             ->where('g_class_id', request()->g_class_id);
