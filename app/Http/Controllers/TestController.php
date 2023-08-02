@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Http\Controllers\MarkController;
 
 class TestController extends Controller
 {
@@ -171,9 +172,39 @@ class TestController extends Controller
         if ($request->has('g_class_id')) {
             $query->where('g_class_id', $request->g_class_id);
         }
-    
+        
         $tests = $query->orderBy('date', 'desc')->simplePaginate(10);
-    
+        
+        $tests->getCollection()->transform(function ($test) {
+
+            $mark_controller = new MarkController();
+            $remaining = $mark_controller->getRemainingStudents($test, false);
+
+            $test['all_marks_inserted'] = $remaining->isEmpty() ? true : false;
+            return $test;
+        });
+        
         res::success('tests found successfully', $tests);
+    }
+
+    public function getTest($id)
+    {
+        $test = Test::with(['subject:id,name', 'g_class:id,name', 'type:id,name'])->find($id);
+    
+        if ($test === null) {
+            res::error('this test id is not valid', code:404);
+        }
+        
+        if(Gate::denies('viewClassInfo',[GClass::class,$test->g_class->id]))
+            res::error("You dont have the permission to read this test info.",code:403);
+        
+        $test->makeHidden(['subject_id', 'g_class_id', 'type_id']);
+
+        $mark_controller = new MarkController();
+        $remaining = $mark_controller->getRemainingStudents($test, false);
+        
+        $test['all_marks_inserted'] = $remaining->isEmpty() ? true : false;
+
+        res::success(data:$test);
     }
 }

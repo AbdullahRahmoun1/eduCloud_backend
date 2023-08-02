@@ -95,7 +95,7 @@ class MarkController extends Controller
 
         res::success('mark changed successfully',$mark->makeHidden('test'));
     }
-    public function getRemainingStudents(Test $test){
+    public function getRemainingStudents(Test $test, $abort = true){
 
         $g_class_id= $test->g_class_id;
         $students1 = Student::where('g_class_id',$g_class_id)->get();
@@ -105,6 +105,12 @@ class MarkController extends Controller
         })->get();
 
         $result = $students1->diff($students2);
-        res::success('here are the students who\'s mark was\'t inserted yet:', $result);
+
+        $result = $result->map(fn($item) => $item->only(['id', 'first_name', 'last_name', 'father_name', 'g_class_id']));
+
+        if($abort)
+            res::success('here are the students who\'s mark was\'t inserted yet:', $result);
+        
+        return $result;
     }
 }

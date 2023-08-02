@@ -55,7 +55,7 @@ class StudentController extends Controller
         $candidateRules['grade_id'] = ['required', 'exists:grades,id']; 
         $candidateRules['mother_name'] = $uniqueCand; 
 
-        $studentRules['g_class_id'] = ['required', 'exists:g_classes,id']; 
+        $studentRules['g_class_id'] = ['exists:g_classes,id', 'nullable']; 
         $studentRules['mother_name'] = $uniqueStu; 
         
         //validate 

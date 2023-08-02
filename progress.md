@@ -48,7 +48,7 @@ add temp role ❌
 
     view test marks ✅
 
-    view test info ❌
+    view test info ✅
 
     view all tests (search + filters) ✅
     ___________
