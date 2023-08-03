@@ -113,4 +113,41 @@ class MarkController extends Controller
         
         return $result;
     }
+
+    public function getMarksOfStudent($student_id)
+    {
+
+        if($student_id <= -1){
+
+            if(auth()->user()->owner_type != Student::class)
+                res::error('invalid student id and you are not a student');
+            else
+                $student_id = auth()->user()->owner->id;
+        }
+
+        $student = Student::find($student_id);
+        if(!$student){
+            res::error('this student id is not valid', code:422);
+        }
+
+        Helper::tryToReadStudent($student_id, $abort = true);
+
+        $tests = DB::table('tests')
+            ->join('students', 'tests.g_class_id', '=', 'students.g_class_id')
+            ->leftJoin('marks', function ($join) use ($student_id) {
+                $join->on('tests.id', '=', 'marks.test_id')
+                    ->where('marks.student_id', '=', $student_id);
+            })
+            ->join('types', 'tests.type_id', '=', 'types.id')
+            ->join('subjects', 'tests.subject_id', '=', 'subjects.id')
+            ->select('tests.id as test_id','tests.title as test_title','tests.date','types.id as type_id', 'types.name as type_name', 'subjects.id as subject_id', 'subjects.name as subject_name', 'tests.min_mark', 'tests.max_mark', 'marks.id as mark_id', 'marks.mark')
+            ->where('students.id', $student_id)
+            ->orderBy('tests.date')
+            ->get();
+
+            if(!$abort)
+                return $tests;
+            
+            res::success('tests was brought successfully.', $tests);
+    }
 }

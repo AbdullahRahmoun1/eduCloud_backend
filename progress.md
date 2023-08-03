@@ -61,6 +61,10 @@ add temp role ❌
     Using previous route, give me the ids of the candidates that should become students  ❌  (abd:working on this);
     search for a student ✅
      
+    _________   _________
+    |general| + |mobile |
+    ‾‾‾‾‾‾‾‾‾   ‾‾‾‾‾‾‾‾‾
+    get all tests with marks for a student ✅
     _________
     |teacher|
     ‾‾‾‾‾‾‾‾‾
