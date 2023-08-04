@@ -92,6 +92,10 @@ class Student extends Model
         return $this->hasMany(Complaint::class);
     }
 
+    public function atMarks(){
+        return $this->morphMany(AtMark::class,'student');
+    }
+
     public function full_name(){
         return $this->first_name.' '.$this->last_name;
     }

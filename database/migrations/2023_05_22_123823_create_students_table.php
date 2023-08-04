@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Grade;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,7 +14,8 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('g_class_id')->constrained();
+            $table->foreignId('g_class_id')->nullable()->constrained();
+            $table->foreignIdFor(Grade::class)->constrained();
             $table->string('first_name',20);
             $table->string('last_name',20);
             $table->string('father_name',20);
@@ -36,7 +38,7 @@ return new class extends Migration
             $table->string('registration_number',30)->nullable();
             $table->date('registration_date')->nullable();
             $table->string('notes',200)->nullable();
-            $table->unique(['first_name', 'last_name', 'father_name', 'mother_name']);
+            $table->unique(['first_name', 'last_name', 'father_name', 'mother_name','grade_id'],"Duplicate student");
             $table->timestamps();
         });
     }

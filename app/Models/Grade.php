@@ -54,4 +54,14 @@ class Grade extends Model
     {
         return $this->hasMany(BaseCalendar::class);
     }
+
+    /**
+     * Get all of the students for the Grade
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function students(): HasMany
+    {
+        return $this->hasMany(Student::class);
+    }
 }
