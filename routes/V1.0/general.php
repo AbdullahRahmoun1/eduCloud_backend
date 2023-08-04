@@ -3,6 +3,7 @@
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\MarkController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TypeController;
 use Illuminate\Support\Facades\Route;
@@ -15,4 +16,5 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('studentAbsences/{student_id}',[AbsenceController::class,'studentAbsences']);
     Route::get('getTypeOfTest/{test}', [TestController::class, 'getTypeOfTest']);
     Route::get('getNameOfType/{id}', [TypeController::class, 'getNameOfType']);
+    Route::get('getMarksOfStudent/{student_id}', [MarkController::class, 'getMarksOfStudent']);
 });

@@ -22,7 +22,7 @@ class MarkController extends Controller
         $max_mark = $test->max_mark;
         //is this employee allowed to add marks for this class?
         if(Gate::denies('editClassInfo', [GClass::class, $class->id])){
-            res::error('you are not a supervisor of the class that took this test',403);
+            res::error('you are not a supervisor of the class that took this test',code:403);
         }
         
         $data = request()->validate([
@@ -76,6 +76,12 @@ class MarkController extends Controller
             res::error('this mark id is not valid', code:422);
         }
         
+        $class = $mark->test->g_class;
+        //is this employee allowed to add marks for this class?
+        if(Gate::denies('editClassInfo', [GClass::class, $class->id])){
+            res::error('you are not a supervisor of this student',code:403);
+        }
+
         $limit = $mark->test->max_mark;
         if(!request()->mark){
             res::error('the mark field is required', code:422);
@@ -89,7 +95,7 @@ class MarkController extends Controller
 
         res::success('mark changed successfully',$mark->makeHidden('test'));
     }
-    public function getRemainingStudents(Test $test){
+    public function getRemainingStudents(Test $test, $abort = true){
 
         $g_class_id= $test->g_class_id;
         $students1 = Student::where('g_class_id',$g_class_id)->get();
@@ -99,6 +105,49 @@ class MarkController extends Controller
         })->get();
 
         $result = $students1->diff($students2);
-        res::success('here are the students who\'s mark was\'t inserted yet:', $result);
+
+        $result = $result->map(fn($item) => $item->only(['id', 'first_name', 'last_name', 'father_name', 'g_class_id']));
+
+        if($abort)
+            res::success('here are the students who\'s mark was\'t inserted yet:', $result);
+        
+        return $result;
+    }
+
+    public function getMarksOfStudent($student_id)
+    {
+
+        if($student_id <= -1){
+
+            if(auth()->user()->owner_type != Student::class)
+                res::error('invalid student id and you are not a student');
+            else
+                $student_id = auth()->user()->owner->id;
+        }
+
+        $student = Student::find($student_id);
+        if(!$student){
+            res::error('this student id is not valid', code:422);
+        }
+
+        Helper::tryToReadStudent($student_id, $abort = true);
+
+        $tests = DB::table('tests')
+            ->join('students', 'tests.g_class_id', '=', 'students.g_class_id')
+            ->leftJoin('marks', function ($join) use ($student_id) {
+                $join->on('tests.id', '=', 'marks.test_id')
+                    ->where('marks.student_id', '=', $student_id);
+            })
+            ->join('types', 'tests.type_id', '=', 'types.id')
+            ->join('subjects', 'tests.subject_id', '=', 'subjects.id')
+            ->select('tests.id as test_id','tests.title as test_title','tests.date','types.id as type_id', 'types.name as type_name', 'subjects.id as subject_id', 'subjects.name as subject_name', 'tests.min_mark', 'tests.max_mark', 'marks.id as mark_id', 'marks.mark')
+            ->where('students.id', $student_id)
+            ->orderBy('tests.date')
+            ->get();
+
+            if(!$abort)
+                return $tests;
+            
+            res::success('tests was brought successfully.', $tests);
     }
 }

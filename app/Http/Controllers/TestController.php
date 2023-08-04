@@ -3,21 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
-use App\Helpers\ResponseFormatter as response;
+use App\Helpers\ResponseFormatter as res;
 use App\Models\GClass;
 use App\Models\Student;
 use App\Models\Test;
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Http\Controllers\MarkController;
 
 class TestController extends Controller
 {
 
     private function validateTestInfo(){
 
-        $this->authorize('editClassInfo', [request()['g_class_id']]);
+        if(Gate::denies('editClassInfo',[GClass::class, request()['g_class_id']])){
+            res::error('you are not a supervisor of this class', code:403);
+        }
+
         $emp = request()->user()->owner;
         $supHasClass = Rule::exists('class_supervisor','g_class_id')
         ->where(function($query) use ($emp){
@@ -30,7 +34,7 @@ class TestController extends Controller
 
         $class = GClass::find(request()->g_class_id);
 
-        $grade = $class ? $class->grade_id : response::error('invalid class id',code:422);
+        $grade = $class ? $class->grade_id : res::error('invalid class id',code:422);
         
 
 
@@ -66,13 +70,17 @@ class TestController extends Controller
 
         $data = $this->validateTestInfo();
 
-        $test = Test::create($data);
+        $test = Helper::lazyQueryTry(fn()=>Test::create($data));
 
-        response::success('test created successfully', $test);
+        res::success('test created successfully', $test);
     }
 
     public function edit(Test $test){
 
+        if(Gate::denies('editClassInfo',[GClass::class, request()['g_class_id']])){
+            res::error('you are not a supervisor of the class that took this test',code:403);
+        }
+        
         $unique = Rule::unique('tests','title')->where(function($query){
             $query->where('subject_id',request()->subject_id)
             ->where('g_class_id', request()->g_class_id);
@@ -90,7 +98,7 @@ class TestController extends Controller
 
         $test->update(array_diff_key($data,['subject_id' => '', 'g_class_id' => '']));
 
-        response::success('test info updated successfully', $test);
+        res::success('test info updated successfully', $test);
     }
     
     public function test(Request $request)
@@ -99,7 +107,6 @@ class TestController extends Controller
         //     'n' => [['required', 'max:7'], 'min:5'],
         //     'm' => 'integer|nullable'
         // ]);
-        return ( Student::find(1)->grade);
         if(Gate::denies('editClassInfo',[Test::class,3]))
         return 'hhhh';
         return ( request()->user()->owner->roles()->select('id')->get()->makeHidden('pivot'));
@@ -129,6 +136,75 @@ class TestController extends Controller
     }
 
     public function getTypeOfTest(Test $test){
-        response::success(data:$test->type);
+        res::success(data:$test->type);
+    }
+
+    public function searchTests(Request $request){
+
+        $request->validate([
+            'subject_id' => 'exists:subjects,id',
+            'g_class_id' => 'exists:g_classes,id',
+            'start_date' => 'date',
+            'end_date' => 'date|after_or_equal:start_date',
+            'type_id' => 'exists:types,id',
+        ]);
+    
+        $query = Test::query();
+    
+        $query->where('title', 'like', '%' . $request->title . '%');
+    
+        if ($request->has('type_id')) {
+            $query->where('type_id', $request->type_id);
+        }
+    
+        if ($request->has('start_date')) {
+            $query->where('date', '>=', $request->start_date);
+        }
+        
+        if ($request->has('end_date')) {
+            $query->where('date', '<=', $request->end_date);
+        }
+    
+        if ($request->has('subject_id')) {
+            $query->where('subject_id', $request->subject_id);
+        }
+    
+        if ($request->has('g_class_id')) {
+            $query->where('g_class_id', $request->g_class_id);
+        }
+        
+        $tests = $query->orderBy('date', 'desc')->simplePaginate(10);
+        
+        $tests->getCollection()->transform(function ($test) {
+
+            $mark_controller = new MarkController();
+            $remaining = $mark_controller->getRemainingStudents($test, false);
+
+            $test['all_marks_inserted'] = $remaining->isEmpty() ? true : false;
+            return $test;
+        });
+        
+        res::success('tests found successfully', $tests);
+    }
+
+    public function getTest($id)
+    {
+        $test = Test::with(['subject:id,name', 'g_class:id,name', 'type:id,name'])->find($id);
+    
+        if ($test === null) {
+            res::error('this test id is not valid', code:404);
+        }
+        
+        if(Gate::denies('viewClassInfo',[GClass::class,$test->g_class->id]))
+            res::error("You dont have the permission to read this test info.",code:403);
+        
+        $test->makeHidden(['subject_id', 'g_class_id', 'type_id']);
+
+        $mark_controller = new MarkController();
+        $remaining = $mark_controller->getRemainingStudents($test, false);
+        
+        $test['all_marks_inserted'] = $remaining->isEmpty() ? true : false;
+
+        res::success(data:$test);
     }
 }

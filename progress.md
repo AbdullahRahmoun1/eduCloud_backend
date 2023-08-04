@@ -1,11 +1,15 @@
-__________
-|Employee|
-‾‾‾‾‾‾‾‾‾‾
+__________     __________
+|Employee| Or   principal
+‾‾‾‾‾‾‾‾‾‾     ‾‾‾‾‾‾‾‾‾‾
 add  ✅
 edit ✅
 add roles ✅
 remove roles ✅
 add temp role ❌
+
+    add base calendar ✅
+    edit base calendar ✅
+
     ____________
     |supervisor|
     ‾‾‾‾‾‾‾‾‾‾‾‾
@@ -19,6 +23,8 @@ add temp role ❌
     edit test of a class ✅
     add test marks of a class ✅
     edit test marks of a class  ✅
+
+    see the base calendar for a specific subject ✅
 
     add daily absences of students ✅  (you can call it multiple times if you want to add more)
     get student's absences ✅  
@@ -40,11 +46,11 @@ add temp role ❌
     get the remaining students who's marks wasn't inserted yet for this test ✅
     (will be used when getting the students names to insert their marks)
 
-    view test marks ❌
+    view test marks ✅
 
-    view test info ❌
+    view test info ✅
 
-    view all tests (list) ❌
+    view all tests (search + filters) ✅
     ___________
     |secretary|
     ‾‾‾‾‾‾‾‾‾‾‾
@@ -55,6 +61,10 @@ add temp role ❌
     Using previous route, give me the ids of the candidates that should become students  ❌  (abd:working on this);
     search for a student ✅
      
+    _________   _________
+    |general| + |mobile |
+    ‾‾‾‾‾‾‾‾‾   ‾‾‾‾‾‾‾‾‾
+    get all tests with marks for a student ✅
     _________
     |teacher|
     ‾‾‾‾‾‾‾‾‾
