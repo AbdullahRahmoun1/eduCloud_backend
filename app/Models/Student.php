@@ -23,6 +23,7 @@ class Student extends Model
     use HasFactory,HasRoles;
     protected $hidden=['created_at','updated_at'];
     protected $guarded=[];
+    protected $appends=['full_name'];
     protected $guard_name='web';
 /**
      * Get all of the marks for the Student
@@ -97,6 +98,10 @@ class Student extends Model
     }
 
     public function full_name(){
+        return $this->first_name.' '.$this->last_name;
+    }
+
+    public function getFullNameAttribute(){
         return $this->first_name.' '.$this->last_name;
     }
 

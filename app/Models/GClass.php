@@ -83,5 +83,9 @@ class GClass extends Model
         return $this->belongsToMany(Subject::class, 'class_teacher_subject', 'g_class_id', 'subject_id');
     }
 
+    public function getFreeSpaces():int{
+        return $this->max_number-$this->students()->count();
+    }
+
     //TODO: add progress calendar relation
 }

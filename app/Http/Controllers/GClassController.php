@@ -137,4 +137,54 @@ class GClassController extends Controller
             'classes'=>$result
         ]);
     }
+
+    public function addOrMoveStudentsToClasses(Grade $grade){
+        $data=request()->validate([
+            'assignments'=>['required','array','min:1'],
+            'allowMoving'=>['required','boolean'],
+            'assignments.*.class_id'=>['required','exists:g_classes,id'],
+            'assignments.*.students_ids'=>['required','array','min:1'],
+            'assignments.*.students_ids.*'=>['required','exists:students,id','distinct']
+        ]);
+        DB::beginTransaction();
+        foreach($data['assignments'] as $entry){
+            $class=GClass::find($entry['class_id']);
+            $students=$entry['students_ids'];
+            //class belongs to provided grade
+            if($class->grade_id!=$grade->id)
+            response::error(
+                "Class ( $class->name ) doesn't belong to the grade provided.",
+                rollback:true
+            );
+            //class can add all of these students
+            $studentsCount=count($students);
+            if($studentsCount>$class->getFreeSpaces())
+            response::error(
+                "Class ( $class->name ) only has {$class->getFreeSpaces()} "
+                ."free spaces. You provided $studentsCount students.",
+                rollback:true
+            );
+            //if moving isn't allowed. is there any student who already has a class
+            if(!$data['allowMoving']){
+                $alreadyHasClass=Student::whereIn('id',$entry['students_ids'])
+                ->whereNotNull('g_class_id');
+                if($alreadyHasClass->count()){
+                    response::error(
+                        "There are {$alreadyHasClass->count()} students that "
+                        ."are already in a class. fix: click allow moving students. ",
+                        [
+                            'students'=>$alreadyHasClass->pluck('full_name')
+                        ],
+                        rollback:true
+                        );
+                }
+            }
+            //All should be good!!
+            Student::whereIn('id',$students)
+            ->update([
+                'g_class_id'=>$class->id
+            ]);
+        }
+        response::success(commit:true);
+    }
 }
