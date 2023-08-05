@@ -60,11 +60,13 @@ class Helper {
     public static function removeRoleDependencies($emp,$role){
 
         $id = $emp->id;
+        $dependencies=null;
         if($role == config('roles.supervisor'))
             $dependencies = ClassSupervisor::where('employee_id',$id);
         else if($role == config('roles.teacher'))
             $dependencies = ClassTeacherSubject::where('employee_id', $id);
         //TODO: add bus dependencies when done
+        if($dependencies!=null)
         $dependencies->delete();
     }
 

@@ -24,6 +24,7 @@ class StudentsDistributer
                 'id','first_name','last_name','grade_id','acceptance_rate'
             ]);
         }
+        //TODO: remember to make it true (after testing)
         AtPerformance::sortByAcceptanceRate($students,false);       
         $newClasses=[];
         foreach($students as $student){
