@@ -1,8 +1,5 @@
 <?php
 namespace App\Helpers;
-
-use Exception;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
 use App\Helpers\ResponseFormatter as res;
@@ -10,7 +7,6 @@ use App\Models\ClassSupervisor;
 use App\Models\ClassTeacherSubject;
 use App\Models\GClass;
 use App\Models\Student;
-
 class Helper {
     public static function lazyQueryTry($toTry){
         try{
