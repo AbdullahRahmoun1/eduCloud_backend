@@ -15,8 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return 'sherorororo';
-    return view('home.html');
+    return view('welcome');
 });
 Route::get('fuck',[NumberController::class,'khara'])
 ->middleware('auth:sanctum');
