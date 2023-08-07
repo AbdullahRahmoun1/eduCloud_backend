@@ -79,7 +79,7 @@ class CandidateStudent extends Model
         ]);
         return $s;
     }
-    public function convertionDuplicateErrorMsg(){
+    public function conversionDuplicateErrorMsg(){
         return "The conversion to an official student for {$this->full_name()}, ID: $this->id".
         " is not possible. Another student in the same grade"
         ." shares the same full name, mother's name, and father's name as this student. "

@@ -37,28 +37,6 @@ class CandidateStudentController extends Controller
         res::success(data:$candidates);
 
     }
-    public function anyErrorsInConverting(Grade $grade){
-        $exists=Rule::exists('candidate_students','id')
-        ->where('grade_id',$grade->id);
-        $data=request()->validate([
-            'ids'=>['required','array','min:1'],
-            'ids.*'=>$exists
-        ],[
-            'ids.*.exists'=>"The provided ID :input does not ".
-            "belong to any candidate student in grade $grade->name .",
-            'ids.*.distinct'=>"The provided student with ID :input is ".
-            "duplicated in the input."
-        ]);
-        $cands=CandidateStudent::whereIn('id',$data['ids'])
-        ->get();
-        foreach($cands as $cand){
-            if(!$cand->canBecomeOfficial()){
-                res::error($cand->convertionDuplicateErrorMsg(),422);
-            }
-        }
-        
-        res::success("All good!. You can continue the proccess.");
-    }
     public function candidatesToOfficials(Grade $grade){
         $exists=Rule::exists('candidate_students','id')
         ->where('grade_id',$grade->id);
@@ -71,11 +49,17 @@ class CandidateStudentController extends Controller
             'ids.*.distinct'=>"The provided student with ID :input is ".
             "duplicated in the input."
         ]);
+        $cands=CandidateStudent::whereIn('id',$data['ids'])->get();
+        foreach($cands as $cand){
+            if(!$cand->canBecomeOfficial()){
+                res::error($cand->conversionDuplicateErrorMsg(),422);
+            }
+        }
         DB::beginTransaction();
         $ctr=0;
         $official_students=[];
         try{
-            $cands=CandidateStudent::whereIn('id',$data['ids'])->get();
+            
             foreach($cands as $cand){
                 $official_students[]=$cand->makeHimOfficial();
                 $ctr++;

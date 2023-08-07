@@ -12,7 +12,6 @@ Route::middleware('auth:sanctum', 'hasRoles:'.config('roles.secretary'))->group(
     Route::get('regeneratePassword/{student}', [StudentController::class, 'regeneratePassword']);
     Route::get('studentSearch', [StudentController::class, 'search']);
     Route::get('candidateToOfficial/view/{grade}', [CandidateStudentController::class, 'all']);
-    Route::get('candidateToOfficial/anyErrors/{grade}', [CandidateStudentController::class, 'anyErrorsInConverting']);
     Route::get('candidateToOfficial/perform/{grade}', [CandidateStudentController::class, 'candidatesToOfficials']);
     Route::post('automaticStudentsDistribution/{algorithm}', [GClassController::class, 'automaticStudentDistribution']);
     Route::post('addOrMoveStudentsToClasses/{grade}',[GClassController::class,'addOrMoveStudentsToClasses']);
