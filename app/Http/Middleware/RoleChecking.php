@@ -19,7 +19,7 @@ class RoleChecking
         $result=true;
         $owner=request()->user()->owner;
         foreach($roles as $role){
-            $result&=$owner->hasRole($role);
+            $result|=$owner->hasRole($role);
         }
         $result|=$owner->hasRole(config('roles.admin'));
         $result|=$owner->hasRole(config('roles.principal'));

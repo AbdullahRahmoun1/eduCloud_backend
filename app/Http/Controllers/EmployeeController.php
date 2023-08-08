@@ -120,6 +120,18 @@ class EmployeeController extends Controller
      //Is he a teacher?
         if(!$teacher->hasRole(config('roles.teacher')))
         res::error('This employee isn\'t a teacher',code:422);
+     //Does he teach the same grade as the subjects belongs to
+        foreach($data as $item){
+            $subject=Subject::find($item['subject_id']);
+            $classes=GClass::whereIn('id',$item['classes'])
+            ->get();
+            foreach($classes as $class){
+                if($class->grade_id!=$subject->grade_id){
+                    res::error("Class $class->name doesn't take subject $subject->name."
+                    ." They belong to different grades.");
+                }
+            }
+        }
      //Assign values to DB
         DB::beginTransaction();
         $it=0;
