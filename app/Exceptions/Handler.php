@@ -45,9 +45,17 @@ class Handler extends ExceptionHandler
                 ], 404);
             }
 
-            if ($request->is('V1.0/secretary/*')) {
+            if ($request->is('V1.0/secretary/editStudentOrCandidate/*')) {
                 return response()->json([
                     'message' => 'this student id is not valid.',
+                    'data' => $e->getMessage()
+                ], 404);
+            }
+
+            if ($request->is('V1.0/secretary/candidateToOfficial/*') ||
+                $request->is('V1.0/secretary/addOrMoveStudentsToClasses/*')) {
+                return response()->json([
+                    'message' => 'this grade id is not valid.',
                     'data' => $e->getMessage()
                 ], 404);
             }
