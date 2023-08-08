@@ -9,6 +9,9 @@ use App\Http\Controllers\TypeController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function(){
+
+    Route::get('getAllTypes', [TypeController::class, 'getAllTypes']);
+    
     Route::get('getAllGrades', [GradeController::class, 'getAllGrades']);
     Route::get('getAllGradesWithClassesAndSubjects', [GradeController::class, 'getAllGradesWithClassesAndSubjects']);
     Route::post('message/{student_id}',[ChatController::class,'post']);
