@@ -123,15 +123,7 @@ class TestController extends Controller
             'student.first_name',
             'student.last_name'
         ]);
-        foreach($marks as $mark){
-            $student=$mark->student;
-            $student->full_name =$student->first_name.
-            ' '.$student->last_name;
-            $student->makeHidden([
-                'first_name',
-                'last_name'
-            ]);
-        }
+        
         res::success(data:$marks);
     }
 
