@@ -26,6 +26,7 @@ class MarkController extends Controller
         }
         
         $data = request()->validate([
+            '*' => ['required', 'array'],
             '*.student_id' => ['required','exists:students,id'],
             '*.mark' => ['required', 'numeric', 'gt:-1', "lte:$max_mark"]
         ]);

@@ -68,6 +68,7 @@ class Handler extends ExceptionHandler
             }
 
             if ($request->is('V1.0/supervisor/addTestMarks/*') ||
+                $request->is('V1.0/supervisor/testMarks/*') ||
                 $request->is('V1.0/supervisor/getRemainingStudentsForTest/*') ||
                 $request->is('V1.0/general/getTypeOfTest/*')) {
                 return response()->json([
