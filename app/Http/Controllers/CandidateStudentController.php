@@ -14,7 +14,7 @@ class CandidateStudentController extends Controller
 {
     public function all(Grade $grade){
         $min_percentage= request()->validate([
-            'min_percentage'=>['required','numeric','between:0.01,1']
+            'min_percentage'=>['required','numeric','between:1,100']
         ]);
         $min_percentage=$min_percentage['min_percentage'];
         $grade->load(['candidates:id,first_name,last_name,grade_id']);
@@ -66,7 +66,7 @@ class CandidateStudentController extends Controller
             }
         }catch(QueryException $e){
             $cand=$cands[$ctr];
-            res::queryError($e,duplicate:$cands->convertionDuplicateErrorMsg,rollback:true);
+            res::queryError($e,duplicate:$cands->conversionDuplicateErrorMsg(),rollback:true);
         }
         DB::commit();
         res::success("Success! $ctr students became official!",[

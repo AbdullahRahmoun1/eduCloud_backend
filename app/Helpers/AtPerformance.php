@@ -19,7 +19,7 @@ class AtPerformance{
             }
             $sub=$mark->abilityTest->subject->name;
             if($mark_max>0){
-                if($mark_got/($mark_max*0.1)>=$mark->abilityTest->minimum_success_percentage){
+                if($mark_got/($mark_max*1.0)>=$mark->abilityTest->minimum_success_percentage){
                     $succeeded_subjects[]=$sub;
                 }else{
                     $failed_subjects[]=$sub;
@@ -32,7 +32,6 @@ class AtPerformance{
         }
         sort($succeeded_subjects);
         sort($failed_subjects);
-        $student->full_name=$student->full_name();  
         $have_one_test=$max>0;
         if($have_one_test){
             $f=$got/($max*1.0)*100;
