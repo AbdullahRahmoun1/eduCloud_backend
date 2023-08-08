@@ -204,9 +204,10 @@ class StudentController extends Controller
 
         $result = $result->orderBy('first_name')->orderBy('last_name');
 
-        if(isset(request()->page))
+        if(request()->has('page'))
             $result = $result->simplePaginate(10);
-        
+        else
+        $result = $result->get();
         response::success('results found successfully', $result);
     }
     

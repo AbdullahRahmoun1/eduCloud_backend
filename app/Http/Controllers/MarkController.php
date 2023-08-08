@@ -106,7 +106,7 @@ class MarkController extends Controller
 
         $result = $students1->diff($students2);
 
-        $result = $result->map(fn($item) => $item->only(['id', 'first_name', 'last_name', 'father_name', 'g_class_id']));
+        $result = $result->map(fn($item) => $item->only(['id', 'first_name', 'last_name', 'father_name','mother_name', 'g_class_id']));
 
         if($abort)
             res::success('here are the students who\'s mark was\'t inserted yet:', $result);
