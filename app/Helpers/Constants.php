@@ -1,5 +1,5 @@
 <?php
-namespace App\Helpers;
-class Consts {
+namespace app\Helpers;
+class Constants {
     // public const 
 }
