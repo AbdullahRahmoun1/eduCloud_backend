@@ -9,7 +9,7 @@ use App\Http\Controllers\TypeController;
 use App\Models\Test;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum', 'hasRoles:supervisor')->group(function(){
+Route::middleware('auth:sanctum', 'hasRoles:supervisor,secretary')->group(function(){
     Route::get('studentSearch', [StudentController::class, 'search']);
     
     Route::post('addTestType', [TypeController::class, 'add']);
