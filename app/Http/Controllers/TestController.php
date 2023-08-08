@@ -173,9 +173,12 @@ class TestController extends Controller
             $query->where('g_class_id', $request->g_class_id);
         }
         
-        $tests = $query->orderBy('date', 'desc')->simplePaginate(10);
-        
-        $tests->getCollection()->transform(function ($test) {
+        if($request->has('page'))
+            $tests = $query->orderBy('date', 'desc')->simplePaginate(10);
+        else
+            $tests = $query->orderBy('date', 'desc')->get();
+        // return $tests;
+        $tests->transform(function ($test) {
 
             $mark_controller = new MarkController();
             $remaining = $mark_controller->getRemainingStudents($test, false);
