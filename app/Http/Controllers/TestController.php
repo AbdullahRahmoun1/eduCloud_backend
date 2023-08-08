@@ -132,7 +132,7 @@ class TestController extends Controller
                 'last_name'
             ]);
         }
-        return $marks;
+        res::success(data:$marks);
     }
 
     public function getTypeOfTest(Test $test){

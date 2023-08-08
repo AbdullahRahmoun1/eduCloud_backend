@@ -23,4 +23,9 @@ class MoneyRequest extends Model
     public function moneySubRequests(){
         return $this->hasMany(MoneySubRequest::class);
     }
+
+    public static function getAppropriateType($isSchoolRequest){
+        return $isSchoolRequest?
+        self::SCHOOL:self::BUS;
+    }
 }

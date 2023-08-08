@@ -19,7 +19,6 @@ return new class extends Migration
             $table->date('date');
             $table->string('notes',70)->nullable();
             $table->foreignIdFor(Student::class);
-            $table->foreignIdFor(MoneySubRequest::class);   
             $table->timestamps();
         });
     }

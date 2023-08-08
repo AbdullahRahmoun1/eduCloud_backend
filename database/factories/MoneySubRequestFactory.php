@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\MoneyRequest;
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Random\RandomError;
 

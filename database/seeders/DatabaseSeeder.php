@@ -109,7 +109,8 @@ class DatabaseSeeder extends Seeder
         Notification::factory(100)->create();
         Notification::factory(3)->create(['owner_id' => 1, 'owner_type' => Student::class]);
 
-        MoneyRequest::factory(100)->create();
+        $this
+        ->try(fn()=>MoneyRequest::factory(100)->create());
         MoneySubRequest::factory(300)->create();
         Income::factory(500)->create();
 

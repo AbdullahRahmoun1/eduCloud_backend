@@ -15,9 +15,10 @@ return new class extends Migration
         Schema::create('money_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('value');
-            $table->string('notes',70);
+            $table->string('notes',70)->nullable();
             $table->enum('type',['school','bus']);
             $table->foreignIdFor(Student::class);
+            $table->unique(['student_id','type']);
             $table->timestamps();
         });
     }

@@ -23,7 +23,6 @@ class IncomeFactory extends Factory
             'date'=>now()->addDays(random_int(0,15)),
             'notes'=>fake()->text(60),
             'student_id'=>Student::all()->random()->id,
-            'money_sub_request_id'=>MoneySubRequest::all()->random()->id,
         ];
     }
 }

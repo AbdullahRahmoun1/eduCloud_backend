@@ -95,7 +95,7 @@ add temp role ❌
     ____________
     |accountant|
     ‾‾‾‾‾‾‾‾‾‾‾‾
-    add payment for student ❌
+    add payment for student (abd : working on it)
     edit payment of student ❌
     monitor the finance stuff ❌
 
