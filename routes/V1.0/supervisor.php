@@ -3,6 +3,7 @@
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\BaseCalendarController;
 use App\Http\Controllers\MarkController;
+use App\Http\Controllers\ProgressCalendarController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TypeController;
@@ -24,6 +25,7 @@ Route::middleware('auth:sanctum', 'hasRoles:supervisor,secretary')->group(functi
     Route::get('searchTests', [TestController::class, 'searchTests']);
     Route::get('getRemainingStudentsForTest/{test}', [MarkController::class, 'getRemainingStudents']);
 
+    Route::post('addAchievement', [ProgressCalendarController::class, 'addAchievement']);
     Route::get('getCalendarOfSubject/{subject_id}', [BaseCalendarController::class, 'getCalendarOfSubject']);
     
     Route::post('todaysAbsences',[AbsenceController::class,'addAbsences']);
