@@ -13,10 +13,10 @@ use App\Helpers\ResponseFormatter as res;
 class CandidateStudentController extends Controller
 {
     public function all(Grade $grade){
-        $min_percentage= request()->validate([
+        $data= request()->validate([
             'min_percentage'=>['required','numeric','between:1,100']
         ]);
-        $min_percentage=$min_percentage['min_percentage'];
+        $min_percentage=$data['min_percentage'];
         $grade->load(['candidates:id,first_name,last_name,grade_id']);
         $candidates=$grade->candidates;
         $candidates->load([     
@@ -31,7 +31,7 @@ class CandidateStudentController extends Controller
             AtPerformance::assignStudentAcceptanceRate($candidate,$min_percentage);
         }
         $candidates->makeHidden([
-            'first_name','last_name','atMarks'
+            'atMarks'
         ]);
         AtPerformance::sortByAcceptanceRate($candidates);
         res::success(data:$candidates);
