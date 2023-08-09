@@ -10,6 +10,7 @@ Route::middleware('auth:sanctum','hasRoles:'.config('roles.accountant'))->group(
     Route::post('editBill/{bill}', [MoneyRequestController::class,'edit']);
     Route::post('addPayment/{student}', [IncomeController::class,'add']);
     Route::post('editPayment/{student}', [IncomeController::class,'edit']);
-    Route::get('getPaymentsOf/{student}', [IncomeController::class,'get']);
-    Route::get('getStudentsFinanceInformation/{student}', [MoneyRequestController::class,'getStudentsFinanceInformation']);
+    
 });
+Route::get('getPaymentsOf/{student}', [IncomeController::class,'get']);
+    Route::get('getStudentsFinanceInformation/{student}', [MoneyRequestController::class,'getStudentsFinanceInformation']);
