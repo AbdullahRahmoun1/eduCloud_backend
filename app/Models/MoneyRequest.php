@@ -21,7 +21,7 @@ class MoneyRequest extends Model
         return $this->belongsTo(Student::class);
     }
     public function moneySubRequests(){
-        return $this->hasMany(MoneySubRequest::class);
+        return $this->hasMany(MoneySubRequest::class)->orderBy('final_date');
     }
 
     public static function getAppropriateType($isSchoolRequest){

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\MoneyRequest as mr;
 use App\Models\MoneySubRequest;
 use App\Models\Student;
 use Illuminate\Database\Migrations\Migration;
@@ -17,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('value');
             $table->date('date');
+            $table->enum('type',[mr::BUS,mr::SCHOOL]);
             $table->string('notes',70)->nullable();
             $table->foreignIdFor(Student::class);
             $table->timestamps();

@@ -16,7 +16,7 @@ class RoleChecking
      */
     public function handle(Request $request, Closure $next,...$roles): Response
     {
-        $result=true;
+        $result=false;
         $owner=request()->user()->owner;
         foreach($roles as $role){
             $result|=$owner->hasRole($role);

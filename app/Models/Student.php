@@ -69,12 +69,12 @@ class Student extends Model
     }
 
     public function moneyRequests(): HasMany{
-        return $this->hasMany(MoneyRequest::class);
+        return $this->hasMany(MoneyRequest::class)->orderBy('type');
     }
 
     public function incomes(): HasMany
     {
-        return $this->hasMany(Income::class);
+        return $this->hasMany(Income::class)->orderBy('date');
     }
 
     public function address(){
@@ -100,9 +100,13 @@ class Student extends Model
     public function full_name(){
         return $this->first_name.' '.$this->last_name;
     }
+    public function hideFullName(){
+        $this->makeHidden('full_name');
+    }
 
     public function getFullNameAttribute(){
         return $this->first_name.' '.$this->last_name;
     }
+    
 
 }

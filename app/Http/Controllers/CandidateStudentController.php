@@ -19,7 +19,7 @@ class CandidateStudentController extends Controller
         $min_percentage=$min_percentage['min_percentage'];
         $grade->load(['candidates:id,first_name,last_name,grade_id']);
         $candidates=$grade->candidates;
-        $candidates->load([
+        $candidates->load([     
             'atMarks'=>fn($query)=>
             $query->where('is_entry_mark',true),
             'atMarks.sections',
