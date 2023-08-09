@@ -115,7 +115,7 @@ class MarkController extends Controller
         return $result;
     }
 
-    public function getMarksOfStudent($student_id)
+    public function getMarksOfStudent($student_id, $abort = true, $all = false)
     {
 
         if($student_id <= -1){
@@ -131,7 +131,7 @@ class MarkController extends Controller
             res::error('this student id is not valid', code:422);
         }
 
-        Helper::tryToReadStudent($student_id, $abort = true);
+        Helper::tryToReadStudent($student_id);
 
         $tests = DB::table('tests')
             ->join('students', 'tests.g_class_id', '=', 'students.g_class_id')
@@ -144,7 +144,7 @@ class MarkController extends Controller
             ->select('tests.id as test_id','tests.title as test_title','tests.date','types.id as type_id', 'types.name as type_name', 'subjects.id as subject_id', 'subjects.name as subject_name', 'tests.min_mark', 'tests.max_mark', 'marks.id as mark_id', 'marks.mark')
             ->where('students.id', $student_id);
 
-            if(request()->without_nulls == 1)
+            if(request()->without_nulls == 1 || !$all)
                 $tests = $tests->whereNotNull('mark');
             
             $tests = $tests->orderBy('tests.date')->get();

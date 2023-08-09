@@ -45,7 +45,9 @@ class Handler extends ExceptionHandler
                 ], 404);
             }
 
-            if ($request->is('V1.0/secretary/editStudentOrCandidate/*')) {
+            if ($request->is('V1.0/secretary/editStudentOrCandidate/*') ||
+                $request->is('V1.0/secretary/regeneratePassword/*') ||
+                $request->is('V1.0/general/viewStudent/*')) {
                 return response()->json([
                     'message' => 'this student id is not valid.',
                     'data' => $e->getMessage()

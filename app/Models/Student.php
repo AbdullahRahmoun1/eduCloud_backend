@@ -44,6 +44,10 @@ class Student extends Model
         return $this->belongsTo(GClass::class);
     }
     
+    public function grade(){
+        return $this->belongsTo(Grade::class);
+    }
+
     public function notifications(): MorphMany
     {
         return $this->morphMany(Notification::class,'owner');
