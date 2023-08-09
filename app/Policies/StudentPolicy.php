@@ -17,6 +17,8 @@ class StudentPolicy
         $owner->hasRole(config('roles.student'))&&$owner->id==$student_id 
         ||
         $owner->hasRole(config('roles.supervisor'))
-        && in_array($student->g_class_id,$owner->g_classes_sup->pluck('id')->toArray());
+        && in_array($student->g_class_id,$owner->g_classes_sup->pluck('id')->toArray())
+        ||
+        $owner->hasRole(config('roles.secretary'));
     }
 }

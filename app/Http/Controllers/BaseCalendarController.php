@@ -8,7 +8,11 @@ use App\Models\Subject;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter as res;
 use App\Models\BaseCalendar;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+
+use function PHPUnit\Framework\isEmpty;
 
 class BaseCalendarController extends Controller
 {
@@ -16,9 +20,34 @@ class BaseCalendarController extends Controller
 
         $data = $this->validateCalendar($request);
 
-        $calendar =  Helper::lazyQueryTry(fn()=>BaseCalendar::create($data));
-    
-        res::success('plan created successfully', $calendar);
+        DB::beginTransaction();
+
+        $result = [];
+        $entryNum = 1;
+        foreach($data as $entry){
+
+            //making sure the entry is not duplicated
+            $query = BaseCalendar::where('grade_id', $entry['grade_id'])
+            ->where('subject_id', $entry['subject_id'])
+            ->where('title', $entry['title'])->get();
+            
+            if(count($query) > 0){
+            res::error("in entry number $entryNum ... this title already exists with this subject and class or this entry is duplicated in the input",code:422, rollback:true);
+            }
+
+            try{
+            $calendar = BaseCalendar::create($entry);
+            }
+            catch(Exception $e){
+                res::error("something went wrong in entry $entryNum.", $e->getMessage(),rollback:true);
+            }
+            $entryNum++;
+
+            $result[] = $calendar;
+        }
+
+        DB::commit();
+        res::success('plans created successfully', $result);
     }
 
     public function edit(Request $request, $calendar_id){
@@ -30,8 +59,11 @@ class BaseCalendarController extends Controller
         if(!$calendar){
             res::error('this base calendar id is not valid',code:422);
         }
+        if(count($data) != 1){
+            res::error('you can edit 1 plan at a time', code:422);
+        }
 
-        Helper::lazyQueryTry(fn()=>$calendar->update($data));
+        Helper::lazyQueryTry(fn()=>$calendar->update($data[0]));
     
         res::success('plan updated successfully', $calendar);
     }
@@ -39,29 +71,39 @@ class BaseCalendarController extends Controller
     public function validateCalendar($request, $calendar_id = null){
 
         $data = $request->validate([
-            'subject_id' => [
+            '*' => ['required', 'array'],
+            '*.subject_id' => [
                 'required',
                 'exists:subjects,id',
-                Rule::unique('base_calendars')->ignore($calendar_id)->where(function ($query) use ($request) {
-                    return $query->where('grade_id', $request->grade_id)
-                        ->where('title', $request->title);
-                }),
             ],
-            'grade_id' => 'required|exists:grades,id',
-            'title' => 'required|min:1|max:30',
-            'date' => 'required|date',
-            'is_test' => 'required|boolean'
-        ],[
-            'subject_id.unique' => 'this title already exists with this subject and class'
+            '*.grade_id' => 'required|exists:grades,id',
+            '*.title' => 'required|min:1|max:30',
+            '*.date' => 'required|date',
+            '*.is_test' => 'required|boolean'
         ]);
-    
-        $grade = Grade::find($data['grade_id']);
-        $subject = Subject::find($data['subject_id']);
         
-        if (!$grade->subjects->contains($subject)) {
-            res::error('The subject does not belong to the specified grade', code:422);
-        }
+        $entryNum = 1;
+        foreach($data as $entry){
 
+            $grade = Grade::find($entry['grade_id']);
+            $subject = Subject::find($entry['subject_id']);
+            
+            //making sure the subject belongs to the grade
+            if (!$grade->subjects->contains($subject)) {
+                res::error("in entry number $entryNum ... The subject does not belong to the specified grade", code:422);
+            }
+
+            //making sure the entry is not duplicated
+            $query = BaseCalendar::where('grade_id', $entry['grade_id'])
+            ->where('subject_id', $entry['subject_id'])
+            ->where('title', $entry['title'])->get();
+            
+            if((count($query) == 1 && $query[0]->id != $calendar_id) ||
+                count($query) > 1){
+                res::error("in entry number $entryNum ... this title already exists with this subject and class or this entry is duplicated in the input",code:422);
+            }
+            $entryNum++;
+        }
         return $data;
     }
 

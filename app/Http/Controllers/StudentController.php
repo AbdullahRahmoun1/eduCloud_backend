@@ -204,10 +204,36 @@ class StudentController extends Controller
 
         $result = $result->orderBy('first_name')->orderBy('last_name');
 
-        if(isset(request()->page))
+        if(request()->has('page'))
             $result = $result->simplePaginate(10);
-        
+        else
+        $result = $result->get();
         response::success('results found successfully', $result);
     }
     
+    public function view(Student $student){
+
+        Helper::tryToReadStudent($student->id);
+
+        $mark_controller = new MarkController();
+        $marks = $mark_controller->getMarksOfStudent($student->id,false);
+        $marks->map(fn($mark) =>
+            $mark->percentage = round(($mark->mark/$mark->max_mark*1.0)*100)
+        );
+
+        $result = $student::query()
+        ->with('grade:id,name', 'g_class:id,name','numbers:id,number,type,relationship,owner_id')
+        ->where('id', $student->id)
+        ->get()[0];
+
+        //TODO:add address to the view Student
+        $result['address'] = $result['place_of_living'] ?? 'N/A';
+
+        if(request()->all != 1)
+            $result = $result->only('id','full_name','father_name','mother_name', 'grade', 'g_class', 'numbers', 'address');
+
+        $result['marks'] = $marks;
+
+        response::success(data:$result);
+    }
 }

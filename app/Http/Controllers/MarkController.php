@@ -26,6 +26,7 @@ class MarkController extends Controller
         }
         
         $data = request()->validate([
+            '*' => ['required', 'array'],
             '*.student_id' => ['required','exists:students,id'],
             '*.mark' => ['required', 'numeric', 'gt:-1', "lte:$max_mark"]
         ]);
@@ -106,7 +107,7 @@ class MarkController extends Controller
 
         $result = $students1->diff($students2);
 
-        $result = $result->map(fn($item) => $item->only(['id', 'first_name', 'last_name', 'father_name', 'g_class_id']));
+        $result = $result->map(fn($item) => $item->only(['id', 'first_name', 'last_name', 'father_name','mother_name', 'g_class_id']));
 
         if($abort)
             res::success('here are the students who\'s mark was\'t inserted yet:', $result);
@@ -114,7 +115,7 @@ class MarkController extends Controller
         return $result;
     }
 
-    public function getMarksOfStudent($student_id)
+    public function getMarksOfStudent($student_id, $abort = true, $all = false)
     {
 
         if($student_id <= -1){
@@ -130,7 +131,7 @@ class MarkController extends Controller
             res::error('this student id is not valid', code:422);
         }
 
-        Helper::tryToReadStudent($student_id, $abort = true);
+        Helper::tryToReadStudent($student_id);
 
         $tests = DB::table('tests')
             ->join('students', 'tests.g_class_id', '=', 'students.g_class_id')
@@ -141,9 +142,12 @@ class MarkController extends Controller
             ->join('types', 'tests.type_id', '=', 'types.id')
             ->join('subjects', 'tests.subject_id', '=', 'subjects.id')
             ->select('tests.id as test_id','tests.title as test_title','tests.date','types.id as type_id', 'types.name as type_name', 'subjects.id as subject_id', 'subjects.name as subject_name', 'tests.min_mark', 'tests.max_mark', 'marks.id as mark_id', 'marks.mark')
-            ->where('students.id', $student_id)
-            ->orderBy('tests.date')
-            ->get();
+            ->where('students.id', $student_id);
+
+            if(request()->without_nulls == 1 || !$all)
+                $tests = $tests->whereNotNull('mark');
+            
+            $tests = $tests->orderBy('tests.date')->get();
 
             if(!$abort)
                 return $tests;
