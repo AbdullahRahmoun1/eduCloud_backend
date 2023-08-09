@@ -30,7 +30,6 @@ class StudentPolicy
                 $owner->g_classes_sup->pluck('id')->toArray()
             );
         }
-        
         return $result;
     }
 }

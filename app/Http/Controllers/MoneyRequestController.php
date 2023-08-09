@@ -93,24 +93,14 @@ class MoneyRequestController extends Controller
         $money_request->load(['moneySubRequests']);
         res::success(data:$money_request);
     }
-    public function getBill(Student $student) {
-        $data=request()->validate(
-            ['schoolBill'=>['boolean']]
-        );
-        $student->load([
-            'moneyRequests','moneyRequests.moneySubRequests',
-            'incomes'
-        ]);
-        if(isset($data['schoolBill'])){
 
-        }
-    }
     public function getStudentsFinanceInformation(Student $student){
         $student->load([
             'moneyRequests','moneyRequests.moneySubRequests',
             'incomes'
         ]);
         //note: incomes come already sorted in ascending order
+        Helper::tryToReadStudent($student->id);
         //get how much he paid
         $paidForSchool=$student->incomes
         ->where('type',mr::SCHOOL)
