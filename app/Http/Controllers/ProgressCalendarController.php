@@ -46,7 +46,7 @@ class ProgressCalendarController extends Controller
 
     public function getProgressOfClass($g_class_id){
         
-        Helper::tryToEdit($g_class_id);
+        Helper::tryToRead($g_class_id);
         
         $g_class = GClass::find($g_class_id);
         if(!$g_class){
