@@ -81,19 +81,19 @@ class Helper {
     }
     public static function tryToRead($class_id){
         if(Gate::denies('viewClassInfo',[GClass::class,$class_id]))
-        res::error("You dont have the permission to read this class's data.",
+        res::error("You don't have the permission to read this class's data.",
         code:403);
     }
     
     public static function tryToEdit($class_id){
         if(Gate::denies('editClassInfo',[GClass::class,$class_id]))
-        res::error("You dont have the permission to edit this class's data.",
+        res::error("You don't have the permission to edit this class's data.",
         code:403);
     }
 
     public static function tryToReadStudent($student_id){
         if(Gate::denies('viewStudent',[Student::class,$student_id]))
-        res::error("You dont have the permission to read this student's data.",
+        res::error("You don't have the permission to read this student's data.",
         code:403);
     }
 }

@@ -63,6 +63,17 @@ class IncomeController extends Controller
         );
         res::success(data:$income);
     }
+    public function edit(Income $income) {
+        $data=request()->validate([
+            'value'=>['numeric','min:1000'],
+            'notes'=>['string','min:1'],
+            'schoolPayment'=>['boolean']
+        ]);
+        $data['type']=$data['schoolPayment']?mr::SCHOOL:mr::BUS;
+        unset($data['schoolPayment']);
+        Helper::lazyQueryTry(fn()=>$income->update($data));
+        res::success();
+    }
     public function get(Student $student){
         // incomes come already sorted in ascending order
         // (ascending) because it helps in another 
@@ -70,7 +81,7 @@ class IncomeController extends Controller
         $data=request()->validate([
             'schoolPayments?'=>['boolean']
         ]);
-        Helper::tryToReadStudent($student);
+        Helper::tryToReadStudent($student->id);
         if(isset($data['schoolPayments?'])){
             $incomes=$student->incomes()
             ->whereType(
