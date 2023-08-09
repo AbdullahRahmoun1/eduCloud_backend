@@ -70,6 +70,7 @@ class IncomeController extends Controller
         $data=request()->validate([
             'schoolPayments?'=>['boolean']
         ]);
+        Helper::tryToReadStudent($student);
         if(isset($data['schoolPayments?'])){
             $incomes=$student->incomes()
             ->whereType(

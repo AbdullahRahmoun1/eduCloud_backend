@@ -198,6 +198,12 @@ class StudentController extends Controller
             });
         }
 
+        $result->when(isset(request()->hasClass),
+            fn($query)=>request()->hasClass?
+            $query->whereNotNull('g_class_id'):
+            $query->whereNull('g_class_id')
+        );
+
         if(isset(request()->class_id)){
             $result->where('g_class_id',request()->class_id);
         }
