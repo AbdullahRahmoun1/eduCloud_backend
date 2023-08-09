@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('progress_calendars', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('base_calendar_id')->constrained();
+            $table->foreignId('g_class_id')->constrained();
+            $table->unique('g_class_id', 'base_calendar_id');
             $table->timestamps();
         });
     }

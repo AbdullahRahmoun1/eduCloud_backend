@@ -19,8 +19,8 @@ class ClassPolicy
     //  */
     public function editClassInfo(Account $account,$class_id): bool{
         $owner=$account->owner;
-        return $owner->hasRole(config('roles.supervisor'))
-        && in_array($class_id
-        ,$owner->g_classes_sup->pluck('id')->toArray());
+        return ($owner->hasRole(config('roles.supervisor'))
+        && in_array($class_id, $owner->g_classes_sup->pluck('id')->toArray()))
+        || $owner->hasRole(config('roles.secretary'));
     }
 }
