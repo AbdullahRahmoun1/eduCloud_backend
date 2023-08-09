@@ -27,7 +27,8 @@ Route::middleware('auth:sanctum', 'hasRoles:supervisor,secretary')->group(functi
 
     Route::post('addAchievement', [ProgressCalendarController::class, 'addAchievement']);
     Route::get('getCalendarOfSubject/{subject_id}', [BaseCalendarController::class, 'getCalendarOfSubject']);
-    
+    Route::get('getProgressOfClass/{class_id}', [ProgressCalendarController::class, 'getProgressOfClass']);
+
     Route::post('todaysAbsences',[AbsenceController::class,'addAbsences']);
     Route::post('justifyAbsence/{absence}',[AbsenceController::class,'justifyAbsence']);
     Route::post('editAbsenceJustification/{absence}',[AbsenceController::class,'editJustification']);

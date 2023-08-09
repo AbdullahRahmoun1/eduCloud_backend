@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('base_calendar_id')->constrained();
             $table->foreignId('g_class_id')->constrained();
-            $table->unique('g_class_id', 'base_calendar_id');
+            $table->unique(['g_class_id', 'base_calendar_id']);
             $table->timestamps();
         });
     }

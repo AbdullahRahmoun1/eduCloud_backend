@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\BaseCalendar;
+use App\Models\GClass;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,8 @@ class ProgressCalendarFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'g_class_id' => GClass::all()->random()->id,
+            'base_calendar_id' => BaseCalendar::all()->random()->id
         ];
     }
 }

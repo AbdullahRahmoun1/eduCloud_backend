@@ -43,4 +43,29 @@ class ProgressCalendarController extends Controller
         
         res::success('progress added successfully', $progress);
     }
+
+    public function getProgressOfClass($g_class_id){
+        
+        Helper::tryToRead($g_class_id);
+        
+        $g_class = GClass::find($g_class_id);
+        if(!$g_class){
+            res::error('this class id is not valid',code:422);
+        }
+
+        $grade = $g_class->grade;
+        $calendar = BaseCalendar::where('grade_id',$grade->id)
+        ->orderBy('date')->get();
+
+        $progress = ProgressCalendar::where('g_class_id', $g_class_id);
+        $ids = $progress->pluck('base_calendar_id')->toArray();
+
+        $calendar->map(function($goal) use ($ids){
+            return in_array($goal->id, $ids) ?
+            $goal->done = true :
+            $goal->done = false;
+        });
+        
+        res::success('calendar of this class retrieved successfully', $calendar);
+    }
 }
