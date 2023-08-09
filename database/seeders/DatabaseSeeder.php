@@ -33,6 +33,7 @@ use App\Models\MoneySubRequest;
 use App\Models\Address;
 use App\Models\Bus;
 use App\Models\BusAddress;
+use App\Models\ProgressCalendar;
 use App\Models\Reply;
 use App\Models\StudentBus;
 use App\Models\SupervisorOfBus;
@@ -73,7 +74,9 @@ class DatabaseSeeder extends Seeder
 
         BaseCalendar::create(['subject_id' => 1, 'grade_id' => 1, 'title' => 'first chapter', 'is_test' => 0, 'date' => now()]);
         BaseCalendar::create(['subject_id' => 1, 'grade_id' => 1, 'title' => 'second chapter', 'is_test' => 0, 'date' => now()->addDay(4)]);
-        BaseCalendar::factory(5)->create();
+        BaseCalendar::factory(10)->create();
+
+        $this->try(fn() => ProgressCalendar::factory(20)->create());
 
         Complaint::factory(50)->create();
         Reply::factory(50)->create();
