@@ -142,9 +142,12 @@ class MarkController extends Controller
             ->join('types', 'tests.type_id', '=', 'types.id')
             ->join('subjects', 'tests.subject_id', '=', 'subjects.id')
             ->select('tests.id as test_id','tests.title as test_title','tests.date','types.id as type_id', 'types.name as type_name', 'subjects.id as subject_id', 'subjects.name as subject_name', 'tests.min_mark', 'tests.max_mark', 'marks.id as mark_id', 'marks.mark')
-            ->where('students.id', $student_id)
-            ->orderBy('tests.date')
-            ->get();
+            ->where('students.id', $student_id);
+
+            if(request()->without_nulls == 1)
+                $tests = $tests->whereNotNull('mark');
+            
+            $tests = $tests->orderBy('tests.date')->get();
 
             if(!$abort)
                 return $tests;
