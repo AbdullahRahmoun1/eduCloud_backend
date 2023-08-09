@@ -58,15 +58,15 @@ class MoneyRequestController extends Controller
     }
     public function edit(mr $bill) {
         $data=request()->validate([
-            'totalValue'=>['min:1000','numeric'],
+            'totalValue'=>['required_with:totalValue','min:1000','numeric'],
             'notes'=>['string','max:70'],
-            'bill_sections'=>['array','min:1'],
+            'bill_sections'=>['required_with:totalValue','array','min:1'],
             'bill_sections.*.value'=>['numeric','between:1000,'.request()->totalValue],
             'bill_sections.*.final_date'=>['date','after:'.now(),'distinct']
         ]);
         //check if bills section match the total value
         $sSum=0;
-        $totalValue=$data['totalValue']??$bill->value;
+        $totalValue=$data['totalValue'];
         foreach($data['bill_sections'] as $billS)
         $sSum+=$billS['value'];
         if($sSum!=$totalValue)
