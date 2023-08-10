@@ -94,12 +94,13 @@ class MoneyRequestController extends Controller
         res::success(data:$money_request);
     }
 
-    public function getStudentsFinanceInformation(Student $student){
+    public static function getStudentsFinanceInformation(Student $student,$onlyGetData=false){
         $student->load([
             'moneyRequests','moneyRequests.moneySubRequests',
             'incomes'
         ]);
         //note: incomes come already sorted in ascending order
+        if(!$onlyGetData)
         Helper::tryToReadStudent($student->id);
         //get how much he paid
         $paidForSchool=$student->incomes
@@ -143,6 +144,9 @@ class MoneyRequestController extends Controller
         ]);
         $student->hideFullName();
         //now return the response
+        if($onlyGetData)
+        return $student;
+        else
         res::success(data:$student);
     }
 }

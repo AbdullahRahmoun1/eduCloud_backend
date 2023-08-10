@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Helpers\Helper;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -20,10 +21,11 @@ class PrivateNotification implements ShouldBroadcast
      */
     public function __construct(
         public string $user_id,
-        public string $type="something",
-        public string $message,        
+        public string $notificationType="notification type",
+        public array $message,
+        public bool $is_user_type_student=true,
     ){
-        //
+        
     }
 
     /**
@@ -33,11 +35,14 @@ class PrivateNotification implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
+        $channel=$this->is_user_type_student?
+        Helper::getStudentChannel($this->user_id):
+        Helper::getEmployeeChannel($this->user_id);
         return [
-            new PrivateChannel("user_{$this->user_id}"),
+            new PrivateChannel($channel),
         ];
     }
     public function broadcastAs(){
-        return 'notification';
+        return 'new-notification';
     }
 }
