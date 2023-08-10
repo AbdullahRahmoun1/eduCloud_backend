@@ -21,8 +21,8 @@ class PrivateNotification implements ShouldBroadcast
      */
     public function __construct(
         public string $user_id,
-        public string $notificationType="notification type",
         public array $message,
+        public string $notificationType="notification type",
         public bool $is_user_type_student=true,
     ){
         

@@ -12,9 +12,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('inspire')
-        ->sendOutputTo('noice.log',true)
-        ->everyMinute();
+        $schedule->command('backup:run')
+        // ->runInBackground()
+        ->everyMinute()
+        ->before(fn()=>'before')
+        ->onSuccessWithOutput(fn()=>"---------------------------------------")
+        ->sendOutputTo(storage_path('logs/backup.log'));
     }
 
     /**

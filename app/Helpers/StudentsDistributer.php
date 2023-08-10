@@ -153,7 +153,7 @@ class StudentsDistributer
 
     private static function prepareClassesVisualizing(&$classes,$assignments,$reverse=true){
         foreach($classes as $class){
-            $class->newStudents=$assignments[$class->id];
+            $class->newStudents=$assignments[$class->id]??[];
             $n='new_avg_acceptance_rate';
             $class->$n=
             number_format($class->$n,2)+0;
