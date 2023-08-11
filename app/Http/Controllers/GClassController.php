@@ -76,11 +76,11 @@ class GClassController extends Controller
             'students_ids'=>['required','array','min:1'],
             'students_ids.*'=>['exists:students,id'],
             'classes_ids'=>['required','array','min:1'],
-            'classes_ids.*'=>['exists:g_classes,id'],
+            'classes_ids.*'=>['required','exists:g_classes,id'],
             'force'=>['required','boolean']
         ],[
             'students_ids.*.exists'=>"There is no student with ID :input.",
-            'classes_ids.*.exists'=>"There is no student with ID :input.",
+            'classes_ids.*.exists'=>"There is no class with ID :input.",
         ]);
         //fetch data from db
         $students=Student::whereIn('id',$data['students_ids'])

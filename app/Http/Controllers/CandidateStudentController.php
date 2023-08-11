@@ -72,6 +72,7 @@ class CandidateStudentController extends Controller
         res::success("Success! $ctr students became official!",[
             'official_students'=>$official_students
         ]);
+        
     }
     
 }

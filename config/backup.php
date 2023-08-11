@@ -162,11 +162,11 @@ return [
 
         'notifications' => [
             \Spatie\Backup\Notifications\Notifications\BackupHasFailedNotification::class => ['discord'],
-            // \Spatie\Backup\Notifications\Notifications\UnhealthyBackupWasFoundNotification::class => ['mail'],
-            // \Spatie\Backup\Notifications\Notifications\CleanupHasFailedNotification::class => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\UnhealthyBackupWasFoundNotification::class => ['discord'],
+            \Spatie\Backup\Notifications\Notifications\CleanupHasFailedNotification::class => ['discord'],
             \Spatie\Backup\Notifications\Notifications\BackupWasSuccessfulNotification::class => ['discord'],
-            // \Spatie\Backup\Notifications\Notifications\HealthyBackupWasFoundNotification::class => ['mail'],
-            // \Spatie\Backup\Notifications\Notifications\CleanupWasSuccessfulNotification::class => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\HealthyBackupWasFoundNotification::class => ['discord'],
+            \Spatie\Backup\Notifications\Notifications\CleanupWasSuccessfulNotification::class => ['discord'],
         ],
 
         /*
@@ -183,7 +183,7 @@ return [
                 'name' => env('MAIL_FROM_NAME', 'Example'),
             ],
         ],
-
+        //TODO: TRY THIS
         'slack' => [
             'webhook_url' => '',
 
@@ -197,9 +197,9 @@ return [
             'icon' => null,
 
         ],
-
+        //TODO: TRY TO MAKE IT WORK
         'discord' => [
-            'webhook_url' => 'https://discord.com/api/webhooks/1139323731752267776/RapGIi_UEG4tqJlpwGMUUSiBS7CBL7mIe3MrcdvgNCXkfh5PEUtjFJmIt2gKHzw054n_',
+            'webhook_url' => 'https://discord.com/api/webhooks/1139323759493394502/rAxd4-zOK8mgMwDwzmbAWnActTGymkpVsGPcF5dJgkS9Hz7vSQxPce43br-wkr0gjGjH',
 
             /*
              * If this is an empty string, the name field on the webhook will be used.
