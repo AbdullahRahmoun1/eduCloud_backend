@@ -15,13 +15,14 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
-});
-Broadcast::channel(Helper::getStudentChannel("{student_id}")
-,fn($student_id)=>['hello']
-);
-Broadcast::channel(Helper::getEmployeeChannel("{employee_id}")
-,fn($employee_id)=>true
-);
+// Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
+//     return (int) $user->id === (int) $id;
+// });
+// Broadcast::channel('private-student-1',fn()=>true);
+// Broadcast::channel(Helper::getStudentChannel("{student_id}")
+// ,fn($student_id)=>true
+// );
+// Broadcast::channel(Helper::getEmployeeChannel("{employee_id}")
+// ,fn($employee_id)=>true
+// );
 

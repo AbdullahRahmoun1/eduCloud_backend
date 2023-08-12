@@ -75,9 +75,11 @@ add temp role ❌
     ________________
     |bus_supervisor|
     ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-    get the students he supervises ❌
+    get the busses he supervises  ✅
+    get the students he supervises ( from my buses.. chose a bus .. call get bus students route for it )❌
     manage going trip ( student got on/off the bus ) ❌
     manage returning trip ( student got off the bus ) ❌
+    manage map shit ❌
     
     ___________
     |bus_admin|
@@ -104,6 +106,3 @@ add temp role ❌
     get school general financial study ✅
     get lateStudent's with their late bills with small search ✅
     
-
-
-

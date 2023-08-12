@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
 use App\Helpers\ResponseFormatter as res;
 use App\Models\Category;
+use App\Models\Bus;
 use App\Models\ClassSupervisor;
 use App\Models\ClassTeacherSubject;
 use App\Models\GClass;
@@ -144,4 +145,10 @@ class Helper {
 
         return $notification;
     }
+    public static function tryToReadBus($bus_id){
+        if(Gate::denies('viewBus',[Bus::class,$bus_id]))
+        res::error("You don't have the permission to read this bus's data.",
+        code:403);
+    }
+
 }
