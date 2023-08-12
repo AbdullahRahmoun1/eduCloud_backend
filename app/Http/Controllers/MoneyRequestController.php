@@ -97,7 +97,15 @@ class MoneyRequestController extends Controller
         res::success(data:$money_request);
     }
     public static function getStudentsFinanceInformation($student_id,$onlyGetData=false){
-        if($student_id==-1)$student_id=request()->user()->owner->id;
+        if($student_id==-1){
+            $owner=request()->user()->owner;
+            if(!$owner->hasRole(config('roles.student')))
+            res::error(
+                "You can't get your financial information. you'r not a student.",
+                code:422
+            );
+            $student_id=$owner->id;
+        }
         $student=Student::find($student_id);
         $student->load([
             'moneyRequests','moneyRequests.moneySubRequests',

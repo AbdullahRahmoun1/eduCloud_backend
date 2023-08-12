@@ -74,10 +74,20 @@ class IncomeController extends Controller
         Helper::lazyQueryTry(fn()=>$income->update($data));
         res::success();
     }
-    public function get(Student $student){
+    public function get($student_id){
         // incomes come already sorted in ascending order
         // (ascending) because it helps in another 
         //route and can be fixed easily in this route
+        if($student_id==-1){
+            $owner=request()->user()->owner;
+            if(!$owner->hasRole(config('roles.student')))
+            res::error(
+                "You can't get your payments. you'r not a student.",
+                code:422
+            );
+            $student_id=$owner->id;
+        }
+        $student=Student::find($student_id);
         $data=request()->validate([
             'schoolPayments?'=>['boolean']
         ]);
