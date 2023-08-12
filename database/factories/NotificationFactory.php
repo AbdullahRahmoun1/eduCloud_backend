@@ -25,7 +25,8 @@ class NotificationFactory extends Factory
             'owner_id'=>$type==1?Student::all()->random()->id:Employee::all()->random()->id,
             'owner_type'=>$type==1?Student::class:Employee::class,
             'date'=>now(),
-            'category_id'=>Category::all()->random()->id
+            'category_id'=>Category::all()->random()->id,
+            'approved' => fake()->boolean(),
         ];
     }
 }

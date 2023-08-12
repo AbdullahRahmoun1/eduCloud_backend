@@ -65,9 +65,8 @@ class DatabaseSeeder extends Seeder
         $this
         ->try(fn()=>GClass::factory(10)->create());
         CandidateStudent::factory(30)->create();
-        ClassSupervisor::create(['employee_id' => 3, 'g_class_id' => 1]);
-        ClassSupervisor::create(['employee_id' => 3, 'g_class_id' => 2]);
-        ClassSupervisor::create(['employee_id' => 3, 'g_class_id' => 3]);
+        ClassSupervisor::create(['employee_id' => 8, 'g_class_id' => 1]);
+        ClassSupervisor::create(['employee_id' => 8, 'g_class_id' => 2]);
         ClassTeacherSubject::create(['employee_id' => 1, 'subject_id' => 1, 'g_class_id' => 2]);
         ClassTeacherSubject::create(['employee_id' => 1, 'subject_id' => 1, 'g_class_id' => 1]);
         ClassTeacherSubject::create(['employee_id' => 2, 'subject_id' => 2, 'g_class_id' => 1]);
@@ -108,7 +107,8 @@ class DatabaseSeeder extends Seeder
         $this
         ->try(fn()=>Mark::factory(100)->create());
 
-        Category::factory(30)->create();
+        Category::create(['name' => 'global_note']);
+        Category::factory(4)->create();
         Notification::factory(100)->create();
         Notification::factory(3)->create(['owner_id' => 1, 'owner_type' => Student::class]);
 

@@ -18,6 +18,7 @@ class CategoryFactory extends Factory
     {
         return [
             'name'=>fake()->unique()->text(10),
+            'send_directly'=>fake()->boolean(),
         ];
     }
 }

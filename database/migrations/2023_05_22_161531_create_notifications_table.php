@@ -18,8 +18,9 @@ return new class extends Migration
             $table->integer('owner_id');
             $table->string('owner_type',60);
             $table->string('body',300);
-            $table->boolean('sent_successfully')->default(true);    
-            $table->date('date');
+            $table->boolean('sent_successfully')->default(true); 
+            $table->boolean('approved')->default(true);   
+            $table->dateTime('date');
             $table->foreignIdFor(Category::class);  
             $table->timestamps();
         });

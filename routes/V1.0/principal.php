@@ -3,13 +3,16 @@
 use App\Http\Controllers\AbilityTestController;
 use App\Http\Controllers\AtMarkController;
 use App\Http\Controllers\BaseCalendarController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\GClassController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Models\AtMark;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum','hasRoles:'.config('roles.principal'))->group(function () {
@@ -42,14 +45,8 @@ Route::middleware('auth:sanctum','hasRoles:'.config('roles.principal'))->group(f
     Route::get('employeeSearch/{query}',[EmployeeController::class,'search']);
     Route::get('viewEmployee/{employee}',[EmployeeController::class,'viewEmployee']);
 
-
-
-
-
-
-
- //Students
-    Route::post('addStudentOrCandidate/{is_direct}', [StudentController::class, 'add']);
-
+    Route::post('addCategory', [CategoryController::class, 'add']);
+    Route::post('editCategory/{id}', [CategoryController::class, 'edit']);
+    Route::post('sendGlobalNotification', [NotificationController::class, 'global']);
 });
 
