@@ -12,6 +12,6 @@ Route::middleware('auth:sanctum','hasRoles:'.config('roles.accountant'))->group(
     Route::post('addPayment/{student}', [IncomeController::class,'add']);
     Route::post('editPayment/{income}', [IncomeController::class,'edit']);
     Route::get('schoolFinancialStudy',[SchoolFinanceController::class,'generalStudy']);
-    
+    Route::get('getLateStudentsBills',[SchoolFinanceController::class,'getLateStudentsBills']);
 });
 //TODO:: fix authorization

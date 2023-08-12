@@ -10,10 +10,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Events\PrivateNotification;
 use DateTime;
-use DateInterval;
-use App\Models\Student;
 use App\Models\MoneyRequest as mr;
-use App\Http\Controllers\MoneyRequestController;
+use App\Http\Controllers\SchoolFinanceController;
 use Exception;
 
 
@@ -36,7 +34,7 @@ class NotifyParentsToPayBills implements ShouldQueue,ShouldBeUnique
     public function handle()
     {
         $messagesSent=0;
-        $shouldBeWarned=MoneyRequestController::getLateStudentsBills(true);
+        $shouldBeWarned=SchoolFinanceController::getLateStudentsBills(with_warnings:true,send_response:false);
         try{
             //TODO insert notification to db
             foreach($shouldBeWarned as $id=>$bills){

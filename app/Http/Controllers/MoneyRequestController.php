@@ -96,7 +96,6 @@ class MoneyRequestController extends Controller
         $money_request->load(['moneySubRequests']);
         res::success(data:$money_request);
     }
-
     public static function getStudentsFinanceInformation(Student $student,$onlyGetData=false){
         $student->load([
             'moneyRequests','moneyRequests.moneySubRequests',
@@ -151,49 +150,5 @@ class MoneyRequestController extends Controller
         return $student;
         else
         res::success(data:$student);
-    }
-
-    public static function getLateStudentsBills($with_warnings=false) {
-        $students=Student::all();
-        $shouldBeWarned=[];
-        foreach($students as $student){
-            $financeInfo=self::getStudentsFinanceInformation($student,true);
-            $bill=$financeInfo->schoolBill;
-            if($bill)
-            self::checkBill(
-                $bill,
-                $student,
-                $shouldBeWarned,
-                $with_warnings?7:0
-            );
-            $bill=$financeInfo->busBill;
-            if($bill)
-            self::checkBill(
-                $bill,
-                $student,
-                $shouldBeWarned,
-                $with_warnings?7:0
-            );
-            
-        }
-        return $shouldBeWarned;
-    }
-
-    private static function checkBill($bill,$student,&$shouldBeWarned,$dayInterval=7){
-        $today = new DateTime();
-        $sections=$bill->moneySubRequests;
-                foreach($sections as $section){
-                    $final_date = new DateTime($section->final_date);
-                    $interval = new DateInterval("P{$dayInterval}D"); // P7D = period of 6 days
-                    $final_date = $final_date->sub($interval);
-                    //final date - 7 days we start warning them..
-                    if(!$section->fully_paid && $today>=$final_date){
-                        $shouldBeWarned[$student->id][]=[
-                            'student'=>$student,
-                            'type'=>$bill->type,
-                            'section'=>$section,
-                        ];
-                    }
-                }
     }
 }

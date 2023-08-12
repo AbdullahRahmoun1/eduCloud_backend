@@ -101,9 +101,8 @@ add temp role ❌
     edit payment of student ✅
     get payments of student ✅
     get student's financial stuff ✅
-    get school general financial study ❌ (abd: working on this)
-    get school specific month financial study ❌ (abd: working on this)
-
+    get school general financial study ✅
+    get lateStudent's with their late bills with small search ✅
     
 
 
