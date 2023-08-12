@@ -18,8 +18,9 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+Broadcast::channel('private-student-51',fn()=>true);
 Broadcast::channel(Helper::getStudentChannel("{student_id}")
-,fn($student_id)=>['hello']
+,fn($student_id)=>true
 );
 Broadcast::channel(Helper::getEmployeeChannel("{employee_id}")
 ,fn($employee_id)=>true
