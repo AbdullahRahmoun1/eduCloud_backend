@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Helpers\ResponseFormatter as response;
 use App\Models\Account;
 use App\Models\CandidateStudent;
+use App\Models\Employee;
 use App\Models\GClass;
 use App\Models\Student;
 use Exception;
@@ -32,7 +33,8 @@ class StudentController extends Controller
             'father_name' => $namesV, 
             'place_of_living' => ['string', 'min:3', 'max:45', 'nullable'], 
             'birth_date' => ['required', 'date'], 
-            '6th_grade_avg' => ['numeric', 'nullable', 'gt:0'] 
+            '6th_grade_avg' => ['numeric', 'nullable', 'gt:0'],
+            'grade_id' => ['required', 'exists:grades,id'],
         ]; 
         
         $studentRules = array_merge($candidateRules, [ 
@@ -52,16 +54,20 @@ class StudentController extends Controller
             'registration_date' => ['date', 'nullable'], 
             'notes' => ['string', 'min:1', 'max:200', 'nullable'], 
         ]); 
-        $candidateRules['grade_id'] = ['required', 'exists:grades,id']; 
         $candidateRules['mother_name'] = $uniqueCand; 
 
-        $studentRules['g_class_id'] = ['exists:g_classes,id', 'nullable']; 
+        $studentRules['g_class_id'] = [
+            'nullable',
+            Rule::exists('g_classes', 'id')->where(function ($query) use($r) {
+                $query->where('grade_id', $r['grade_id']);})]; 
+
         $studentRules['mother_name'] = $uniqueStu; 
         
         //validate 
         $data = request()->validate(
             $is_direct ? $studentRules : $candidateRules, 
-            ['mother_name.unique' => 'this student is already in the system']);
+            ['mother_name.unique' => 'this student is already in the system',
+            'g_class_id.exists' => 'this g_class id is invalid or doesnt belong to that grade']);
 
         DB::beginTransaction();
         try{
@@ -113,7 +119,8 @@ class StudentController extends Controller
             'father_name' => $namesV, 
             'place_of_living' => ['string', 'min:3', 'max:45', 'nullable'], 
             'birth_date' => ['date', 'nullable'], 
-            '6th_grade_avg' => ['numeric', 'nullable', 'gt:0'] 
+            '6th_grade_avg' => ['numeric', 'nullable', 'gt:0'],
+            'grade_id' => ['exists:grades,id', 'nullable']
         ]; 
         
         $studentRules = array_merge($candidateRules, [ 
@@ -143,6 +150,10 @@ class StudentController extends Controller
         $data = request()->validate(
             $is_candidate ? $candidateRules : $studentRules, 
             ['mother_name.unique' => 'this student is already in the system']); 
+            
+        // $grade_id = isset($r['grade_id']) ? $r['grade_id'] :
+        //     Student::find()
+        // return 'fhg';
         
         //update the student
         Helper::lazyQueryTry(fn()=> $student->update($data));
@@ -215,9 +226,18 @@ class StudentController extends Controller
         response::success('results found successfully', $result);
     }
     
-    public function view(Student $student){
+    public function view($student_id){
 
-        Helper::tryToReadStudent($student->id);
+        if($student_id < 0 ){
+            if(auth()->user()->owner_type == Employee::class){
+                response::error('invalid student id',code:422);
+            }
+            $student_id = auth()->user()->owner->id;
+        }
+
+        Helper::tryToReadStudent($student_id);
+        
+        $student = Student::find($student_id);
 
         $mark_controller = new MarkController();
         $marks = $mark_controller->getMarksOfStudent($student->id,false);
@@ -233,7 +253,7 @@ class StudentController extends Controller
         //TODO:add address to the view Student
         $result['address'] = $result['place_of_living'] ?? 'N/A';
 
-        if(request()->all != 1)
+        if(request()->all != 1 || auth()->user()->owner_type == Student::class)
             $result = $result->only('id','full_name','father_name','mother_name', 'grade', 'g_class', 'numbers', 'address');
 
         $result['marks'] = $marks;
