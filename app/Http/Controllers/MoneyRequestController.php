@@ -96,7 +96,9 @@ class MoneyRequestController extends Controller
         $money_request->load(['moneySubRequests']);
         res::success(data:$money_request);
     }
-    public static function getStudentsFinanceInformation(Student $student,$onlyGetData=false){
+    public static function getStudentsFinanceInformation($student_id,$onlyGetData=false){
+        if($student_id==-1)$student_id=request()->user()->owner->id;
+        $student=Student::find($student_id);
         $student->load([
             'moneyRequests','moneyRequests.moneySubRequests',
             'incomes'
