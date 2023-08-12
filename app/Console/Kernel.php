@@ -2,11 +2,9 @@
 
 namespace App\Console;
 
-use App\Tasks\NotifyParentsToPayBills;
+use App\Jobs\NotifyParentsToPayBills;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Spatie\Backup\Notifications\Channels\Discord\DiscordChannel;
-use Spatie\Backup\Notifications\Channels\Discord\DiscordMessage;
 
 class Kernel extends ConsoleKernel
 {
@@ -17,13 +15,14 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('backup:run')
         ->runInBackground()
-        ->everyMinute()
+        // ->everyMinute()
         ->dailyAt('00:00')
         ->sendOutputTo(storage_path('logs/backup.log'));
 
-        $schedule->call(new NotifyParentsToPayBills())
-        ->dailyAt('10:00')
-        ->sendOutputTo(storage_path('logs/notifyParentsToPay.log'));        
+        $schedule->job(new NotifyParentsToPayBills())
+        ->everyMinute();
+        // ->weekly()
+        // ->days([0,2,4])->at('10:00');
     }
 
     /**
@@ -32,7 +31,6 @@ class Kernel extends ConsoleKernel
     protected function commands(): void
     {
         $this->load(__DIR__.'/Commands');
-
         require base_path('routes/console.php');
     }
 }

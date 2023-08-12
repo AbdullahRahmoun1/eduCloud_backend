@@ -28,4 +28,5 @@ class MoneyRequest extends Model
         return $isSchoolRequest?
         self::SCHOOL:self::BUS;
     }
+
 }

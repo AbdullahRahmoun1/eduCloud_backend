@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
+use Exception;
+use DateInterval;
 use App\Helpers\Helper;
-use App\Helpers\ResponseFormatter as res;
-use App\Models\MoneyRequest as mr;
-use App\Models\MoneySubRequest;
 use App\Models\Student;
+use Illuminate\Http\Request;
+use App\Models\MoneySubRequest;
+use App\Models\MoneyRequest as mr;
+use Illuminate\Support\Facades\DB;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Helpers\ResponseFormatter as res;
 
 class MoneyRequestController extends Controller
 {
@@ -148,5 +151,49 @@ class MoneyRequestController extends Controller
         return $student;
         else
         res::success(data:$student);
+    }
+
+    public static function getLateStudentsBills($with_warnings=false) {
+        $students=Student::all();
+        $shouldBeWarned=[];
+        foreach($students as $student){
+            $financeInfo=self::getStudentsFinanceInformation($student,true);
+            $bill=$financeInfo->schoolBill;
+            if($bill)
+            self::checkBill(
+                $bill,
+                $student,
+                $shouldBeWarned,
+                $with_warnings?7:0
+            );
+            $bill=$financeInfo->busBill;
+            if($bill)
+            self::checkBill(
+                $bill,
+                $student,
+                $shouldBeWarned,
+                $with_warnings?7:0
+            );
+            
+        }
+        return $shouldBeWarned;
+    }
+
+    private static function checkBill($bill,$student,&$shouldBeWarned,$dayInterval=7){
+        $today = new DateTime();
+        $sections=$bill->moneySubRequests;
+                foreach($sections as $section){
+                    $final_date = new DateTime($section->final_date);
+                    $interval = new DateInterval("P{$dayInterval}D"); // P7D = period of 6 days
+                    $final_date = $final_date->sub($interval);
+                    //final date - 7 days we start warning them..
+                    if(!$section->fully_paid && $today>=$final_date){
+                        $shouldBeWarned[$student->id][]=[
+                            'student'=>$student,
+                            'type'=>$bill->type,
+                            'section'=>$section,
+                        ];
+                    }
+                }
     }
 }
