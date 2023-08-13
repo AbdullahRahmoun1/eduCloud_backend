@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PrivateNotification;
 use App\Helpers\Helper;
 use App\Helpers\ResponseFormatter as res;
 use App\Models\GClass;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\MarkController;
+use Exception;
 
 class TestController extends Controller
 {
@@ -103,13 +105,13 @@ class TestController extends Controller
     
     public function test(Request $request)
     {   
-        // $val = Validator::make($request, [
-        //     'n' => [['required', 'max:7'], 'min:5'],
-        //     'm' => 'integer|nullable'
-        // ]);
-        if(Gate::denies('editClassInfo',[Test::class,3]))
-        return 'hhhh';
-        return ( request()->user()->owner->roles()->select('id')->get()->makeHidden('pivot'));
+        
+        try{
+        return Helper::sendNotificationToOneStudent(1,'asdsa',5,true,false);
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 
     public function getTestMarks(Test $test){

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->boolean('for_students')->default(true);
+            $table->boolean('send_directly')->default(false);
             $table->integer('marks')->default(0);
             $table->timestamps();
         });

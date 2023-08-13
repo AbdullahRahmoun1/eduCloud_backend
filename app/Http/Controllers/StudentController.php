@@ -20,11 +20,20 @@ class StudentController extends Controller
     public function add($is_direct, Request $r) {
 
         //initialize the rules for validation 
-        $namesV = ['required', 'string', 'between:2,20']; 
+        $namesV = ['required', 'string', 'between:2,20'];
+
         $uniqueStu = $namesV; 
-        $uniqueStu[] = Rule::unique('students', 'mother_name')->where('first_name',$r['first_name'])->where('last_name', $r['last_name'])->where('father_name', $r['father_name']); 
+        $uniqueStu[] = Rule::unique('students', 'mother_name')
+        ->where('first_name',$r['first_name'])
+        ->where('last_name', $r['last_name'])
+        ->where('father_name', $r['father_name']); 
+
         $uniqueCand = $namesV; 
-        $uniqueCand[] = Rule::unique('candidate_students', 'mother_name')->where('first_name',$r['first_name'])->where('last_name', $r['last_name'])->where('father_name', $r['father_name']); 
+        $uniqueCand[] = Rule::unique('candidate_students', 'mother_name')
+        ->where('first_name',$r['first_name'])
+        ->where('last_name', $r['last_name'])
+        ->where('father_name', $r['father_name']); 
+
         $namesV30 = ['string', 'max:30', 'nullable']; 
         
         $candidateRules = [ 
@@ -107,10 +116,21 @@ class StudentController extends Controller
         $mother_n = $r['mother_name'] ? $r['mother_name'] : $student['mother_name'];
 
         $namesV = ['string', 'between:2,20', 'nullable']; 
+
         $uniqueStu = $namesV; 
-        $uniqueStu[] = Rule::unique('students', 'mother_name')->where('first_name',$first_n)->where('last_name', $last_n)->where('father_name', $father_n); 
+        $uniqueStu[] = Rule::unique('students', 'mother_name')
+        ->ignore($id)
+        ->where('first_name',$first_n)
+        ->where('last_name', $last_n)
+        ->where('father_name', $father_n); 
+
         $uniqueCand = $namesV; 
-        $uniqueCand[] = Rule::unique('candidate_students', 'mother_name')->where('first_name',$r['first_name'])->where('last_name', $r['last_name'])->where('father_name', $r['father_name']); 
+        $uniqueCand[] = Rule::unique('candidate_students', 'mother_name')
+        ->ignore($id)
+        ->where('first_name',$r['first_name'])
+        ->where('last_name', $r['last_name'])
+        ->where('father_name', $r['father_name']);
+
         $namesV30 = ['string', 'max:30', 'nullable']; 
         
         $candidateRules = [ 
@@ -140,16 +160,19 @@ class StudentController extends Controller
             'registration_date' => ['date', 'nullable'], 
             'notes' => ['string', 'min:1', 'max:200', 'nullable'], 
         ]); 
-        $candidateRules['grade_id'] = ['exists:grades,id', 'nullable']; 
         $candidateRules['mother_name'] = $uniqueCand; 
 
-        $studentRules['g_class_id'] = ['exists:g_classes,id', 'nullable']; 
+        $studentRules['g_class_id'] = [
+            'nullable',
+            Rule::exists('g_classes', 'id')->where(function ($query) use($r) {
+                $query->where('grade_id', $r['grade_id']);})];
         $studentRules['mother_name'] = $uniqueStu; 
         
         //validate 
         $data = request()->validate(
             $is_candidate ? $candidateRules : $studentRules, 
-            ['mother_name.unique' => 'this student is already in the system']); 
+            ['mother_name.unique' => 'this student is already in the system',
+            'g_class_id.exists' => 'this g_class id is invalid or doesnt belong to that grade']); 
             
         // $grade_id = isset($r['grade_id']) ? $r['grade_id'] :
         //     Student::find()

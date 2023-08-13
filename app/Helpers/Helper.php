@@ -1,15 +1,28 @@
 <?php
 namespace App\Helpers;
+use Exception;
 use App\Models\Bus;
 use App\Models\GClass;
 use App\Models\Student;
+use App\Models\Category;
+use Illuminate\Support\Str;
+use App\Models\Notification;
 use App\Models\ClassSupervisor;
-use Illuminate\Support\Facades\DB;
+use App\Events\PrivateNotification;
 use App\Models\ClassTeacherSubject;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
 use App\Helpers\ResponseFormatter as res;
 
+use App\Models\Category;
+use App\Models\Bus;
+use App\Models\ClassSupervisor;
+use App\Models\ClassTeacherSubject;
+use App\Models\GClass;
+use App\Models\Notification;
+use App\Models\Student;
+use Exception;
+use Illuminate\Support\Str;
 class Helper {
     public static function lazyQueryTry($toTry,$dupMsg=null){
         DB::beginTransaction();
@@ -105,6 +118,48 @@ class Helper {
         if(Gate::denies('viewStudent',[Student::class,$student_id]))
         res::error("You don't have the permission to read this student's data.",
         code:403);
+    }
+
+    public static function sendNotificationToOneStudent($student_id, $body, $category_id, $notify = false, $sent = true){
+
+        if(!Student::find($student_id))
+            throw new Exception('invalid student id');
+        
+        if(!Category::find($category_id))
+            throw new Exception('invalid category id');
+
+        if(Str::length($body) > 300)
+            throw new Exception('the body must be less that 300 chars');
+
+        $data['owner_id'] = $student_id;
+        $data['owner_type'] = Student::class;
+        $data['body'] = $body;
+        $data['category_id'] = $category_id;
+        $data['date'] = now();
+
+        $category = Category::find($category_id);
+
+        //if the note is not sent or will not be sent -> put them as false
+        if(((!$category->send_directly && !auth()->user()->owner->hasRole('principal')) || !$notify) && !$sent){
+            $data['approved'] = false;
+            $data['sent_successfully'] = false;
+        }
+        
+        try{
+            $notification = Notification::create($data);
+        }
+        catch(Exception $e){
+            throw new Exception('something went wrong!',code:400);
+        }
+
+        if(($category->send_directly || auth()->user()->owner->hasRole('principal')) && $notify){
+            event(new PrivateNotification(
+                $student_id,
+                ['title' => $category->name, 'body' => $body],
+                $category->name));
+        }
+
+        return $notification;
     }
     public static function tryToReadBus($bus_id){
         if(Gate::denies('viewBus',[Bus::class,$bus_id]))
