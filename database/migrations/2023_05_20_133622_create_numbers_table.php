@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('owner_id');
             $table->enum('type',[
                 'father', 'mother', 'home',
-                'sms', 'telegrame',
+                'sms', 'telegram',
                 'extra', 'other'
             ]);
             $table->string('relationship',50)->nullable();

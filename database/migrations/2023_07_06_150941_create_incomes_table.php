@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create('incomes', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('value');
+            $table->string('receipt_number')->unique();
             $table->date('date');
             $table->enum('type',[mr::BUS,mr::SCHOOL]);
             $table->string('notes',70)->nullable();

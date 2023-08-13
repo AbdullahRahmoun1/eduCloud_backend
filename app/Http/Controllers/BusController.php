@@ -27,6 +27,14 @@ class BusController extends Controller
     }
     public function studentsInBus(Bus $bus) {
         Helper::tryToReadBus($bus->id);
-        
+        $bus->load([
+            'students:id,first_name,last_name,grade_id,g_class_id',
+            'students.grade:id,name',
+            'students.g_class:id,name',
+            'students.numbers'
+            ,
+        ]);
+        $students=$bus->students;
+        res::success(data:$students);
     }
 }

@@ -16,6 +16,7 @@ class Income extends Model
         'updated_at'
     ];
     protected $guarded =['created_at','updated_at'];
+    public const DUP_MSG="There is a receipt with the same receipt_number";
 
     public function student(): BelongsTo {
         return $this->belongsTo(Student::class);

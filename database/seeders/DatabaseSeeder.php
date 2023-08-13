@@ -115,7 +115,8 @@ class DatabaseSeeder extends Seeder
         $this
         ->try(fn()=>MoneyRequest::factory(100)->create());
         MoneySubRequest::factory(300)->create();
-        Income::factory(500)->create();
+        $this
+        ->try(fn()=>Income::factory(500)->create());
 
         $this
         ->try(fn()=>Bus::factory(50)->create());

@@ -29,4 +29,11 @@ class BusPolicy
         $result|=$owner->hasRole(config('roles.busAdmin'));
         return $result;
     }
+    public function controlBusTrips(Account $account,$bus_id){
+        $owner=request()->user()->owner;
+        return $owner->hasRole(config('roles.busSupervisor')) 
+        &&
+        in_array($bus_id,$owner->buses->pluck('id'));
+        
+    }
 }

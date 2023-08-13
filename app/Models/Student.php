@@ -21,7 +21,7 @@ use Spatie\Permission\Traits\HasRoles;
 class Student extends Model
 {
     use HasFactory,HasRoles;
-    protected $hidden=['created_at','updated_at'];
+    protected $hidden=['created_at','updated_at','pivot'];
     protected $guarded=[];
     protected $appends=['full_name'];
     protected $guard_name='web';

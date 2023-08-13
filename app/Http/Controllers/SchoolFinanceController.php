@@ -55,7 +55,7 @@ class SchoolFinanceController extends Controller
         $shouldBeWarned=[];
         foreach($students as $student){
             //get student's financial information
-            $financeInfo=MoneyRequestController::getStudentsFinanceInformation(clone $student,true);
+            $financeInfo=MoneyRequestController::getStudentsFinanceInformation($student->id,true);
             $bill=$financeInfo->schoolBill;
             //if he has a school bill then check it
             if($bill)

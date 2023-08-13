@@ -1,20 +1,29 @@
 <?php
 namespace App\Helpers;
+use App\Models\Bus;
+use App\Models\GClass;
+use App\Models\Student;
+use App\Models\ClassSupervisor;
+use Illuminate\Support\Facades\DB;
+use App\Models\ClassTeacherSubject;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
 use App\Helpers\ResponseFormatter as res;
-use App\Models\Bus;
-use App\Models\ClassSupervisor;
-use App\Models\ClassTeacherSubject;
-use App\Models\GClass;
-use App\Models\Student;
+
 class Helper {
-    public static function lazyQueryTry($toTry){
+    public static function lazyQueryTry($toTry,$dupMsg=null){
+        DB::beginTransaction();
         try{
             $result=$toTry();
         }catch(QueryException $e){
-            res::queryError($e);
+            $code=$e->errorInfo[1];
+            if($code==1062 && $dupMsg!=null){
+                res::queryError($e,$dupMsg,rollback:true);
+            }else{
+                res::queryError($e,rollback:true);
+            }
         }
+        DB::commit();
         return $result;
     }
     public static function success(){
@@ -100,6 +109,11 @@ class Helper {
     public static function tryToReadBus($bus_id){
         if(Gate::denies('viewBus',[Bus::class,$bus_id]))
         res::error("You don't have the permission to read this bus's data.",
+        code:403);
+    }
+    public static function tryToControlBusTrips($bus_id){
+        if(Gate::denies('controlBusTrips',[Bus::class,$bus_id]))
+        res::error("You don't have the permission to control this bus's trips.",
         code:403);
     }
 

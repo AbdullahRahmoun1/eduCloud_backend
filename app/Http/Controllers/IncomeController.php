@@ -8,6 +8,7 @@ use App\Models\Income;
 use App\Models\MoneyRequest as mr;
 use App\Models\MoneyRequest;
 use App\Models\Student;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class IncomeController extends Controller
@@ -15,6 +16,7 @@ class IncomeController extends Controller
     public function add(Student $student) {
         $data=request()->validate([
             'value'=>['required','numeric','min:1000'],
+            'receipt_number'=>['required','string','min:1'],
             'forSchoolBill?'=>['required','boolean'],
             'notes'=>['string','max:60'],
         ]);
@@ -59,27 +61,31 @@ class IncomeController extends Controller
         }
         //looks good.. insert to db
         $income=Helper::lazyQueryTry(
-            fn()=>Income::create($data)
+            fn()=>Income::create($data),
+            dupMsg:Income::DUP_MSG
         );
         res::success(data:$income);
     }
     public function edit(Income $income) {
         $data=request()->validate([
             'value'=>['numeric','min:1000'],
+            'receipt_number'=>['string','min:1'],
             'notes'=>['string','min:1'],
-            'schoolPayment'=>['boolean']
         ]);
-        $data['type']=$data['schoolPayment']?mr::SCHOOL:mr::BUS;
-        unset($data['schoolPayment']);
-        Helper::lazyQueryTry(fn()=>$income->update($data));
+        if($data['receipt_number']==$income->receipt_number)
+        unset($data['receipt_number']);
+        Helper::lazyQueryTry(
+            fn()=>$income->update($data),
+            dupMsg:Income::DUP_MSG
+        );
         res::success();
     }
     public function get($student_id){
         // incomes come already sorted in ascending order
         // (ascending) because it helps in another 
         //route and can be fixed easily in this route
+        $owner=request()->user()->owner;
         if($student_id==-1){
-            $owner=request()->user()->owner;
             if(!$owner->hasRole(config('roles.student')))
             res::error(
                 "You can't get your payments. you'r not a student.",
@@ -99,6 +105,8 @@ class IncomeController extends Controller
             )->get()->reverse();
         }else
         $incomes=$student->incomes->reverse();
-        res::success(data:$incomes);
+        if($owner->hasRole(config('roles.student')))
+        $incomes->makeHidden('notes');
+        res::success(data:$incomes->values());
     }
 }
