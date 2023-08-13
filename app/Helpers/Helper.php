@@ -8,21 +8,13 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Models\Notification;
 use App\Models\ClassSupervisor;
+use Illuminate\Support\Facades\DB;
 use App\Events\PrivateNotification;
 use App\Models\ClassTeacherSubject;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
 use App\Helpers\ResponseFormatter as res;
 
-use App\Models\Category;
-use App\Models\Bus;
-use App\Models\ClassSupervisor;
-use App\Models\ClassTeacherSubject;
-use App\Models\GClass;
-use App\Models\Notification;
-use App\Models\Student;
-use Exception;
-use Illuminate\Support\Str;
 class Helper {
     public static function lazyQueryTry($toTry,$dupMsg=null){
         DB::beginTransaction();
