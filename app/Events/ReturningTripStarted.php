@@ -5,6 +5,7 @@ namespace App\Events;
 use App\Helpers\Helper;
 use App\Http\Controllers\BusReturningTripController as trip;
 use App\Models\Bus;
+use Brick\Math\BigInteger;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -20,35 +21,46 @@ class ReturningTripStarted implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct(public Bus $bus){
-        
+    public function __construct(
+        private $student,
+        private bool $absent,
+        private String $link
+        ){
     }
-
     /**
      * Get the channels the event should broadcast on.
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn(): array
-    {
-        $ids=$this->bus->students->pluck('id');
-        $channels=$ids->map(
-            fn($id)=>new PrivateChannel(
-                Helper::getStudentChannel($id)
-            )    
-        );
-        return $channels->toArray();
-    }
-
-    public function broadcastWith(){
-        $data=trip::generateBusKeyAndLink($this->bus);
+    public function broadcastOn(): array {
         return [
-            'link'=>$data['link']
+            new PrivateChannel(
+            Helper::getStudentChannel($this->student->id)
+            )    
         ];
     }
-
+    public function broadcastWith() {
+        $studentName=$this->student->full_name;
+        $result=[
+            'student_id'=>$this->student->id,
+            'student_name'=>$studentName,
+            'absent'=>$this->absent,
+            'date'=>date("Y-m-d"),
+            'time'=>date("g:i A")
+        ];
+        if($this->absent){
+            $result['title'] = "Student Absence on School Bus";
+            $result['body'] = "The student $studentName did not ride"
+            ." the school bus on the return trip back home.";
+        }else {
+            $result['title'] = "Returning trip started.";
+            $result['body'] = 
+            "Click on the message to track the current location of the bus.";
+            $result['link'] = $this->link;
+        }
+        return $result;
+    }
     public function broadCastAs() {
         return 'returningTripStarted';
     }
-
 }

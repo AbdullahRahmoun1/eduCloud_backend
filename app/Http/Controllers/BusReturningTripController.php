@@ -3,19 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Events\ReturningTripStarted;
-use DateTime;
 use App\Models\Bus;
 use App\Helpers\Helper;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter as res;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Validation\Rule;
 
 class BusReturningTripController extends Controller
 {
     public function startTrip(Bus $bus) {
         //is the user allowed to control this trip?
         Helper::tryToControlBusTrips($bus->id);
+        //get the absent students
+         //is this student subscribed to this bus
+        $studentSubscribedToBus=Rule::exists('student_bus','student_id')
+        ->where('bus_id',$bus->id);
+        //validate
+        $data=request()->validate([
+            'absentStudentsIds'=>['array','min:1'],
+            'absentStudentsIds.*'=>['required','exists:students,id',$studentSubscribedToBus]
+        ]);
+        $absentIds=$data['absentStudentsIds']??[];
         //good.. now get todays key + generate a link
         $data=self::generateBusKeyAndLink($bus);
         $key=$data['key'];
@@ -30,13 +39,13 @@ class BusReturningTripController extends Controller
                 ],
                 409
             );
-        }
+        }        
         //nop.. ok now we save the link for today's journey
         Cache::put($key,$link,2.5*60);
         $allowedIds=$bus->students->pluck('id');
         Cache::put($link,$allowedIds,2.5*60);
         //notify parents that returning journey has started and give them the link
-        event(new ReturningTripStarted($bus));
+        self::notifyParents($bus,$absentIds,$link);
         //success.. now we can return the link 
         //to supervisor to start sharing his location
         res::success(data:[
@@ -72,4 +81,13 @@ class BusReturningTripController extends Controller
         Cache::forget($key);
         Cache::forget($link);
     }
+    private static function notifyParents($bus,$absentIds,$link) {
+        foreach($bus->students as $student){
+            $absent=in_array($student->id,$absentIds);
+            event(new ReturningTripStarted(
+                $student,$absent,$link
+            ));
+        }
+    }
+    
 }
