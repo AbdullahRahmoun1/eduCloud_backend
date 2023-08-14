@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\BusEvents;
 
 use App\Helpers\Helper;
 use Illuminate\Broadcasting\Channel;
@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class LeavingTripStarted
+class LeavingTripStarted implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -22,6 +22,7 @@ class LeavingTripStarted
         private $student,
         private String $link
         ) {
+            
         
     }
 
@@ -40,12 +41,11 @@ class LeavingTripStarted
     }
     public function broadcastWith() {
         $studentName=$this->student->full_name;
-        $result=[
-            'student_id'=>$this->student->id,
-            'student_name'=>$studentName,
-            'date'=>date("Y-m-d"),
-            'time'=>date("g:i A"),
-            'link'=>$this->link
+        $result=Helper::msgBasicData(true,$this->student);
+        $result+=[
+            'link'=>$this->link,
+            'title'=>"Attention! Leaving trip started.",
+            'body'=>"Click on the message to track the current location of the bus."
         ];
         return $result;
     }

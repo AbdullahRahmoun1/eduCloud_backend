@@ -30,6 +30,7 @@ class BusReturningTripController extends Controller
             'absentStudentsIds.*'=>['required','exists:students,id',$studentSubscribedToBus]
         ]);
         $absentIds=$data['absentStudentsIds']??[];
+        
         //good.. now get todays key + generate a link
         $data=self::generateBusKeyAndLink($bus);
         $key=$data['key'];
@@ -47,9 +48,10 @@ class BusReturningTripController extends Controller
         }        
         //nop.. ok now we save the link for today's journey
         Cache::put($key,$link,self::DataLifeTime);
-        //allowed ids are the student who are
-        // subscribes to bus and not marked as absent by bus_sup
-        $allowedIds=$bus->students->pluck('id')->diff($absentIds);
+        //allowed ids are the student who can watch the bus location
+        $allowedIds=$bus->students
+        ->where('isAbsentToday',false)->pluck('id')
+        ->diff($absentIds);
         Cache::put($link,$allowedIds,self::DataLifeTime);
         //initialize the link channel 
         event(new GpsLinkInitialization($link));
@@ -63,14 +65,7 @@ class BusReturningTripController extends Controller
     }
     public function studentLeftTheBus(Student $student){
         //fix this line if you found a way to make it return only one
-        $bus=$student->bus()->first();
-        if($bus==null){
-            res::error(
-                "Couldn't find student's bus. make sure that"
-                ." he is a transportation subscriber",
-                code:422
-            );
-        }
+        $bus=Helper::validateStudentHasBus($student);
         Helper::tryToControlBusTrips($bus);
         $key=self::generateBusKeyAndLink($bus)['key'];
         $link=Cache::get($key,-1);
@@ -90,7 +85,8 @@ class BusReturningTripController extends Controller
         $allowedIds=collect($allowedIds);
         if(!$allowedIds->contains($student->id)){
             res::error(
-                "Looks like This student already left the bus!",
+                !$student->isAbsentToday?"Looks like This student already left the bus!"
+                :"Student is absent today! You can't do this action. ",
             );
         }
         Cache::put(
@@ -128,9 +124,10 @@ class BusReturningTripController extends Controller
         ];
     }
     private static function notifyParents($bus,$absentIds,$link) {
-        //TODO: check if student is already absent in school
         //if true then don't send the message
         foreach($bus->students as $student){
+            if($student->isAbsentToday)
+            continue;
             $absent=in_array($student->id,$absentIds);
             event(new ReturningTripStarted(
                 $student,$absent,$link

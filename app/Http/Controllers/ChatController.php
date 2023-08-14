@@ -65,9 +65,9 @@ class ChatController extends Controller
                     'employee_id'=>$owner->id
                 ])
             );
-            event(new EventsReply($owner->id,$student->id,$rep));
+            event(new EventsReply($student->id,$rep));
         }
-        return $data;
+        res::success();
     }
     public function getChat($student_id) {
         $owner=request()->user()->owner;

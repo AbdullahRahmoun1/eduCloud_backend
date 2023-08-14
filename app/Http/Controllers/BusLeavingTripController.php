@@ -6,16 +6,20 @@ use App\Models\Bus;
 use App\Helpers\Helper;
 use App\Models\Student;
 use Illuminate\Support\Str;
-use App\Events\LeavingTripStarted;
-use App\Events\StudentBoardedTheBus;
+use App\Events\BusEvents\LeavingTripStarted;
+use App\Events\BusEvents\StudentBoardedTheBus;
 use Illuminate\Support\Facades\Cache;
 use App\Events\BusEvents\GpsLinkClosed;
 use App\Helpers\ResponseFormatter as res;
 use App\Events\BusEvents\GpsLinkInitialization;
 
-class BusReturningTripController extends Controller
+class BusLeavingTripController extends Controller
 {
     public const DataLifeTime=2.5*60;
+
+
+    //TODO:  bull will arrive soon
+    //TODO:  bull will leave the student because he is late
     public function startTrip(Bus $bus) {
         //is the user allowed to control this trip?
         Helper::tryToControlBusTrips($bus->id);
@@ -50,16 +54,15 @@ class BusReturningTripController extends Controller
             'link'=>Cache::get($key)
         ]);
     }
+    public function busWillArriveSoon(Student $student){
+        $bus=Helper::validateStudentHasBus($student);
+        Helper::tryToControlBusTrips($bus->id);
+        
+
+    }
     public function StudentBoardedTheBus(Student $student){
         //fix this line if you found a way to make it return only one
-        $bus=$student->bus()->first();
-        if($bus==null){
-            res::error(
-                "Couldn't find student's bus. make sure that"
-                ." he is a transportation subscriber",
-                code:422
-            );
-        }
+        $bus=Helper::validateStudentHasBus($student);
         Helper::tryToControlBusTrips($bus);
         $data=self::generateBusKeysAndLink($bus);
         if(!Cache::has($data['key'])){
@@ -79,7 +82,7 @@ class BusReturningTripController extends Controller
         $onBoard=collect($onBoard);
         if($onBoard->contains($student->id)){
             res::error(
-                "Looks like This student already left the bus!",
+                "Looks like This student already boarded the bus!",
             );
         }
         $onBoard->push($student->id);
@@ -123,6 +126,8 @@ class BusReturningTripController extends Controller
             ));
         }
     }
+    
+
     public function forgetKeys($bus) {
         $data=self::generateBusKeysAndLink($bus);
         $key=$data['key'];

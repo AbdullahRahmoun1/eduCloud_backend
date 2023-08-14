@@ -9,36 +9,41 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class StudentLeftTheBus implements ShouldBroadcast
+class BusBrokeDown implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public function __construct(
-        private $student
-        ){
+
+    /**
+     * Create a new event instance.
+     */
+    public function __construct(public $student)
+    {
+        
+    }
+
+    public function broadcastWith() {
+        $studentName=$this->student->full_name;
+        $result=Helper::msgBasicData(true,$this->student);
+        $result+=[
+            'title'=>"Bus broke down!",
+            'body'=>"Please be assured. We will get you'r child safe in no time."
+        ];
+        return $result;
     }
     /**
      * Get the channels the event should broadcast on.
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn(): array {
+    public function broadcastOn(): array
+    {
         return [
             new PrivateChannel(
-            Helper::getStudentChannel($this->student->id)
-            )    
+                Helper::getStudentChannel($this->student->id)
+            )
         ];
-    }
-    public function broadcastWith() {
-        $studentName=$this->student->full_name;
-        $result=Helper::msgBasicData(true,$this->student);
-        $result+=[
-            'title'=>"Student Arrival Alert",
-            'body'=>"Student $studentName has safely disembarked from the school bus"
-        ];
-        
-        return $result;
     }
     public function broadCastAs() {
-        return 'studentLeftTheBus';
+        return "BusBrokeDown";
     }
 }

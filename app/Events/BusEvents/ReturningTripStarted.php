@@ -41,22 +41,20 @@ class ReturningTripStarted implements ShouldBroadcast
     }
     public function broadcastWith() {
         $studentName=$this->student->full_name;
-        $result=[
-            'student_id'=>$this->student->id,
-            'student_name'=>$studentName,
-            'absent'=>$this->absent,
-            'date'=>date("Y-m-d"),
-            'time'=>date("g:i A")
-        ];
+        $result=Helper::msgBasicData(true,$this->student);
+        $result['absent']=$this->absent;
         if($this->absent){
-            $result['title'] = "Student Absence on School Bus";
-            $result['body'] = "The student $studentName did not ride"
-            ." the school bus on the return trip back home.";
+            $result+=[
+                'title'=>"Student Absence on School Bus",
+                'body'=>"The student $studentName did not ride"
+                ." the school bus on the return trip back home."
+            ];
         }else {
-            $result['title'] = "Returning trip started.";
-            $result['body'] = 
-            "Click on the message to track the current location of the bus.";
-            $result['link'] = $this->link;
+            $result+=[
+                'title'=>"Attention! Returning trip started.",
+                'body'=>"Click on the message to track the current location of the bus.",
+                'link' => $this->link
+            ];
         }
         return $result;
     }

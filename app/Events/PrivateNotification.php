@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Helpers\Helper;
+use App\Models\Student;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -38,6 +39,15 @@ class PrivateNotification implements ShouldBroadcast
         return [
             new PrivateChannel($channel),
         ];
+    }
+    public function broadcastWith() {
+        $result=Helper::msgBasicData(
+            $this->is_user_type_student,
+            Student::find($this->user_id)
+        );
+        $result+=$this->message;
+        $result['notificationType']=$this->notificationType;
+        return $result;
     }
     public function broadcastAs(){
         return 'new-notification';

@@ -18,8 +18,6 @@ class GlobalNotification implements ShouldBroadcast
      */
     public function __construct(
         public string $message
-        
-        
         ){
         //
     }

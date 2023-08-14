@@ -34,7 +34,10 @@ class BusController extends Controller
             'students.numbers'
             ,
         ]);
-        $students=$bus->students;
+        $students=$bus->students
+        ->map(
+            fn($s)=>$s->append('isAbsentToday')
+        );
         res::success(data:$students);
     }
 }

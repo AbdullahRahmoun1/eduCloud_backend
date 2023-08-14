@@ -23,19 +23,10 @@ class Complaint implements ShouldBroadcast
      */
     public $student;
     public function __construct(
-        $studnet_id,
+        $student_id,
         public ModelsComplaint $complaint
         ){
-        $student = Student::find($studnet_id);
-        $student->load(['g_class','g_class.grade']);
-        $student->class=$student->g_class->name;
-        $student->grade=$student->g_class->grade->name;
-        Helper::onlyKeepAttributes($student,[
-            'id',
-            'first_name','last_name',
-            'grade','class'
-        ]);
-        $this->student=$student;
+            $this->student=Student::findOrFail($student_id);
     }
 
     /**
@@ -56,6 +47,24 @@ class Complaint implements ShouldBroadcast
                 Helper::getEmployeeChannel($id)
             ),$ids
         );;
+    }
+    public function broadcastWith() {
+        $student = $this->student;
+        $student->load(['g_class','g_class.grade']);
+        $student->class=$student->g_class->name;
+        $student->grade=$student->g_class->grade->name;
+        Helper::onlyKeepAttributes($student,[
+            'id',
+            'first_name','last_name',
+            'grade','class'
+        ]);
+        unset($student['g_class']);
+        $this->complaint->makeHidden('student_id');
+        $result=[
+            'student'=>$student,
+            'complaint'=>$this->complaint
+        ];
+        return $result;
     }
     public function broadcastAs() {
         return 'new_student_complaint';

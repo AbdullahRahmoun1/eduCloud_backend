@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\BusEvents;
 
 use App\Helpers\Helper;
 use Illuminate\Broadcasting\Channel;
@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class StudentBoardedTheBus
+class StudentBoardedTheBus implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -38,14 +38,15 @@ class StudentBoardedTheBus
 
     public function broadcastWith() {
         $studentName=$this->student->full_name;
-        $result=[
-            'student_id'=>$this->student->id,
-            'student_name'=>$studentName,
-            'date'=>date("Y-m-d"),
-            'time'=>date("g:i A"),
+        $result=Helper::msgBasicData(true,$this->student);
+        $result+=[
             'title'=>"Student Boarding Alert",
             'body'=>"Student $studentName has safely boarded the school bus"
         ];
         return $result;
+    }
+
+    public function broadCastAs() {
+        return "StudentBoardedTheBus";
     }
 }

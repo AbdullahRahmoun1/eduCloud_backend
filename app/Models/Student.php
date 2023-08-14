@@ -113,6 +113,9 @@ class Student extends Model
     public function getFullNameAttribute(){
         return $this->first_name.' '.$this->last_name;
     }
-    
-
+    public function getIsAbsentTodayAttribute() {
+        $count=Absence::where('student_id',$this->id)
+        ->where('date',date('Y-m-d'))->count();
+        return $count>0;
+    }
 }

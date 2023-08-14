@@ -14,6 +14,7 @@ use App\Models\ClassTeacherSubject;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
 use App\Helpers\ResponseFormatter as res;
+use Psy\Readline\Hoa\StreamStatable;
 use Pusher\Pusher;
 
 class Helper {
@@ -163,5 +164,30 @@ class Helper {
         if(Gate::denies('controlBusTrips',[Bus::class,$bus_id]))
         res::error("You don't have the permission to control this bus's trips.",
         code:403);
+    }
+    public static function validateStudentHasBus($student){
+        $bus=$student->bus()->first();
+        if($bus==null){
+            res::error(
+                "Couldn't find student's bus. make sure that"
+                ." he is a transportation subscriber",
+                code:422
+            );
+        }
+        return $bus;
+    }
+    public static function msgBasicData($showStudentInfo=true,$student=null) {
+        $result=[
+            'date'=>date("Y-m-d"),
+            'time'=>date("g:i A"),
+        ];
+        if($showStudentInfo && $student){
+            $studentName=$student->full_name;
+            $result+=[
+                'student_id'=>$student->id,
+                'student_name'=>$studentName
+            ];
+        }
+        return $result;
     }
 }
