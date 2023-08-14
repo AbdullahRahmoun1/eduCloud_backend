@@ -52,7 +52,7 @@ class Complaint implements ShouldBroadcast
         )->get()->pluck('id');
         $ids=array_unique(array_merge($prins->toArray(),$sups->toArray()));
         return array_map(
-            fn($id)=>new Channel(
+            fn($id)=>new PrivateChannel(
                 Helper::getEmployeeChannel($id)
             ),$ids
         );;

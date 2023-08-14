@@ -35,6 +35,7 @@ class ChatController extends Controller
         $type=$user->owner_type;
         $owner=$user->owner;
         if($type==Student::class){
+            return "student";
             if($student->id!=$owner->id)
             res::error(
                 "Failed..You dont have the permission to chat with this student.",
@@ -49,11 +50,12 @@ class ChatController extends Controller
             );
             event(new EventsComplaint($student->id,$comp));
         }else{
+            return "employee";
             try{
                 $this->authorize('editClassInfo',[GClass::class,$student->g_class_id]);
             }catch(Exception $e){
                 res::error(
-                    "Failed..You dont have the permission to chat with this student.",
+                    "Failed..You don't have the permission to chat with this student.",
                     code:403
                 );
             }

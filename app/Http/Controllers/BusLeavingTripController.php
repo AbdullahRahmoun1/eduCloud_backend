@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\BusEvents\GpsLinkClosed;
-use App\Events\BusEvents\GpsLinkInitialization;
 use App\Models\Bus;
 use App\Helpers\Helper;
 use App\Models\Student;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
+use App\Events\LeavingTripStarted;
+use App\Events\StudentBoardedTheBus;
 use Illuminate\Support\Facades\Cache;
+use App\Events\BusEvents\GpsLinkClosed;
 use App\Helpers\ResponseFormatter as res;
-use App\Events\BusEvents\ReturningTripStarted;
-use App\Events\BusEvents\StudentLeftTheBus;
+use App\Events\BusEvents\GpsLinkInitialization;
 
 class BusReturningTripController extends Controller
 {
@@ -20,20 +19,11 @@ class BusReturningTripController extends Controller
     public function startTrip(Bus $bus) {
         //is the user allowed to control this trip?
         Helper::tryToControlBusTrips($bus->id);
-        //get the absent students
-         //is this student subscribed to this bus
-        $studentSubscribedToBus=Rule::exists('student_bus','student_id')
-        ->where('bus_id',$bus->id);
-        //validate
-        $data=request()->validate([
-            'absentStudentsIds'=>['array','min:1'],
-            'absentStudentsIds.*'=>['required','exists:students,id',$studentSubscribedToBus]
-        ]);
-        $absentIds=$data['absentStudentsIds']??[];
         //good.. now get todays key + generate a link
-        $data=self::generateBusKeyAndLink($bus);
+        $data=self::generateBusKeysAndLink($bus);
         $key=$data['key'];
         $link=$data['link'];
+        $onBoardKey=$data['onBoardKey'];
         //wait.. we have to make sure that there is no data with this key
         //if there is..then someone called this earlier today..
         if(Cache::has($key)){
@@ -47,21 +37,20 @@ class BusReturningTripController extends Controller
         }        
         //nop.. ok now we save the link for today's journey
         Cache::put($key,$link,self::DataLifeTime);
-        //allowed ids are the student who are
-        // subscribes to bus and not marked as absent by bus_sup
-        $allowedIds=$bus->students->pluck('id')->diff($absentIds);
+        $allowedIds=$bus->students->pluck('id');
         Cache::put($link,$allowedIds,self::DataLifeTime);
+        Cache::put($onBoardKey,[],self::DataLifeTime);
         //initialize the link channel 
         event(new GpsLinkInitialization($link));
         //notify parents that returning journey has started and give them the link
-        self::notifyParents($bus,$absentIds,$link);
+        self::notifyParents($bus,$link);
         //success.. now we can return the link 
         //to supervisor to start sharing his location
         res::success(data:[
             'link'=>Cache::get($key)
         ]);
     }
-    public function studentLeftTheBus(Student $student){
+    public function StudentBoardedTheBus(Student $student){
         //fix this line if you found a way to make it return only one
         $bus=$student->bus()->first();
         if($bus==null){
@@ -72,42 +61,41 @@ class BusReturningTripController extends Controller
             );
         }
         Helper::tryToControlBusTrips($bus);
-        $key=self::generateBusKeyAndLink($bus)['key'];
-        $link=Cache::get($key,-1);
-        if($link==-1){
+        $data=self::generateBusKeysAndLink($bus);
+        if(!Cache::has($data['key'])){
             res::error(
-                "Returning trip hasn't started yet!.",
+                "Leaving trip hasn't started yet!.",
             );
         }
-        $allowedIds=Cache::get($link,-1);
-        if($allowedIds===-1){
+        $onBoardKey=$data['onBoardKey'];
+        if(!Cache::has($onBoardKey)){
             res::error(
                 "Contact developer.",
                 data:"Link found..allowed ids didn't.",
                 code:500
             );
         }
-        $allowedIds=collect($allowedIds);
-        if(!$allowedIds->contains($student->id)){
+        $onBoard=Cache::get($onBoardKey);
+        $onBoard=collect($onBoard);
+        if($onBoard->contains($student->id)){
             res::error(
                 "Looks like This student already left the bus!",
             );
         }
+        $onBoard->push($student->id);
         Cache::put(
-            $link,
-            $allowedIds->reject(function($value)use($student){
-                return $value==$student->id;
-            }),
+            $onBoardKey,
+            $onBoard,
             self::DataLifeTime
         );
-        event(new StudentLeftTheBus($student));
+        event(new StudentBoardedTheBus($student));
         res::success();
     }
     public function endTrip(Bus $bus) {
         //is he allowed to end trip
         Helper::tryToControlBusTrips($bus->id);
         //get data
-        $data=self::generateBusKeyAndLink($bus);
+        $data=self::generateBusKeysAndLink($bus);
         $key=$data['key'];
         //ok.. is this trip still active?
         if(!Cache::has($key))
@@ -120,29 +108,28 @@ class BusReturningTripController extends Controller
         //return response..
         res::success("Trip ended successfully!");
     }
-    public static function generateBusKeyAndLink($bus){
+    public static function generateBusKeysAndLink($bus){
         $today = date('Y-m-d');
         return [
-            'key'=>"returning_trip_link/$bus->name($bus->id)_$today",
+            'key'=>"leaving_trip_link/$bus->name($bus->id)_$today",
             'link'=>Str::random(30),
+            'onBoardKey'=>"leaving_trip_onBoard/$bus->name($bus->id)_$today"
         ];
     }
-    private static function notifyParents($bus,$absentIds,$link) {
-        //TODO: check if student is already absent in school
-        //if true then don't send the message
+    private static function notifyParents($bus,$link) {
         foreach($bus->students as $student){
-            $absent=in_array($student->id,$absentIds);
-            event(new ReturningTripStarted(
-                $student,$absent,$link
+            event(new LeavingTripStarted(
+                $student,$link
             ));
         }
     }
     public function forgetKeys($bus) {
-        $data=self::generateBusKeyAndLink($bus);
+        $data=self::generateBusKeysAndLink($bus);
         $key=$data['key'];
         $link=Cache::get($key);
         Cache::forget($key);
         Cache::forget($link);
+        Cache::forget($data['onBoardKey']);
     }
     
 }

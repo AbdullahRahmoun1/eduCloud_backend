@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\BusEvents;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\BusReturningTripController as trip;

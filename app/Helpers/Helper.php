@@ -14,6 +14,7 @@ use App\Models\ClassTeacherSubject;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
 use App\Helpers\ResponseFormatter as res;
+use Pusher\Pusher;
 
 class Helper {
     public static function lazyQueryTry($toTry,$dupMsg=null){
@@ -163,5 +164,4 @@ class Helper {
         res::error("You don't have the permission to control this bus's trips.",
         code:403);
     }
-
 }

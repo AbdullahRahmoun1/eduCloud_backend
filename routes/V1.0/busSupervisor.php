@@ -14,6 +14,10 @@ Route::middleware('auth:sanctum','hasRoles:'.config('roles.busSupervisor'))
         'endReturningTrip/{bus}',
         [BusReturningTripController::class,'endTrip']
     );
+    Route::post(
+        'studentLeftTheBus/{student}',
+        [BusReturningTripController::class,'studentLeftTheBus']
+    );
 });
 
 

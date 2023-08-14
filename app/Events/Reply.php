@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class Reply implements ShouldBroadcast
@@ -26,7 +27,6 @@ class Reply implements ShouldBroadcast
         ){
             $employee=Employee::find($employee_id);
             
-            
             $this->employee=[
                 'employee_first_name'=>$employee->first_name,
                 'employee_second_name'=>$employee->second_name,
@@ -41,7 +41,7 @@ class Reply implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel(
+            new PrivateChannel(
                 Helper::getStudentChannel($this->student_id)
             ),
         ];
