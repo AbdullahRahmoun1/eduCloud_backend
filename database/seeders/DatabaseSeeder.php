@@ -45,10 +45,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
         $this
         ->try(fn()=>Address::factory(50)->create());
-        
+        $this
+        ->try(function(){
         Grade::create(['name' => 'السابع']);
         Grade::create(['name' => 'الثامن']);
         Grade::create(['name' => 'التاسع']);
@@ -56,6 +56,8 @@ class DatabaseSeeder extends Seeder
         GClass::create(['grade_id' => 1, 'name' => 'الاولى', 'max_number' => 26]);
         GClass::create(['grade_id' => 1, 'name' => 'الثانية', 'max_number' => 30]);
         GClass::create(['grade_id' => 3, 'name' => 'الاولى', 'max_number' => 28]);
+        });
+        
         Employee::factory(5)->create();
         Student::factory(50)->create();
         $this->call(RolesAndPermissionsSeeder::class);
