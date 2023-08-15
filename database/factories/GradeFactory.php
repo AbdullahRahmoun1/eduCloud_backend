@@ -17,8 +17,9 @@ class GradeFactory extends Factory
      */
     public function definition(): array
     {
+        $n=fake()->unique()->numberBetween(2,12);
         return [
-            'name'=>Str::random(10),
+            'name'=>"{$n}th grade",
         ];
     }
 }

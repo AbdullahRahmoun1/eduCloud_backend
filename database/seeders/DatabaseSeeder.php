@@ -45,8 +45,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        //Fixed
         $this
         ->try(fn()=>Address::factory(50)->create());
+        $this
+        ->try(fn()=>Grade::factory(10)->create());
+        // $this
+        // ->try(fn()=>);
+
+        //Not yet
+        
         $this
         ->try(function(){
         Grade::create(['name' => 'السابع']);
@@ -60,8 +68,8 @@ class DatabaseSeeder extends Seeder
         
         Employee::factory(5)->create();
         Student::factory(50)->create();
-        $this->call(RolesAndPermissionsSeeder::class);
-        $this->call(AccountSeeder::class);
+        $this->try(fn()=>$this->call(RolesAndPermissionsSeeder::class));
+        $this->try(fn()=>$this->call(AccountSeeder::class));
         Subject::create(['name' => 'فيزيا', 'grade_id' => 1]);
         Subject::factory(9)->create();
         $this

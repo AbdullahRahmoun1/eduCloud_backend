@@ -18,8 +18,8 @@ class AddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'=>Str::random(7),
-            'description'=>fake()->text(random_int(10,45))
+            'name'=>fake()->unique()->state,
+            'description'=>fake()->streetAddress
         ];
     }
 }

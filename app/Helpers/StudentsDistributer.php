@@ -43,7 +43,7 @@ class StudentsDistributer
             $newClasses[$class->id]=$class;
             $classesQueue->next();
         }   
-        $classes=$newClasses;
+        $classes=(array)$newClasses;
         self::even_distribution_improveAssignments($classes,$assignments,1000);
         self::prepareClassesVisualizing($classes,$assignments);
         return $classes;
