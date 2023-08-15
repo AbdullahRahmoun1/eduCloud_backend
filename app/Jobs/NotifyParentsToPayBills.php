@@ -25,7 +25,7 @@ class NotifyParentsToPayBills implements ShouldQueue,ShouldBeUnique
     
     public function __construct()
     {
-            
+        $this->queue="MyQueue";
     }
 
     /**
@@ -54,7 +54,6 @@ class NotifyParentsToPayBills implements ShouldQueue,ShouldBeUnique
         }catch(Exception $e){
             return "Task notifyParentToPayBills failed , reason : {$e->getMessage()}";
         }
-        return $shouldBeWarned;
         return "Task notifyParentToPayBills succeeded!!"
         ." Students Notified : ".count($shouldBeWarned)
         ." Messages sent : ".$messagesSent;
