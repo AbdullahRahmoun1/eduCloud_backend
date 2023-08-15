@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\GClass;
+use App\Models\ProgressCalendar;
 use App\Models\Subject;
 use App\Models\Type;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -28,7 +29,7 @@ class TestFactory extends Factory
             'subject_id'=>Subject::all()->random()->id,
             'g_class_id'=>GClass::all()->random()->id,
             'type_id'=>Type::all()->random()->id,
-            'progress_calendar_id'=>fake()->unique()->numberBetween(1,100),
+            'progress_calendar_id'=>ProgressCalendar::all()->random()->id,
         ];
     }
 }

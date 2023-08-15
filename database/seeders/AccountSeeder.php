@@ -50,6 +50,18 @@ class AccountSeeder extends Seeder
             'owner_id'=>$emp->id,
             'owner_type'=>Employee::class,
         ]);
+
+        $emp=Employee::create([
+            'first_name'=>'busss',
+            'last_name'=>'bus_supervisor',
+        ]);
+        $emp->assignRole(config('roles.busSupervisor'));
+        Account::create([
+            'password'=>'12345',
+            'user_name'=>'kh',
+            'owner_id'=>$emp->id,
+            'owner_type'=>Employee::class,
+        ]);
         
         
         
