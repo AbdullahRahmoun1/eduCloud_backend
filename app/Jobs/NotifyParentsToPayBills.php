@@ -23,9 +23,7 @@ class NotifyParentsToPayBills implements ShouldQueue,ShouldBeUnique
      * Create a new job instance.
      */
     
-    public function __construct()
-    {
-        $this->queue="MyQueue";
+    public function __construct(){
     }
 
     /**
