@@ -7,30 +7,64 @@ use App\Http\Controllers\BusReturningTripController;
 
 Route::middleware('auth:sanctum','hasRoles:'.config('roles.busSupervisor'))
 ->group(function(){
-    Route::post(
-        'startLeavingTrip/{bus}',
-        [BusLeavingTripController::class,'startTrip']
-    );
-    Route::post(
-        'endLeavingTrip/{bus}',
-        [BusLeavingTripController::class,'endTrip']
-    );
-    Route::post(
-        'studentBoardedTheBus/{student}',
-        [BusLeavingTripController::class,'StudentBoardedTheBus']
-    );
-    Route::post(
-        'startReturningTrip/{bus}',
-        [BusReturningTripController::class,'startTrip']
-    );
-    Route::post(
-        'endReturningTrip/{bus}',
-        [BusReturningTripController::class,'endTrip']
-    );
-    Route::post(
-        'studentLeftTheBus/{student}',
-        [BusReturningTripController::class,'studentLeftTheBus']
-    );
+    //Leaving trip
+    Route::group([
+        'prefix'=>'leavingTrip'
+    ],function () {
+        Route::post(
+            'start/{bus}',
+            [BusLeavingTripController::class,'startTrip']
+        );
+        Route::post(
+            'busWillArriveSoon/{student}',
+            [BusLeavingTripController::class,'busWillArriveSoon']
+        );
+        Route::post(
+            'busWillSkipStudent/{student}',
+            [BusLeavingTripController::class,'busWillSkipStudent']
+        );
+        Route::post(
+            'busBrokeDown/{bus}',
+            [BusLeavingTripController::class,'busBrokeDown']
+        );
+        Route::post(
+            'studentBoardedTheBus/{student}',
+            [BusLeavingTripController::class,'StudentBoardedTheBus']
+        );
+        Route::post(
+            'end/{bus}',
+            [BusLeavingTripController::class,'endTrip']
+        );    
+    });
+    
+    //Returning trip
+    Route::group([
+        'prefix'=>'returningTrip'
+    ],function () {
+        Route::post(
+            'start/{bus}',
+            [BusReturningTripController::class,'startTrip']
+        );
+        Route::post(
+            'busWillArriveSoon/{student}',
+            [BusReturningTripController::class,'busWillArriveSoon']
+        );
+        Route::post(
+            'busBrokeDown/{bus}',
+            [BusReturningTripController::class,'busBrokeDown']
+        );
+        Route::post(
+            'studentLeftTheBus/{student}',
+            [BusReturningTripController::class,'studentLeftTheBus']
+        );
+        Route::post(
+            'end/{bus}',
+            [BusReturningTripController::class,'endTrip']
+        );
+    
+    });
+    
+    
 });
 
 Route::middleware(

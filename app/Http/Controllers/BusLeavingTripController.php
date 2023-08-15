@@ -6,20 +6,20 @@ use App\Models\Bus;
 use App\Helpers\Helper;
 use App\Models\Student;
 use Illuminate\Support\Str;
+use App\Events\BusEvents\BusWillSkip;
+use Illuminate\Support\Facades\Cache;
+use App\Events\BusEvents\BusBrokeDown;
+use App\Events\BusEvents\GpsLinkClosed;
+use App\Events\BusEvents\BusArrivalSoon;
+use App\Helpers\ResponseFormatter as res;
 use App\Events\BusEvents\LeavingTripStarted;
 use App\Events\BusEvents\StudentBoardedTheBus;
-use Illuminate\Support\Facades\Cache;
-use App\Events\BusEvents\GpsLinkClosed;
-use App\Helpers\ResponseFormatter as res;
 use App\Events\BusEvents\GpsLinkInitialization;
 
 class BusLeavingTripController extends Controller
 {
     public const DataLifeTime=2.5*60;
 
-
-    //TODO:  bull will arrive soon
-    //TODO:  bull will leave the student because he is late
     public function startTrip(Bus $bus) {
         //is the user allowed to control this trip?
         Helper::tryToControlBusTrips($bus->id);
@@ -57,8 +57,8 @@ class BusLeavingTripController extends Controller
     public function busWillArriveSoon(Student $student){
         $bus=Helper::validateStudentHasBus($student);
         Helper::tryToControlBusTrips($bus->id);
-        
-
+        event(new BusArrivalSoon($student));
+        res::success();
     }
     public function StudentBoardedTheBus(Student $student){
         //fix this line if you found a way to make it return only one
@@ -94,6 +94,28 @@ class BusLeavingTripController extends Controller
         event(new StudentBoardedTheBus($student));
         res::success();
     }
+    public function busWillSkipStudent(Student $student) {
+        $bus=Helper::validateStudentHasBus($student);
+        Helper::tryToControlBusTrips($bus->id);
+        event(new BusWillSkip($student));
+        res::success();
+    }
+    public function busBrokeDown(Bus $bus) {
+        Helper::tryToControlBusTrips($bus->id);
+        $data=self::generateBusKeysAndLink($bus);
+        $key=$data['key'];
+        $link=Cache::get($key,-1);
+        if($link==-1){
+            res::error("Start the trip first.");
+        }
+        $allowedIds=Cache::get($link);
+        $students=Student::whereIn('id',$allowedIds)
+        ->get();
+        foreach($students as $student){
+            event(new BusBrokeDown($student));
+        }
+        res::success();
+    }
     public function endTrip(Bus $bus) {
         //is he allowed to end trip
         Helper::tryToControlBusTrips($bus->id);
@@ -126,8 +148,6 @@ class BusLeavingTripController extends Controller
             ));
         }
     }
-    
-
     public function forgetKeys($bus) {
         $data=self::generateBusKeysAndLink($bus);
         $key=$data['key'];

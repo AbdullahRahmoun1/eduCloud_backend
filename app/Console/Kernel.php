@@ -15,8 +15,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('backup:run')
         ->runInBackground()
-        // ->everyMinute()
-        ->dailyAt('00:00')
+        ->everyMinute()
+        // ->dailyAt('00:00')
         ->sendOutputTo(storage_path('logs/backup.log'));
 
         $schedule->job(new NotifyParentsToPayBills())

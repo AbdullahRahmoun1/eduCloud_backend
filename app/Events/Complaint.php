@@ -4,7 +4,6 @@ namespace App\Events;
 
 use App\Helpers\Helper;
 use App\Models\Student;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
 use App\Models\Complaint as ModelsComplaint;
@@ -12,7 +11,6 @@ use App\Models\Employee;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 class Complaint implements ShouldBroadcast
 {

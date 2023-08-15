@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\BusEvents\GpsLinkClosed;
-use App\Events\BusEvents\GpsLinkInitialization;
 use App\Models\Bus;
 use App\Helpers\Helper;
 use App\Models\Student;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Cache;
+use App\Events\BusEvents\BusBrokeDown;
+use App\Events\BusEvents\GpsLinkClosed;
+use App\Events\BusEvents\BusArrivalSoon;
 use App\Helpers\ResponseFormatter as res;
-use App\Events\BusEvents\ReturningTripStarted;
 use App\Events\BusEvents\StudentLeftTheBus;
+use App\Events\BusEvents\ReturningTripStarted;
+use App\Events\BusEvents\GpsLinkInitialization;
 
 class BusReturningTripController extends Controller
 {
@@ -63,8 +65,29 @@ class BusReturningTripController extends Controller
             'link'=>Cache::get($key)
         ]);
     }
+    public function busBrokeDown(Bus $bus) {
+        Helper::tryToControlBusTrips($bus->id);
+        $data=self::generateBusKeyAndLink($bus);
+        $key=$data['key'];
+        $link=Cache::get($key,-1);
+        if($link===-1){
+            res::error("Start the trip first.");
+        }
+        $allowedIds=Cache::get($link);
+        $students=Student::whereIn('id',$allowedIds)
+        ->get();
+        foreach($students as $student){
+            event(new BusBrokeDown($student));
+        }
+        res::success();
+    }
+    public function busWillArriveSoon(Student $student){
+        $bus=Helper::validateStudentHasBus($student);
+        Helper::tryToControlBusTrips($bus->id);
+        event(new BusArrivalSoon($student));
+        res::success();
+    }
     public function studentLeftTheBus(Student $student){
-        //fix this line if you found a way to make it return only one
         $bus=Helper::validateStudentHasBus($student);
         Helper::tryToControlBusTrips($bus);
         $key=self::generateBusKeyAndLink($bus)['key'];
