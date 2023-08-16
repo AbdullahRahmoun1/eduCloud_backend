@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Broadcast;
     Broadcast::channel("private-student-{id}",function($id){
         return true;
     });
+    Broadcast::channel("private-gps-{link}",function($id){
+        return true;
+    });
 // Broadcast::channel('private-student-1',fn()=>true);
 // Broadcast::channel(Helper::getStudentChannel("{student_id}")
 // ,fn($student_id)=>true
