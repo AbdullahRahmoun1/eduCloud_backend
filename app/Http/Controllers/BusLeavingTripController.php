@@ -28,6 +28,10 @@ class BusLeavingTripController extends Controller
         $key=$data['key'];
         $link=$data['link'];
         $onBoardKey=$data['onBoardKey'];
+        //make sure there is no returning trip active
+        $Leaving=BusReturningTripController::generateBusKeyAndLink($bus);
+        if(Cache::has($Leaving['key']))
+        res::error("Returning trip is still active. End it first.");
         //wait.. we have to make sure that there is no data with this key
         //if there is..then someone called this earlier today..
         if(Cache::has($key)){

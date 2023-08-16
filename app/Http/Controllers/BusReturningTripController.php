@@ -26,13 +26,16 @@ class BusReturningTripController extends Controller
          //is this student subscribed to this bus
         $studentSubscribedToBus=Rule::exists('student_bus','student_id')
         ->where('bus_id',$bus->id);
+        //make sure there is no leaving trip active
+        $Leaving=BusLeavingTripController::generateBusKeysAndLink($bus);
+        if(Cache::has($Leaving['key']))
+        res::error("Leaving trip is still active. End it first.");
         //validate
         $data=request()->validate([
             'absentStudentsIds'=>['array','min:1'],
             'absentStudentsIds.*'=>['required','exists:students,id',$studentSubscribedToBus]
         ]);
         $absentIds=$data['absentStudentsIds']??[];
-        
         //good.. now get todays key + generate a link
         $data=self::generateBusKeyAndLink($bus);
         $key=$data['key'];

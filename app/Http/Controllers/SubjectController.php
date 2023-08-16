@@ -66,9 +66,11 @@ class SubjectController extends Controller
         res::success();
     }
     public function view(Subject $subject){
-        $subject->teachers;
-        $subject->g_classes;
-        //TODO: add paires of teacher_class_performancePercentage
+        $subject->load([
+            'g_classes',
+            'g_classes.teachers'=> fn($query)=>$query->where('subject_id',$subject->id)
+        ]
+        );
         return $subject;
     }
 }
