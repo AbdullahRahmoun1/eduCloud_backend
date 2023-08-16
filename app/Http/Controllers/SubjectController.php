@@ -68,9 +68,10 @@ class SubjectController extends Controller
     public function view(Subject $subject){
         $subject->load([
             'g_classes',
+            'grade',
             'g_classes.teachers'=> fn($query)=>$query->where('subject_id',$subject->id)
         ]
         );
-        return $subject;
+        res::success(data:$subject);
     }
 }
