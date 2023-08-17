@@ -36,7 +36,8 @@ class GradeController extends Controller
         $grade->load([
             'g_classes:id,name,grade_id',
             'subjects:id,name,grade_id',
-            'subjects.teachers:id,name'
+            'subjects.teachers:id,name',
+            'g_classes.supervisors:id,name'
         ]);
         res::success(data:$grade);
     }
