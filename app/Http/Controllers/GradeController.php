@@ -33,12 +33,15 @@ class GradeController extends Controller
         res::success();
     }
     public function view(Grade $grade){
-        $grade->load([
-            'g_classes:id,name,grade_id',
-            'subjects:id,name,grade_id',
-            'subjects.teachers:id,name',
-            'g_classes.supervisors:id,name'
-        ]);
+
+        $grade;
+        $subjects = $grade->subjects;
+        $g_classes = $grade->g_classes;
+        $grade['subjects'] = $subjects->makeHidden('teachers'); 
+        $grade['g_classes'] = $g_classes->makeHidden('supervisors'); 
+        $grade['teachers'] = $grade->getTeachersAttribute();
+        $grade['supervisors'] = $grade->getSupervisorsAttribute();
+
         res::success(data:$grade);
     }
     public function getAllGradesWithClassesAndSubjects(Grade $grade) {

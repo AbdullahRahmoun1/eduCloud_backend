@@ -63,6 +63,7 @@ class AccountSeeder extends Seeder
             'owner_type'=>Employee::class,
         ]);
         
+        Student::find(1)->assignRole(config('roles.student'));
         Account::create([
             'password'=>'12345',
             'user_name'=>'student',
