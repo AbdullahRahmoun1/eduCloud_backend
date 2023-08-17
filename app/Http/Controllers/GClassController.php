@@ -15,6 +15,8 @@ use Illuminate\Database\QueryException;
 use App\Helpers\ResponseFormatter as response;
 use App\Helpers\StudentsDistributer;
 use App\Models\Student;
+use App\Models\Subject;
+use Illuminate\Database\Eloquent\Collection;
 
 class GClassController extends Controller
 {
@@ -186,5 +188,20 @@ class GClassController extends Controller
             ]);
         }
         response::success(commit:true);
+    }
+
+    public function getGClass(GClass $g_class){
+
+        Helper::tryToRead($g_class->id);
+        $g_class->load('grade', 'supervisors');
+        $g_class['subjects'] = Grade::find($g_class->grade_id)->subjects;
+        
+        $class = collect($g_class);
+        $class['subjects']->transform(function ($subject) use ($g_class) {
+            $subject['teachers'] = $subject->teachers()->wherePivot('g_class_id',$g_class->id)->get();
+            return $subject;
+        });
+        
+        response::success(data:$class);
     }
 }

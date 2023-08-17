@@ -189,7 +189,7 @@ class TestController extends Controller
 
     public function getTest($id)
     {
-        $test = Test::with(['subject:id,name', 'g_class:id,name', 'type:id,name'])->find($id);
+        $test = Test::with(['subject:id,name,grade_id', 'g_class:id,name', 'type:id,name'])->find($id);
     
         if ($test === null) {
             res::error('this test id is not valid', code:404);
@@ -204,6 +204,7 @@ class TestController extends Controller
         $remaining = $mark_controller->getRemainingStudents($test, false);
         
         $test['all_marks_inserted'] = $remaining->isEmpty() ? true : false;
+        $test['grade'] = $test->subject->grade;
 
         self::getTestMarks($test,false);
 
