@@ -114,7 +114,7 @@ class TestController extends Controller
         }
     }
 
-    public function getTestMarks(Test $test){
+    public function getTestMarks(Test $test, $abort = true){
         Helper::tryToRead($test->g_class_id);
         $marks= $test->marks;
         $marks->load([
@@ -126,7 +126,10 @@ class TestController extends Controller
             'student.last_name'
         ]);
         
-        res::success(data:$marks);
+        if($abort)
+            res::success(data:$marks);
+
+        return $marks;
     }
 
     public function getTypeOfTest(Test $test){
@@ -201,6 +204,8 @@ class TestController extends Controller
         $remaining = $mark_controller->getRemainingStudents($test, false);
         
         $test['all_marks_inserted'] = $remaining->isEmpty() ? true : false;
+
+        self::getTestMarks($test,false);
 
         res::success(data:$test);
     }
