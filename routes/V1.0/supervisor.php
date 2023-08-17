@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\BaseCalendarController;
+use App\Http\Controllers\GClassController;
 use App\Http\Controllers\MarkController;
 use App\Http\Controllers\ProgressCalendarController;
 use App\Http\Controllers\StudentController;
@@ -18,6 +19,8 @@ Route::middleware('auth:sanctum', 'hasRoles:supervisor,secretary')->group(functi
     Route::post('addTest', [TestController::class, 'add']);
     Route::post('editTest/{test}', [TestController::class, 'edit']);
     Route::get('getTest/{test_id}', [TestController::class, 'getTest']);
+    
+    Route::get('getGClass/{g_class}', [GClassController::class, 'getGClass']);
     
     Route::post('addTestMarks/{test}', [MarkController::class, 'addTestMarks']);
     Route::post('editMark/{mark_id}', [MarkController::class, 'editMark']);

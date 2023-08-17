@@ -64,4 +64,33 @@ class Grade extends Model
     {
         return $this->hasMany(Student::class);
     }
+
+    public function getTeachersAttribute()
+    {
+        $teachers = collect();
+
+        foreach ($this->subjects as $subject) {
+            foreach ($subject->teachers as $teacher) {
+                if (!$teachers->contains('id', $teacher->id)) {
+                    $teachers->push($teacher);
+                }
+            }
+        }
+    return $teachers;
+    }
+
+    public function getSupervisorsAttribute()
+    {
+        $supervisors = collect();
+
+        foreach ($this->g_classes as $class) {
+            foreach ($class->supervisors as $supervisor) {
+                if (!$supervisors->contains('id', $supervisor->id)){
+                    $supervisors->push($supervisor);
+                }
+            }
+        }
+
+        return $supervisors;
+    }
 }
