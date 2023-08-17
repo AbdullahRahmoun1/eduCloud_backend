@@ -69,13 +69,20 @@ class Handler extends ExceptionHandler
                     'data' => $e->getMessage()
                 ], 404);
             }
-
+            
             if ($request->is('V1.0/supervisor/addTestMarks/*') ||
                 $request->is('V1.0/supervisor/testMarks/*') ||
                 $request->is('V1.0/supervisor/getRemainingStudentsForTest/*') ||
                 $request->is('V1.0/general/getTypeOfTest/*')) {
                 return response()->json([
                     'message' => 'this test id is not valid.',
+                    'data' => $e->getMessage()
+                ], 404);
+            }
+
+            if ($request->is('V1.0/supervisor/getGClass/*')) {
+                return response()->json([
+                    'message' => 'this g_class id is not valid.',
                     'data' => $e->getMessage()
                 ], 404);
             }

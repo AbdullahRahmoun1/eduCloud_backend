@@ -84,7 +84,7 @@ class EmployeeController extends Controller
         ]);
      //Is he a supervisor?
         if(!$sup->hasRole(config('roles.supervisor')))
-        abort(422,'This employee isn\'t a supervisor');
+        res::error('This employee isn\'t a supervisor',code:422);
      //Assign Classes to him in the DB
         $ctr=0;
         DB::beginTransaction();
