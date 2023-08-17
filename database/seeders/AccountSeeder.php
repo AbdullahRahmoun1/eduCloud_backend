@@ -58,7 +58,7 @@ class AccountSeeder extends Seeder
         $emp->assignRole(config('roles.busSupervisor'));
         Account::create([
             'password'=>'12345',
-            'user_name'=>'kh',
+            'user_name'=>'busup',
             'owner_id'=>$emp->id,
             'owner_type'=>Employee::class,
         ]);
