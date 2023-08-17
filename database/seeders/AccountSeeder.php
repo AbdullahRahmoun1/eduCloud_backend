@@ -63,7 +63,11 @@ class AccountSeeder extends Seeder
             'owner_type'=>Employee::class,
         ]);
         
-        
-        
+        Account::create([
+            'password'=>'12345',
+            'user_name'=>'student',
+            'owner_id'=>1,
+            'owner_type'=>Student::class,
+        ]);
     }
 }
