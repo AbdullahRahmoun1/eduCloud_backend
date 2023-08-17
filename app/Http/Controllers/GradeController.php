@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Helpers\Helper;
 use App\Helpers\ResponseFormatter as res; 
 use App\Models\Grade;
-use Illuminate\Http\Request;
 
 class GradeController extends Controller
 {
@@ -36,9 +35,16 @@ class GradeController extends Controller
         $grade->load([
             'g_classes:id,name,grade_id',
             'subjects:id,name,grade_id',
-            'subjects.teachers:id,name',
-            'g_classes.supervisors:id,name'
+            'subjects.teachers:id,first_name,last_name',
+            'g_classes.supervisors:id,first_name,last_name'
         ]);
+        foreach($grade->subjects as $subject){
+            $teachers=$subject->teachers;
+            unset($subject->teachers);
+            $subject->teachers = $teachers->unique(function ($teacher) {
+                return $teacher->id;
+            });
+        }
         res::success(data:$grade);
     }
     public function getAllGradesWithClassesAndSubjects(Grade $grade) {
