@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MarkController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TypeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\GClassController;
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\StudentController;
@@ -42,4 +43,6 @@ Route::middleware('auth:sanctum', 'hasRoles:supervisor,secretary')->group(functi
     Route::get('getAbilityTestsOf/{subject}',[AbilityTestController::class,'viewSubjectsAbilityTests']);
     Route::post('addAbilityTestMark',[AtMarkController::class,'add']);
     
+
+    Route::get('getUnsentNotifications', [NotificationController::class, 'getUnsentNotifications']);
 });

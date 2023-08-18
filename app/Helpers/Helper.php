@@ -115,7 +115,7 @@ class Helper {
         code:403);
     }
 
-    public static function sendNotificationToOneStudent($student_id, $body, $category_id, $notify = false, $sent = true){
+    public static function sendNotificationToOneStudent($student_id, $title,  $body, $category_id, $notify = false, $sent = true){
 
         if(!Student::find($student_id))
             throw new Exception('invalid student id');
@@ -128,6 +128,7 @@ class Helper {
 
         $data['owner_id'] = $student_id;
         $data['owner_type'] = Student::class;
+        $data['title'] = $title;
         $data['body'] = $body;
         $data['category_id'] = $category_id;
         $data['date'] = now();
@@ -150,7 +151,7 @@ class Helper {
         if(($category->send_directly || auth()->user()->owner->hasRole('principal')) && $notify){
             event(new PrivateNotification(
                 $student_id,
-                ['title' => $category->name, 'body' => $body],
+                ['title' => $title, 'body' => $body],
                 $category->name));
         }
 

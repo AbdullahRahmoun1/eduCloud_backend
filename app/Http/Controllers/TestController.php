@@ -105,7 +105,11 @@ class TestController extends Controller
     
     public function test(Request $request)
     {   
-        
+        $class = GClass::all()->random();
+        $controller = new ProgressCalendarController();
+        $plan = $controller->getProgressOfClass($class->id, false)
+        ->where('done',false)->random()->id;
+        return $plan;
         try{
         return Helper::sendNotificationToOneStudent(1,'asdsa',5,true,false);
         }

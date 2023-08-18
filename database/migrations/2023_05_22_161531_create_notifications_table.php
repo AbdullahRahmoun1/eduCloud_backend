@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('owner_id');
             $table->string('owner_type',60);
+            $table->string('title',30);
             $table->string('body',300);
             $table->boolean('sent_successfully')->default(true); 
             $table->boolean('approved')->default(true);   
