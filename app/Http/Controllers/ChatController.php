@@ -98,6 +98,7 @@ class ChatController extends Controller
             $r->complaint=$r instanceof Complaint;
             if($isEmployee && !$r->complaint){
                 $r->fromYou=$owner->id==$r->employee_id;
+                $role='other';
                 if($r->employee->hasRole(config('roles.supervisor')))
                 $role=config('roles.supervisor');
                 if($r->employee->hasRole(config('roles.principal')))
@@ -106,7 +107,7 @@ class ChatController extends Controller
                 $r->employee->role=$role;   
             }
         }
-        res::success(data:$result);
+        res::success(data:$result->values());
     }
     public function getSupervisorsConversations() {
         //FIXME find a better way this will be slow in future
@@ -127,6 +128,7 @@ class ChatController extends Controller
         $replies=Reply::whereIn('student_id',$allowedToViewStudents)->get();;
         $messages=$complaints->merge($replies);
         $messages=$messages->sortByDesc('date_time');
+        return $messages;
         // $messages->sortBy
         $result=collect();
         foreach($messages as $message){
