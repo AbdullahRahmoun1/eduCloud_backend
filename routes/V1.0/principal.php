@@ -43,11 +43,11 @@ Route::middleware('auth:sanctum','hasRoles:'.config('roles.principal'))->group(f
     Route::get('possibleRolesForEmps',[RoleController::class,'rolesForEmployees']);
     Route::get('employeesWithRole/{role}',[EmployeeController::class,'employeesWithRole']);
     Route::get('employeeSearch/{query}',[EmployeeController::class,'search']);
-    Route::get('viewEmployee/{employee}',[EmployeeController::class,'viewEmployee']);
-
     Route::post('addCategory', [CategoryController::class, 'add']);
     Route::post('editCategory/{id}', [CategoryController::class, 'edit']);
     Route::post('sendGlobalNotification', [NotificationController::class, 'global']);
     Route::post('approveNotifications', [NotificationController::class, 'approveNotifications']);
 });
+Route::get('viewEmployee/{employee}',[EmployeeController::class,'viewEmployee'])
+->middleware('auth:sanctum');
 
