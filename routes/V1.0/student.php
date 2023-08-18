@@ -13,14 +13,17 @@ Route::middleware([
     Route::get('getStudentsFinanceInformation/{student}', [MoneyRequestController::class,'getStudentsFinanceInformation']);
 });
 
+//student & supervisor & secretary & principal
 Route::middleware(['auth:sanctum', 'hasRoles:student,supervisor,secretary'])
 ->group(function () {
 
     Route::get('getNotificationsOfStudent/{student}', [NotificationController::class, 'getNotificationsOfStudent']);
 });
 
+//supervisor & secretary & principal
 Route::middleware(['auth:sanctum', 'hasRoles:supervisor,secretary'])
 ->group(function () {
-
+    
+    Route::get('getUnsentNotifications', [NotificationController::class, 'getUnsentNotifications']);
     Route::post('sendNotificationsToStudents/{notify}', [NotificationController::class, 'sendNotificationsToStudents']);
 });

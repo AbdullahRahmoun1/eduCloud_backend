@@ -46,6 +46,7 @@ Route::middleware('auth:sanctum','hasRoles:'.config('roles.principal'))->group(f
     Route::post('addCategory', [CategoryController::class, 'add']);
     Route::post('editCategory/{id}', [CategoryController::class, 'edit']);
     Route::post('sendGlobalNotification', [NotificationController::class, 'global']);
+    Route::post('approveNotifications', [NotificationController::class, 'approveNotifications']);
 });
 Route::get('viewEmployee/{employee}',[EmployeeController::class,'viewEmployee'])
 ->middleware('auth:sanctum');
