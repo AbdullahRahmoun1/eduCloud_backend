@@ -31,22 +31,20 @@ class GradeController extends Controller
         Helper::lazyQueryTry(fn()=>$grade->save());
         res::success();
     }
+
     public function view(Grade $grade){
-        $grade->load([
-            'g_classes:id,name,grade_id',
-            'subjects:id,name,grade_id',
-            'subjects.teachers:id,first_name,last_name',
-            'g_classes.supervisors:id,first_name,last_name'
-        ]);
-        foreach($grade->subjects as $subject){
-            $teachers=$subject->teachers;
-            unset($subject->teachers);
-            $subject->teachers = $teachers->unique(function ($teacher) {
-                return $teacher->id;
-            })->values();
-        }
+        
+        $grade;
+        $subjects = $grade->subjects;
+        $g_classes = $grade->g_classes;
+        $grade['subjects'] = $subjects->makeHidden('teachers'); 
+        $grade['g_classes'] = $g_classes->makeHidden('supervisors'); 
+        $grade['teachers'] = $grade->getTeachersAttribute();
+        $grade['supervisors'] = $grade->getSupervisorsAttribute();
+
         res::success(data:$grade);
     }
+
     public function getAllGradesWithClassesAndSubjects(Grade $grade) {
         $result = $grade->with('g_classes', 'subjects')->get();
         res::success(data:$result);

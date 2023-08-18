@@ -131,4 +131,75 @@ class NotificationController extends Controller
 
         res::success('notifications sent successfully', $notifications, true);
     }
+
+    public function getUnsentNotifications(){
+
+        $query = Notification::query()
+        ->where('sent_successfully',false)
+        ->where('owner_type', Student::class);
+
+        if(request()->has('category_id')){
+            $query->where('category_id', request()->category_id);
+        }
+
+        if(request()->has('owner_id')){
+            $query->where('owner_id', request()->owner_id);
+        }
+        $employee = auth()->user()->owner;
+        
+        //TODO: fix supervisor authorization
+
+        // if($employee->hasRole('supervisor')
+        // &&
+        // !$employee->hasRole('secretary') &&
+        // !$employee->hasRole('principal')
+        // ){
+
+        //     $his_classes = $employee->g_classes_sup->pluck('g_class_id');
+        //     return $notifications = Notification::whereHas('owner', function ($query) {
+        //         $query->where('g_class_id', 5);
+        //     }, Student::class)->get();
+        //     $query->whereHas('owner',fn($query) =>
+        //         $query->whereIn('g_class_id',$his_classes)
+        //     ,Student::class);
+        // }
+        
+        $query->orderBy('date', 'desc');
+
+        if(request()->has('page')){
+            $notifications = $query->simplePaginate(10);
+        }
+        else{
+            $notifications = $query->get();
+        }
+        
+
+        res::success(data:$notifications);
+    }
+
+    public function approveNotifications(){
+
+        $data = request()->validate([
+            'notifications' => ['required', 'array'],
+            'notifications.*' => ['exists:notifications,id']
+        ]);
+
+        DB::beginTransaction();
+
+        $entryNum = 1;
+
+        foreach($data['notifications'] as $entry){
+            
+            $noti = Notification::find($entry);
+            $wannaSend = request()->send == 1;
+            if($wannaSend && $noti['sent_successfully']){
+                res::error("error in entry number $entryNum .... this notification is already sent");
+            }
+            if(!$wannaSend && $noti['approved'] == 1){
+                res::error("error in entry number $entryNum .... this notification is already approved");
+            }
+
+            $entryNum++;
+        }
+    }
 }
