@@ -219,7 +219,7 @@ class StudentController extends Controller
         $employee = auth()->user()->owner;
         $search=request()->search;
         $searchable_classes = $employee->hasRole(config('roles.supervisor')) &&
-            !($employee->hasRole('roles.secretary') || $employee->hasRole('roles.principal')) ?
+            !($employee->hasRole('roles.secretary') || $employee->hasRole(config('roles.principal'))) ?
             $employee->g_classes_sup : GClass::all();
         
         $result = Student::query()

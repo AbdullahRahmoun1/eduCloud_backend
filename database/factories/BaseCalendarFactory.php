@@ -23,7 +23,7 @@ class BaseCalendarFactory extends Factory
             'grade_id' => $subject->grade_id,
             'title' => fake()->text(10),
             'is_test' => random_int(0,1),
-            'date' => now()->addDays(random_int(5,20)),
+            'date' => now()->addDays(random_int(1,20)),
         ];
     }
 }
