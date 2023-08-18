@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Http\Controllers\ProgressCalendarController;
 use App\Models\BaseCalendar;
 use App\Models\GClass;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -18,9 +19,13 @@ class ProgressCalendarFactory extends Factory
      */
     public function definition(): array
     {
+        $class = GClass::all()->random();
+        $controller = new ProgressCalendarController();
+        $plan = $controller->getProgressOfClass($class->id, false)
+        ->where('done',false)->random();
         return [
-            'g_class_id' => GClass::all()->random()->id,
-            'base_calendar_id' => BaseCalendar::all()->random()->id
+            'g_class_id' => $class->id,
+            'base_calendar_id' => $plan->id
         ];
     }
 }

@@ -130,12 +130,14 @@ class DatabaseSeeder extends Seeder
         }
         //FIXME base calenders
         $this->try(
-            fn() => BaseCalendar::factory(100)->create()
+            fn() => BaseCalendar::factory(40)->create()
         );
         //FIXME progress calenders
-        $this->try(
-            fn() => ProgressCalendar::factory(30)->create()
-        );
+        for($i = 0 ; $i < 60 ; $i++){
+            $this->try(
+                fn() => ProgressCalendar::factory()->create()
+            );
+        }
         //complaints
         $this->try(
             fn() => Complaint::factory(60)->create()

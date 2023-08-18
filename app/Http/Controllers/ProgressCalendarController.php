@@ -44,8 +44,9 @@ class ProgressCalendarController extends Controller
         res::success('progress added successfully', $progress);
     }
 
-    public function getProgressOfClass($g_class_id){
+    public function getProgressOfClass($g_class_id, $abort = true){
         
+        if($abort)
         Helper::tryToRead($g_class_id);
         
         $g_class = GClass::find($g_class_id);
@@ -66,6 +67,9 @@ class ProgressCalendarController extends Controller
             $goal->done = false;
         });
         
-        res::success('calendar of this class retrieved successfully', $calendar);
+        if($abort)
+            res::success('calendar of this class retrieved successfully', $calendar);
+        
+        return $calendar;
     }
 }
