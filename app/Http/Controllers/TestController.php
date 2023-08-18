@@ -118,7 +118,7 @@ class TestController extends Controller
         Helper::tryToRead($test->g_class_id);
         $marks= $test->marks;
         $marks->load([
-            'student:id,first_name,last_name,father_name,mother_name',
+            'student:id,first_name,last_name,father_name,mother_name,grade_id,g_class_id',
         ]);
         $marks->makeHidden([
             'test_id','student_id',
