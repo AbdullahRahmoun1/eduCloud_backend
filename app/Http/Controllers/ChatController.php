@@ -137,10 +137,11 @@ class ChatController extends Controller
                 'student.grade:id,name',
                 'student.g_class:id,name'
             ]);
+            $message['complaint?']=$message instanceof Reply;
             $result[$message->student_id]=$message;
         }
         return $result->values();
-        
+
         //TODO: add this filter in future!!
         // $data=request()->validate([
         //     'grade_id'=>['exists:grades,id'],
