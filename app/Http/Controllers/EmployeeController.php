@@ -195,6 +195,7 @@ class EmployeeController extends Controller
     }
     
     public function viewEmployee(Employee $employee){
+        Helper::tryToReadEmployee($employee->id);
      //Roles....  
         $roles=$employee->getRoleNames()->toArray();
         $employee->makeHidden('roles');

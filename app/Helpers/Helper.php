@@ -14,6 +14,7 @@ use App\Models\ClassTeacherSubject;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
 use App\Helpers\ResponseFormatter as res;
+use App\Models\Employee;
 use Psy\Readline\Hoa\StreamStatable;
 use Pusher\Pusher;
 
@@ -158,6 +159,11 @@ class Helper {
     public static function tryToReadBus($bus_id){
         if(Gate::denies('viewBus',[Bus::class,$bus_id]))
         res::error("You don't have the permission to read this bus's data.",
+        code:403);
+    }
+    public static function tryToReadEmployee($emp_id){
+        if(Gate::denies('view',[Employee::class,$emp_id]))
+        res::error("You don't have the permission to read this employee's data.",
         code:403);
     }
     public static function tryToControlBusTrips($bus_id){

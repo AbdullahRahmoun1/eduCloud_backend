@@ -7,10 +7,12 @@ namespace App\Providers;
 use App\Models\GClass;
 use App\Models\Account;
 use App\Models\Bus;
+use App\Models\Employee;
 use App\Models\Student;
 use App\Models\Test;
 use App\Policies\BusPolicy;
 use App\Policies\ClassPolicy;
+use App\Policies\EmployeePolicy;
 use App\Policies\StudentPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -25,7 +27,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         GClass::class=>ClassPolicy::class,
         Student::class=>StudentPolicy::class,
-        Bus::class=>BusPolicy::class
+        Bus::class=>BusPolicy::class,
+        Employee::class=>EmployeePolicy::class
     ];
 
     /**

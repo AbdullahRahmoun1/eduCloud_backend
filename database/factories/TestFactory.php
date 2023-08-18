@@ -36,7 +36,6 @@ class TestFactory extends Factory
             'subject_id'=>$subj->id,
             'g_class_id'=>$class->id,
             'type_id'=>Type::all()->random()->id,
-            'progress_calendar_id'=>ProgressCalendar::all()->random()->id,
         ];
     }
 }

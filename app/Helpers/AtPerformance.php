@@ -2,6 +2,7 @@
 namespace App\Helpers;
 
 use App\Models\Student;
+use App\Helpers\ResponseFormatter as res;
 
 class AtPerformance{
     public static function assignStudentAcceptanceRate(&$student,$min_percentage=0.2,$make_hidden=false){
@@ -83,4 +84,42 @@ class AtPerformance{
         return $students;
     }
     
+    public static function getClassStudyBasedOnAT($class,$abilityTest) {
+        $atSubjectId=$abilityTest->subject_id;
+        $classesSubjectsIds=$class->grade->subjects->pluck('id');
+        if(!$classesSubjectsIds->contains($atSubjectId)){
+            res::error("This ability test doesn't belong to this class");
+        }
+
+        $sections=$abilityTest->sections;
+        $sectionAvgs=[];
+        foreach($sections as $section){
+            $sectionAvgs[$section->id]=[
+                'sum'=>0,
+                'count'=>0
+            ];
+        }
+        $students=$class->students;
+        foreach($students as $student){
+            $mark=$student->atMarks()
+            ->where('ability_test_id',$abilityTest->id)
+            ->orderByDesc('date')
+            ->first();
+            if($mark==null)continue;
+            $markSections=$mark->sections;
+            foreach($markSections as $mSection){
+                $forAtSection=$mSection->atSection;
+                $sectionAvgs[$forAtSection]['sum']+=
+                $mSection->mark/$forAtSection->max_mark;
+                $sectionAvgs[$forAtSection]['count']++;
+            }
+        }
+        $result['abilityTestSections'] = $sections->map(function ($section) use($sectionAvgs) {
+            $sum=$sectionAvgs[$section->id]['sum'];
+            $count=$sectionAvgs[$section->id]['count'];
+            $section['avg']=$count?$sum/$count:"N/A";
+            return $section;
+        });
+        return $result;
+    }
     }

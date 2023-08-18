@@ -192,12 +192,29 @@ class DatabaseSeeder extends Seeder
         }
         //FIXME too little data,tests
         $this->try(
-            fn() => Test::factory(60)->create()
+            fn() => Test::factory(100)->create()
         );
+        foreach(ProgressCalendar::all() as $pc){
+            $this->try(
+                fn()=>Test::factory()->create([
+                    'progress_calendar_id'=>$pc->id,
+                ])
+            );
+        }
         //test marks
-        $this->try(
-            fn() => Mark::factory(250)->create()
-        );
+        foreach(Test::all() as $test){
+            $class=$test->g_class;
+            $students=$class->students;
+            foreach($students as $student){
+                $this->try(
+                    fn()=>Mark::create([
+                        'mark'=>random_int(1,$test->max_mark),
+                        'student_id'=>$student->id,
+                        'test_id'=>$test->id,
+                    ])
+                );
+            }
+        }
         //notification categories
         foreach(CategoryFactory::$categories as $cat){
             Category::factory()->create([
