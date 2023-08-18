@@ -162,6 +162,7 @@ class DatabaseSeeder extends Seeder
         );
         //ability test section
         foreach(AbilityTest::all() as $at){
+            //ability test sections
             $ctr=6;
             while($ctr){
                 $this->try(
@@ -172,8 +173,10 @@ class DatabaseSeeder extends Seeder
                 );
                 $ctr--;
             }
+            //at marks
         }
         //at marks
+
         $this->try(
             fn() => AtMark::factory(300)->create()
         );
@@ -192,9 +195,9 @@ class DatabaseSeeder extends Seeder
                 );
             }
         }
-        //FIXME too little data,tests
+        //tests
         $this->try(
-            fn() => Test::factory(100)->create()
+            fn() => Test::factory(400)->create()
         );
         foreach(ProgressCalendar::all() as $pc){
             $this->try(

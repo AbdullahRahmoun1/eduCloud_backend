@@ -59,7 +59,15 @@ class AbilityTestController extends Controller
         ]);
     }
     public function viewSubjectsAbilityTests(Subject $subject){
-        return $subject->ability_tests;
+        $subject->load([
+            'ability_tests',
+            'ability_tests.sections'
+        ]);
+        res::success(data:$subject->ability_tests);
+    }
+    public function get(AbilityTest $abilityTest){
+        $abilityTest->load('sections');
+        res::success(data:$abilityTest);
     }
     
 }

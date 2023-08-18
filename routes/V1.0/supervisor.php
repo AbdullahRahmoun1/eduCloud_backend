@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\AbsenceController;
-use App\Http\Controllers\BaseCalendarController;
-use App\Http\Controllers\GClassController;
-use App\Http\Controllers\MarkController;
-use App\Http\Controllers\ProgressCalendarController;
-use App\Http\Controllers\StudentController;
-use App\Http\Controllers\TestController;
-use App\Http\Controllers\TypeController;
 use App\Models\Test;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MarkController;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\TypeController;
+use App\Http\Controllers\GClassController;
+use App\Http\Controllers\AbsenceController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\AbilityTestController;
+use App\Http\Controllers\BaseCalendarController;
+use App\Http\Controllers\ProgressCalendarController;
 
 Route::middleware('auth:sanctum', 'hasRoles:supervisor,secretary')->group(function(){
     Route::get('studentSearch', [StudentController::class, 'search']);
@@ -35,4 +36,10 @@ Route::middleware('auth:sanctum', 'hasRoles:supervisor,secretary')->group(functi
     Route::post('todaysAbsences',[AbsenceController::class,'addAbsences']);
     Route::post('justifyAbsence/{absence}',[AbsenceController::class,'justifyAbsence']);
     Route::post('editAbsenceJustification/{absence}',[AbsenceController::class,'editJustification']);
+
+    Route::post('addAbilityTestForm/{subject}',[AbilityTestController::class,'add']);
+    Route::get('viewAbilityTest/{abilityTest}',[AbilityTestController::class,'get']);
+    Route::get('getAbilityTestsOf/{subject}',[AbilityTestController::class,'viewSubjectsAbilityTests']);
+    Route::post('addAbilityTestMark',[AtMarkController::class,'add']);
+    
 });

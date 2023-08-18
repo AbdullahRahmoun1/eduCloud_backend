@@ -30,9 +30,6 @@ Route::middleware('auth:sanctum','hasRoles:'.config('roles.principal'))->group(f
     Route::post('editClass/{class}',[GClassController::class,'edit']);    
     Route::post('addSubjectsToGrade/{grade}',[SubjectController::class,'addSubjectsToGrade']);    
     Route::post('editSubject/{subject}',[SubjectController::class,'edit']);
-
-    Route::post('addAbilityTestForm/{subject}',[AbilityTestController::class,'add']);
-    Route::post('addAbilityTestMark',[AtMarkController::class,'add']);
     
    Route::post('addBaseCalendar', [BaseCalendarController::class, 'add']);
    Route::post('editBaseCalendar/{calendar_id}', [BaseCalendarController::class, 'edit']);

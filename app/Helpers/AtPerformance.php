@@ -85,7 +85,6 @@ class AtPerformance{
     }
     
     public static function getClassStudyBasedOnAT($class,$abilityTest) {
-        abort("shhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
         $atSubjectId=$abilityTest->subject_id;
         $classesSubjectsIds=$class->grade->subjects->pluck('id');
         if(!$classesSubjectsIds->contains($atSubjectId)){
@@ -101,6 +100,7 @@ class AtPerformance{
             ];
         }
         $students=$class->students;
+        
         foreach($students as $student){
             $mark=$student->atMarks()
             ->where('ability_test_id',$abilityTest->id)
@@ -108,8 +108,9 @@ class AtPerformance{
             ->first();
             if($mark==null)continue;
             $markSections=$mark->sections;
+            return $markSections;
             foreach($markSections as $mSection){
-                error_log("lets gooo");
+                
                 $forAtSection=$mSection->atSection;
                 $sectionAvgs[$forAtSection]['sum']+=
                 $mSection->mark/$forAtSection->max_mark;
