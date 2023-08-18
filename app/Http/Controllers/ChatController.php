@@ -115,7 +115,7 @@ class ChatController extends Controller
             $allowedToViewStudents = Student::all()->pluck('id');
         }else if($owner->hasRole(config('roles.supervisor'))){
             $classes=$owner->g_classes_sup;
-            $allowedToViewStudents=[];
+            $allowedToViewStudents=collect();
             foreach($classes as $class){
                 $allowedToViewStudents+=
                 $class->students->pluck('id');
