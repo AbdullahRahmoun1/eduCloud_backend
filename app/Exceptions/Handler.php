@@ -38,6 +38,7 @@ class Handler extends ExceptionHandler
             }
 
             if ($request->is('V1.0/principal/assignClassesToSupervisor/*') ||
+                $request->is('V1.0/principal/regenerateEmployeePassword/*')||
                 $request->is('V1.0/principal/assign_Class_Subject_ToTeacher/*')) {
                 return response()->json([
                     'message' => 'this employee id is not valid.',
