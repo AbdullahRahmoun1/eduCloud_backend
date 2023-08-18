@@ -20,11 +20,16 @@ class NumberFactory extends Factory
      */
     public function definition(): array{
         $type=random_int(1,3);
+        $owner=$type==1
+        ?Student::all()->random()
+        :($type==2
+            ?CandidateStudent::all()->random()
+            :Bus::all()->random()
+        );
         return [
             'number'=>fake()->phoneNumber,
-            'owner_id'=>$type==1?Student::all()->random()->id:
-            ($type==2?CandidateStudent::all()->random()->id:Bus::all()->random()->id),
-            'owner_type'=>$type==1?Student::class:($type==2?CandidateStudent::class:Bus::class),
+            'owner_id'=>$owner->id,
+            'owner_type'=>$owner::class,
         ];
     }
 }

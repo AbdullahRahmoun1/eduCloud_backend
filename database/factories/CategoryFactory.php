@@ -14,11 +14,28 @@ class CategoryFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    public static $categories= [
+        "General",
+        "Announcement",
+        "Alert",
+        "Reminder",
+        "Important",
+        "Notification",
+        "Event",
+        "Information",
+        "Emergency",
+        "News",
+        "Suggestion",
+    ];
     public function definition(): array
     {
         return [
-            'name'=>fake()->unique()->text(10),
+            'name'=>self::pick(),
             'send_directly'=>fake()->boolean(),
         ];
+    }
+    public function pick() {
+        $n=random_int(0,count(self::$categories)-1);
+        return self::$categories[$n];
     }
 }

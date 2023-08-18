@@ -18,12 +18,14 @@ class MoneyRequestFactory extends Factory
      */
     public function definition(): array
     {
-        $sc=random_int(0,1)==1;
+        $student=Student::all()->random();
+        $requests=$student->moneyRequests;
+        $sc=random_int(0,1);
         return [
             'value'=>random_int(min:$sc?1000000:500000,max:$sc?5000000:2000000),
-            'notes'=>fake()->text(40),
+            'notes'=>fake()->optional()->randomElement(IncomeFactory::NOTES),
             'type'=>$sc?MoneyRequest::SCHOOL:MoneyRequest::BUS,
-            'student_id'=>Student::all()->random()->id,
+            'student_id'=>$student->id,
         ];
     }
 }

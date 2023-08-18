@@ -18,10 +18,11 @@ class MarkFactory extends Factory
      */
     public function definition(): array
     {
+        $test=Test::all()->random();
         return [
-            'mark'=>random_int(1,100),
+            'mark'=>random_int(1,$test->max_mark),
             'student_id'=>Student::all()->random()->id,
-            'test_id'=>Test::all()->random()->id,            
+            'test_id'=>$test->id,            
         ];
     }
 }

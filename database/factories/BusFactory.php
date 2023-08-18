@@ -17,8 +17,9 @@ class BusFactory extends Factory
      */
     public function definition(): array
     {
+        $n=random_int(1,100);
         return [
-            'name'=>Str::random(3),
+            'name'=>fake()->city.".Bus($n)",
             'driver_name'=>fake()->name('male'),
             'max_load'=>random_int(20,35),
         ];

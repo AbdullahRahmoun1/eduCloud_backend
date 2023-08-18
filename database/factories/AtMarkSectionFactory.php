@@ -18,10 +18,15 @@ class AtMarkSectionFactory extends Factory
      */
     public function definition(): array
     {
+        do{
+            $mark=AtMark::all()->random();
+            $sections=$mark->abilityTest->sections;
+        }while(count($sections)==0);
+        $atSection=$mark->abilityTest->sections->random();
         return [
-            'mark'=>random_int(1,100),
-            'at_mark_id'=>AtMark::all()->random()->id,
-            'at_section_id'=>AtSection::all()->random()->id,
+            'mark'=>random_int(0,$atSection->max_mark),
+            'at_mark_id'=>$mark->id,
+            'at_section_id'=>$atSection->id,
         ];
     }
 }

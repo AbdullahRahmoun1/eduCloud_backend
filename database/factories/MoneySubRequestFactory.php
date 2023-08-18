@@ -19,10 +19,15 @@ class MoneySubRequestFactory extends Factory
      */
     public function definition(): array
     {
+        $mr=MoneyRequest::all()->random();
+        $subsCount=$mr->moneySubRequests()->count()+1;
+        $newPrice = intval($mr->value / $subsCount);
+        $newPrice += $mr->value % ($subsCount);
+        $mr->moneySubRequests()->update(['value'=>$newPrice]);
         return [
-            'value'=>random_int(500000,1500000),
+            'value'=>$newPrice,
             'final_date'=>now()->addDays(random_int(1,100)),
-            'money_request_id'=>MoneyRequest::all()->random()->id,          
+            'money_request_id'=>$mr->id,          
         ];
     }
 }

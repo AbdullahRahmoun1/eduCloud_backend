@@ -19,12 +19,15 @@ class NotificationFactory extends Factory
      */
     public function definition(): array
     {
-        $type=random_int(1,2);
+        $type=random_int(0,1);
+        $to=$type
+        ?Student::all()->random()
+        :Employee::all()->random();
         return [
-            'body'=>fake()->realTextBetween(20,100),
-            'owner_id'=>$type==1?Student::all()->random()->id:Employee::all()->random()->id,
-            'owner_type'=>$type==1?Student::class:Employee::class,
-            'date'=>now(),
+            'body'=>fake()->realTextBetween(20,45),
+            'owner_id'=>$to,
+            'owner_type'=>$to::class,
+            'date'=>now()->addDay(random_int(10,50)),
             'category_id'=>Category::all()->random()->id,
             'approved' => fake()->boolean(),
         ];

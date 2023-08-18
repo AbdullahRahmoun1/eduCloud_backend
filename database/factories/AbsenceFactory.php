@@ -17,11 +17,31 @@ class AbsenceFactory extends Factory
      */
     public function definition(): array
     {
+        $j=random_int(0,1);
         return [
-            'justified'=>random_int(0,1),
-            'justification'=>fake()->text(50),
-            'date'=>now()->addDays(random_int(0,50)),
+            'justified'=>$j,
+            'justification'=>$j?$this->pick():null,
+            'date'=>now()->addDays(random_int(0,120)),
             'student_id'=>Student::all()->random()->id,
         ];
+    }
+    private function pick() {
+        $absenceJustifications = [
+            "Doctor visit",
+            "Family event",
+            "Illness",
+            "Medical appt.",
+            "Dentist",
+            "Religious",
+            "Cold/flu",
+            "School trip",
+            "Headache",
+            "Stomachache",
+            "Allergy",
+            "Fever",
+            "Car issue",
+            "Emergency"
+        ];
+        return fake()->randomElement($absenceJustifications);
     }
 }

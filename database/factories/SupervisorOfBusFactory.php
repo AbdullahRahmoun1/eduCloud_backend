@@ -18,11 +18,14 @@ class SupervisorOfBusFactory extends Factory
      */
     public function definition(): array
     {
+        $maxDate = date('Y-m-d', strtotime('+8 months'));
+        $minDate = date('Y-m-d', strtotime('+1 months'));
+        $endDate = fake()
+        ->dateTimeBetween($minDate, $maxDate)
+        ->format('Y-m-d');
         return [
-            'employee_id'=>Employee::all()->random()->id,
-            'bus_id'=>Bus::all()->random()->id,
             'start_date'=>now(),
-            'end_date'=>fake()->date()
+            'end_date'=>$endDate
         ];
     }
 }

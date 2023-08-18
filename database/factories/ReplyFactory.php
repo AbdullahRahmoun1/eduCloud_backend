@@ -21,7 +21,7 @@ class ReplyFactory extends Factory
         return [
             'student_id' => Student::all()->random()->id,
             'employee_id' => Employee::all()->random()->id,
-            'body' => fake()->text(250),
+            'body' => fake()->realText(35),
             'date_time' => now()->addDay(random_int(1,200))
         ];
     }

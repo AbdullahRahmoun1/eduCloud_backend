@@ -20,14 +20,21 @@ class TestFactory extends Factory
      */
     public function definition(): array
     {
+        $tries=0;
+        do{
+            $subj=Subject::all()->random();
+            $classes=$subj->grade->g_classes;
+        }while(count($classes)==0 && $tries++<50);
+        $class=$classes->random();
+        $n=random_int(1,100);
         return [
-            'title'=>'someTitle',
-            'image_url'=>'someImageUrl',
-            'min_mark'=>random_int(1,30),
-            'max_mark'=>random_int(31,200),
+            'title'=>"$subj->name/$class->name/Test($n)",
+            'image_url'=>fake()->imageUrl(40),
+            'min_mark'=>random_int(1,3)*10,
+            'max_mark'=>random_int(5,10)*10,
             'date'=>now()->addDays(random_int(5,50)),
-            'subject_id'=>Subject::all()->random()->id,
-            'g_class_id'=>GClass::all()->random()->id,
+            'subject_id'=>$subj->id,
+            'g_class_id'=>$class->id,
             'type_id'=>Type::all()->random()->id,
             'progress_calendar_id'=>ProgressCalendar::all()->random()->id,
         ];

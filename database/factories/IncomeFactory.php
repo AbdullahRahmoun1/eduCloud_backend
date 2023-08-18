@@ -18,6 +18,18 @@ class IncomeFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    public const NOTES = [
+        "Tuition fees for September 2023.",
+        "Cafeteria charges for the week.",
+        "Library fines for overdue books.",
+        "Extra-curricular activity fees.",
+        "Science lab equipment replacement costs.",
+        "Sports uniform fee.",
+        "Computer lab usage fee.",
+        "Arts and crafts supplies expense.",
+        "Exam re-evaluation fee.",
+        "Field trip contribution."
+    ];
     public function definition(): array
     {
         $randomDigits = '';
@@ -25,12 +37,9 @@ class IncomeFactory extends Factory
             $randomDigits .= rand(0, 9);
         }
         return [
-            'value'=>random_int(300000,1000000),
             'date'=>now()->addDays(random_int(0,15)),
             'receipt_number'=>$randomDigits,
-            'notes'=>fake()->text(60),
-            'type'=>random_int(0,1)?mr::SCHOOL:mr::BUS,
-            'student_id'=>Student::all()->random()->id,
+            'notes'=>fake()->optional()->randomElement(self::NOTES),
         ];
     }
 }

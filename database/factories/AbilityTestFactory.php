@@ -18,9 +18,11 @@ class AbilityTestFactory extends Factory
      */
     public function definition(): array
     {
+        $s=Subject::all()->random();
+        $n=random_int(0,100);
         return [
-            'title' => Str::random(10),
-            'subject_id'=>Subject::all()->random()->id,
+            'title' => "$s->name/Ability test ($n)",
+            'subject_id'=>$s->id,
         ];
     }
 }

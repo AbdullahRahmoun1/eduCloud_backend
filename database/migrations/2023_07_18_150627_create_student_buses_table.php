@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Student::class)->unique();
             $table->foreignIdFor(Bus::class);
-            $table->unique(['student_id','bus_id'],'Student can have one bus');
+            $table->unique(['student_id','bus_id'],'Student can only have one bus');
             $table->timestamps();
         });
     }

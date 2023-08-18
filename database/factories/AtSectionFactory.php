@@ -18,11 +18,13 @@ class AtSectionFactory extends Factory
      */
     public function definition(): array
     {
+        $at=AbilityTest::all()->random();
+        $n = random_int(1,100);
         return [
-            'name'=>Str::random(20),
-            'max_mark'=>random_int(30,60),
-            'min_mark'=>random_int(30,60),
-            'ability_test_id'=>AbilityTest::all()->random()->id,
+            'name'=>"section($n)",
+            'max_mark'=>random_int(3,6)*10,
+            'min_mark'=>random_int(1,2)*10,
+            'ability_test_id'=>$at->id,
         ];
     }
 }

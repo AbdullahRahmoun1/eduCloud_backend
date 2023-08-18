@@ -20,7 +20,7 @@ class CandidateStudentFactory extends Factory
         return [
             'grade_id' => Grade::all()->random()->id,
             'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
+            'last_name' => fake()->unique()->lastName(),
             'father_name' => fake()->firstNameMale(),
             'mother_name' => fake()->firstNameFemale(),
         ];

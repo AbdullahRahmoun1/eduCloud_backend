@@ -37,6 +37,11 @@ use App\Models\ProgressCalendar;
 use App\Models\Reply;
 use App\Models\StudentBus;
 use App\Models\SupervisorOfBus;
+use Database\Factories\BusAddressFactory;
+use Database\Factories\CategoryFactory;
+use Database\Factories\GClassFactory;
+use Database\Factories\SubjectFactory;
+use Illuminate\Database\QueryException;
 
 class DatabaseSeeder extends Seeder
 {
@@ -45,110 +50,258 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        //Fixed
-        $this
-        ->try(fn()=>Address::factory(50)->create());
-        $this
-        ->try(fn()=>Grade::factory(10)->create());
-        // $this
-        // ->try(fn()=>);
-
-        //Not yet
-        
-        $this
-        ->try(function(){
-        Grade::create(['name' => 'السابع']);
-        Grade::create(['name' => 'الثامن']);
-        Grade::create(['name' => 'التاسع']);
-        Grade::factory(2)->create();        
-        GClass::create(['grade_id' => 1, 'name' => 'الاولى', 'max_number' => 26]);
-        GClass::create(['grade_id' => 1, 'name' => 'الثانية', 'max_number' => 30]);
-        GClass::create(['grade_id' => 3, 'name' => 'الاولى', 'max_number' => 28]);
+        //addresses
+        $this->try(
+            fn()=>Address::factory(50)->create()
+        );
+        //grade , subjects , classes
+        $this->try(function(){
+            for($i=1;$i<=12;$i++){
+                //create grade
+                $grade=Grade::create([
+                    'name'=>"{$i}th grade"
+                ]);
+                //create classes for it
+                foreach(GClassFactory::NAMES as $name){
+                    GClass::factory()->create([
+                        'grade_id'=>$grade->id,
+                        'name'=>$name
+                    ]);
+                }
+                //create subjects for it
+                $sub_names=SubjectFactory::pickNames(6);
+                foreach($sub_names as $subName){
+                    Subject::factory()->create([
+                        'grade_id'=>$grade->id,
+                        'name'=>$subName
+                    ]);
+                }
+            }
         });
-        
-        Employee::factory(5)->create();
-        Student::factory(50)->create();
-        $this->try(fn()=>$this->call(RolesAndPermissionsSeeder::class));
-        $this->try(fn()=>$this->call(AccountSeeder::class));
-        Subject::create(['name' => 'فيزيا', 'grade_id' => 1]);
-        Subject::factory(9)->create();
+        //employees
+        $this->try(
+            fn() => Employee::factory(25)->create()
+        );
+        //students
+        $this->try(
+            fn() => Student::factory(90)->create()
+        );
+        //roles
+        $this->try(
+            fn()=>$this
+            ->call(RolesAndPermissionsSeeder::class)
+        );
+        //accounts
+        $this->try(
+            fn()=>$this->call(AccountSeeder::class)
+        );
+        //candidate students
+        $this->try(
+            fn()=>CandidateStudent::factory(30)->create()
+        );
+
+        //add supervisors to  classes and teachers to subjects
+        foreach(GClass::all() as $class){
+            //first: assign supervisor
+            $this->try(function () use($class) {
+                $employee=Employee::all()->random();
+                ClassSupervisor::create([
+                    'employee_id'=>$employee->id,
+                    'g_class_id'=>$class->id,
+                ]);
+                $role=config('roles.supervisor');
+                if(!$employee->hasRole($role))
+                $employee->assignRole($role);
+            });
+            //now assign teachers for subjects
+            foreach($class->grade->subjects as $subject){
+                $this->try(function () use($class,$subject) {
+                    $employee=Employee::all()->random();
+                    ClassTeacherSubject::create([
+                        'employee_id'=>$employee->id,
+                        'g_class_id'=>$class->id,
+                        'subject_id'=>$subject->id
+                    ]);
+                    $role=config('roles.teacher');
+                    if(!$employee->hasRole($role))
+                    $employee->assignRole($role);
+                });
+            }
+        }
+        //FIXME base calenders
+        $this->try(
+            fn() => BaseCalendar::factory(100)->create()
+        );
+        //FIXME progress calenders
+        $this->try(
+            fn() => ProgressCalendar::factory(30)->create()
+        );
+        //complaints
+        $this->try(
+            fn() => Complaint::factory(60)->create()
+        );
+        //replies
         $this
-        ->try(fn()=>GClass::factory(10)->create());
-        CandidateStudent::factory(30)->create();
-        ClassSupervisor::create(['employee_id' => 8, 'g_class_id' => 1]);
-        ClassSupervisor::create(['employee_id' => 8, 'g_class_id' => 2]);
-        ClassTeacherSubject::create(['employee_id' => 1, 'subject_id' => 1, 'g_class_id' => 2]);
-        ClassTeacherSubject::create(['employee_id' => 1, 'subject_id' => 1, 'g_class_id' => 1]);
-        ClassTeacherSubject::create(['employee_id' => 2, 'subject_id' => 2, 'g_class_id' => 1]);
-
-        BaseCalendar::create(['subject_id' => 1, 'grade_id' => 1, 'title' => 'first chapter', 'is_test' => 0, 'date' => now()]);
-        BaseCalendar::create(['subject_id' => 1, 'grade_id' => 1, 'title' => 'second chapter', 'is_test' => 0, 'date' => now()->addDay(4)]);
-        BaseCalendar::factory(10)->create();
-
-        $this->try(fn() => ProgressCalendar::factory(20)->create());
-
-        Complaint::factory(50)->create();
-        Reply::factory(50)->create();
-        
+        ->try(
+            fn() => Reply::factory(60)->create()
+        );
+        //FIXME types
         Type::create(['name'=>'سبر']);
         Type::create(['name'=>'امتحان']);
         Type::create(['name'=>'تسميع']);
         Type::create(['name'=>'مذاكرة']);
-
-
-        $this
-        ->try(fn()=>Absence::factory(50)->create());
-        
-        $this
-        ->try(fn()=>AbilityTest::factory(50)->create());
-        ;
-
-        AtSection::factory(200)->create();
-
-        $this
-        ->try(fn()=>AtMark::factory(300)->create());
-
-        $this
-        ->try(fn()=>AtMarkSection::factory(50)->create());
-        
-
-        $this->try(fn()=>Test::factory(100)->create());
-
-        $this
-        ->try(fn()=>Mark::factory(100)->create());
-
-        Category::create(['name' => 'global_note']);
-        Category::factory(4)->create();
-        Notification::factory(100)->create();
-        Notification::factory(3)->create(['owner_id' => 1, 'owner_type' => Student::class]);
-
-        $this
-        ->try(fn()=>MoneyRequest::factory(100)->create());
-        MoneySubRequest::factory(300)->create();
-        $this
-        ->try(fn()=>Income::factory(500)->create());
-
-        $this
-        ->try(fn()=>Bus::factory(50)->create());
-        
-        $this
-        ->try(fn()=>BusAddress::factory(40)->create());
-
-        $this
-        ->try(fn()=>StudentBus::factory(50)->create());
-
-        $this
-        ->try(fn()=>SupervisorOfBus::factory(50)->create());
-        
-        Number::factory(100)->create();
-        
-
+        // absences
+        $this->try(
+            fn() => Absence::factory(50)->create()
+        );
+        // ability tests
+        $this->try(
+            fn() => AbilityTest::factory(50)->create()
+        );
+        //ability test section
+        foreach(AbilityTest::all() as $at){
+            $ctr=6;
+            while($ctr){
+                $this->try(
+                    fn()=>AtSection::factory()->create([
+                        'ability_test_id'=>$at->id,
+                        'name'=>"section($ctr)"
+                    ])
+                );
+                $ctr--;
+            }
+        }
+        //at marks
+        $this->try(
+            fn() => AtMark::factory(300)->create()
+        );
+        //at mark sections
+        foreach(AtMark::all() as $mark){
+            $sections=$mark->abilityTest->sections;
+            foreach($sections as $section){
+                $max= $section->max_mark;
+                $this->try(
+                    fn()=>
+                    AtMarkSection::create([
+                        'at_mark_id'=>$mark->id,
+                        'at_section_id'=>$section->id,
+                        'mark'=>random_int(0,$max)
+                    ])
+                );
+            }
+        }
+        //FIXME too little data,tests
+        $this->try(
+            fn() => Test::factory(60)->create()
+        );
+        //test marks
+        $this->try(
+            fn() => Mark::factory(250)->create()
+        );
+        //notification categories
+        foreach(CategoryFactory::$categories as $cat){
+            Category::factory()->create([
+                'name'=>$cat
+            ]);
+        }
+        //FIXME notifications
+        $this->try(
+            fn() => Notification::factory(150)->create()
+        );
+        //bills
+        foreach(Student::all() as $student){
+            $n=random_int(1,2);
+            if($n-->0){
+                MoneyRequest::factory()->create([
+                    'student_id'=>$student->id,
+                    'type'=>MoneyRequest::SCHOOL
+                ]);
+            }
+            if($n-->0){
+                MoneyRequest::factory()->create([
+                    'student_id'=>$student->id,
+                    'type'=>MoneyRequest::BUS    
+                ]);
+            }
+        }
+        //bills_sections
+        $this->try(
+            fn() => MoneySubRequest::factory(300)->create()
+        );
+        MoneyRequest::whereDoesntHave('moneySubRequests')->delete();
+        //student payments
+        foreach(Student::all() as $student){
+            foreach($student->moneyRequests as $mr){
+                foreach($mr->moneySubRequests as $subReq){
+                    $payFully=random_int(0,1);
+                    $value=$payFully
+                    ?$subReq->value
+                    :random_int($subReq->value/4,$subReq->value);
+                    Income::factory()->create([
+                        'student_id'=>$student->id,
+                        'type'=>$mr->type,
+                        'value'=>$value
+                    ]);
+                }
+            }
+        }
+        //buses
+        $this->try(
+            fn() => Bus::factory(15)->create()
+        );
+        //distribute students to buses
+        foreach(Student::all() as $student){
+            if($student->transportation_subscriber){
+                $this->try(fn () =>
+                    StudentBus::create([
+                        'student_id'=>$student->id,
+                        'bus_id'=>Bus::all()->random()->id,
+                    ])
+                );
+            }
+        }
+        //assign supervisors of buses..
+        foreach(Bus::all() as $bus){
+            //assign addresses
+            $numOfAddresses=random_int(3,8);
+            $addresses=BusAddressFactory::pickNAddress($numOfAddresses);
+            foreach($addresses as $address){
+                $this->try(
+                    fn()=>
+                    BusAddress::factory()->create([
+                        'bus_id'=>$bus->id,
+                        'address_id'=>$address->id,
+                    ])
+                );
+            }
+            //assign supervisors
+            $employee=Employee::all()->random();
+            $role=config('roles.busSupervisor');
+            if(!$employee->hasRole($role))
+            $employee->assignRole($role);
+            $this->try(
+                fn()=>
+                SupervisorOfBus::factory()->create([
+                    'bus_id'=>$bus->id,
+                    'employee_id'=>$employee->id
+                ])
+            );
+        }
+        //numbers
+        $this->try(
+            fn() => Number::factory(300)->create()
+        );
     }
     private function try($toTry){
         try{
             $toTry();
-        }catch(Exception $e){
-            logger($e->getMessage().'  in Database seeder');
+        }catch(QueryException $e){
+            info($e->getMessage().'  in Database seeder'.PHP_EOL
+            ."---------------------------------------------");
+        }
+        catch(Exception $e){
+            error_log($e->getMessage().'  in Database seeder'.PHP_EOL
+            ."---------------------------------------------");
         }
     }
 }

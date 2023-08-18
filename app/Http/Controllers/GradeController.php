@@ -43,7 +43,7 @@ class GradeController extends Controller
             unset($subject->teachers);
             $subject->teachers = $teachers->unique(function ($teacher) {
                 return $teacher->id;
-            });
+            })->values();
         }
         res::success(data:$grade);
     }

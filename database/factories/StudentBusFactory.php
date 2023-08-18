@@ -19,8 +19,12 @@ class StudentBusFactory extends Factory
      */
     public function definition(): array
     {
+        $student=Student::all()->random();
+        $hasBus=$student->bus()->count()>=1;
+        if($hasBus || !$student->transportation_subscriber)
+        return [];
         return [
-            'student_id'=>Student::all()->random()->id,
+            'student_id'=>$student->id,
             'bus_id'=>Bus::all()->random()->id,
         ];
     }

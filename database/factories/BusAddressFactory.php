@@ -24,4 +24,14 @@ class BusAddressFactory extends Factory
             'price'=>random_int(40000,100000)
         ];
     }
+    public static function pickNAddress($n){
+        $addresses=Address::all();
+        $addresses = $addresses->shuffle();
+        $count=count($addresses)<$n?count($addresses):$n;
+        $result=[];
+        for($i=0;$i<$count;$i++){
+            $result[]=$addresses[$i];
+        }
+        return $result;
+    }
 }

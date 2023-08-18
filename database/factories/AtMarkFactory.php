@@ -20,10 +20,15 @@ class AtMarkFactory extends Factory
      */
     public function definition(): array
     {
+        $at=AbilityTest::all()->random();
+        $type=random_int(0,1);
+        $student=$type
+        ?Student::all()->random()
+        :CandidateStudent::all()->random();
         return [
-            'student_id'=>Student::all()->random()->id,
-            'student_type'=>random_int(1,2)==2?Student::class:CandidateStudent::class,
-            'ability_test_id'=>AbilityTest::all()->random()->id,
+            'student_id'=>$student->id,
+            'student_type'=>$student::class,
+            'ability_test_id'=>$at->id,
             'is_entry_mark'=>random_int(0,1),
             'date'=>fake()->date(),
         ];
