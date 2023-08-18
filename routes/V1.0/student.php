@@ -24,6 +24,5 @@ Route::middleware(['auth:sanctum', 'hasRoles:student,supervisor,secretary'])
 Route::middleware(['auth:sanctum', 'hasRoles:supervisor,secretary'])
 ->group(function () {
     
-    Route::get('getUnsentNotifications', [NotificationController::class, 'getUnsentNotifications']);
     Route::post('sendNotificationsToStudents/{notify}', [NotificationController::class, 'sendNotificationsToStudents']);
 });

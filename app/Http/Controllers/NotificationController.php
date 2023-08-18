@@ -22,11 +22,12 @@ class NotificationController extends Controller
         
         $data = $request->validate([
             'body' => ['required', 'min:1', 'max:300'],
+            'title' => ['required', 'min:1', 'max:30']
         ]);
         $data['date'] = now();
         $data['category_id'] = 1;
         $data['owner_id'] = 0;
-        $data['owner_type'] = 'all';
+        $data['owner_type'] = Student::class;
 
         $notification = Notification::create($data);
         $notification->makeHidden('owner_id', 'owner_type');
@@ -59,7 +60,7 @@ class NotificationController extends Controller
         })
         ->where('owner_type', Student::class)
         ->orderBy('date','desc')
-        ->select('id', 'owner_id', 'category_id', 'body', 'date','sent_successfully', 'approved');
+        ->select('id', 'owner_id', 'category_id','title', 'body', 'date','sent_successfully', 'approved');
 
         if(auth()->user()->owner_type == Student::class){
             $query->where('sent_successfully',true);
@@ -80,7 +81,8 @@ class NotificationController extends Controller
         $data = request()->validate([
             '*' => ['required', 'array'],
             '*.owner_id' => ['required', 'exists:students,id'],
-            '*.body' => ['required', 'max:300'],
+            '*.title' => ['required', 'min:1', 'max:300'],
+            '*.body' => ['required', 'min:1','max:30'],
             '*.category_id' => ['required', 'exists:categories,id']
         ]);
 
@@ -103,9 +105,9 @@ class NotificationController extends Controller
                 $will_be_sent = (auth()->user()->owner->hasRole('principal') ||
                 $category->send_directly) && $notify;
 
-                //TODO: does the notification need a title field?
                 $notifications[] = Helper::sendNotificationToOneStudent(
                     $entry['owner_id'],
+                    $entry['title'],
                     $entry['body'],
                     $entry['category_id'],
                     sent:$will_be_sent
@@ -115,7 +117,7 @@ class NotificationController extends Controller
 
                     $events[] = new PrivateNotification(
                         $entry['owner_id'],
-                        ['title' => $category->name, 'body' => $entry['body']],
+                        ['title' => $entry['title'], 'body' => $entry['body']],
                         $category->name);
                 }
                 $entryNum++;
@@ -141,14 +143,22 @@ class NotificationController extends Controller
         if(request()->has('category_id')){
             $query->where('category_id', request()->category_id);
         }
-
+        
         if(request()->has('owner_id')){
             $query->where('owner_id', request()->owner_id);
         }
-        $employee = auth()->user()->owner;
+        
+        if(request()->approved == 1){
+            $query->where('approved', 1);
+        }
+        
+        if(request()->has('approved') && request()->approved == 0){
+            $query->where('approved', 0);
+        }
         
         //TODO: fix supervisor authorization
-
+        
+        // $employee = auth()->user()->owner;
         // if($employee->hasRole('supervisor')
         // &&
         // !$employee->hasRole('secretary') &&

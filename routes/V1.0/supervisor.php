@@ -8,6 +8,7 @@ use App\Http\Controllers\ProgressCalendarController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TypeController;
+use App\Http\Controllers\NotificationController;
 use App\Models\Test;
 use Illuminate\Support\Facades\Route;
 
@@ -35,4 +36,6 @@ Route::middleware('auth:sanctum', 'hasRoles:supervisor,secretary')->group(functi
     Route::post('todaysAbsences',[AbsenceController::class,'addAbsences']);
     Route::post('justifyAbsence/{absence}',[AbsenceController::class,'justifyAbsence']);
     Route::post('editAbsenceJustification/{absence}',[AbsenceController::class,'editJustification']);
+
+    Route::get('getUnsentNotifications', [NotificationController::class, 'getUnsentNotifications']);
 });
