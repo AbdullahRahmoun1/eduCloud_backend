@@ -115,10 +115,10 @@ class ChatController extends Controller
             $allowedToViewStudents = Student::all()->pluck('id');
         }else if($owner->hasRole(config('roles.supervisor'))){
             $classes=$owner->g_classes_sup;
-            $allowedToViewStudents=collect();
+            $allowedToViewStudents=[];
             foreach($classes as $class){
                 $allowedToViewStudents+=
-                $class->students->pluck('id');
+                $class->students->pluck('id')->toArray();
             }
         }else {
             res::error("You have to be a principal or supervisor to call this route!!");
