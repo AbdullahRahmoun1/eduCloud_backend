@@ -46,16 +46,20 @@ class MarkController extends Controller
             }
             
             //is this entry duplicated?
-            $unique = Mark::where('student_id',$student->id)
-            ->where('test_id',$test->id)->first();
-            if(isset($unique)){
-                DB::rollBack();
-                res::error("error in entry $entryNum ... this entry is duplicated");
-            }
+            //-------------------------------------------------
+            // $unique = Mark::where('student_id',$student->id)
+            // ->where('test_id',$test->id)->first();
+            // if(isset($unique)){
+            //     DB::rollBack();
+            //     res::error("error in entry $entryNum ... this entry is duplicated");
+            // }
 
             //everything good... now create
             try{
-                $studentMark = Mark::create(array_merge($entry,['test_id' => $test->id]));
+                $studentMark = Mark::updateOrCreate(
+                    ['test_id' => $test->id, 'student_id' => $entry['student_id']],
+                    ['mark' => $entry['mark']]
+                );
             }
             catch(Exception $e){
                 res::queryError($e,rollback:true);
