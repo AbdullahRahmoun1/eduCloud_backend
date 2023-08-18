@@ -43,6 +43,8 @@ Route::middleware('auth:sanctum','hasRoles:'.config('roles.principal'))->group(f
     Route::get('possibleRolesForEmps',[RoleController::class,'rolesForEmployees']);
     Route::get('employeesWithRole/{role}',[EmployeeController::class,'employeesWithRole']);
     Route::get('employeeSearch/{query}',[EmployeeController::class,'search']);
+    Route::get('regenerateEmployeePassword/{emp}', [EmployeeController::class, 'regeneratePassword']);
+
     Route::post('addCategory', [CategoryController::class, 'add']);
     Route::post('editCategory/{id}', [CategoryController::class, 'edit']);
     Route::post('sendGlobalNotification', [NotificationController::class, 'global']);

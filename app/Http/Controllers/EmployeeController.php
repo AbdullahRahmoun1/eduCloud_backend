@@ -247,5 +247,23 @@ class EmployeeController extends Controller
         
     }
 
+    public function regeneratePassword(Employee $emp){
 
+        $account = $emp->account;
+        if(!isset($account)){
+            return res::error('this employee does not have an account',null,422);
+        }
+
+        try{
+            $new_password = Account::changePassword($account);
+        }
+        catch(Exception $e){
+            return res::error('something went wrong', $e->getMessage());
+        }
+
+        return res::success('password changed successfully.',[
+            'account' => $account['user_name'],
+            'new password' => $new_password
+        ]);
+    }
 }
