@@ -227,27 +227,56 @@ class DatabaseSeeder extends Seeder
         $this->try(
             fn() => Notification::factory(150)->create()
         );
-        //bills
+        //bills and bill sections
         foreach(Student::all() as $student){
+            //create bills
             $n=random_int(1,2);
+            $school=null;
+            $bus=null;
             if($n-->0){
-                MoneyRequest::factory()->create([
+                $school=MoneyRequest::factory()->create([
                     'student_id'=>$student->id,
                     'type'=>MoneyRequest::SCHOOL
                 ]);
             }
             if($n-->0){
-                MoneyRequest::factory()->create([
+                $bus=MoneyRequest::factory()->create([
                     'student_id'=>$student->id,
                     'type'=>MoneyRequest::BUS    
                 ]);
             }
+            //create school bill sections if found
+            if($school){
+                $n=random_int(2,6);
+                $price = $school->value / $n;
+                while($n--){
+                    $this->try(
+                        fn()=>MoneySubRequest::create([
+                            'value'=>$price,
+                            'final_date'=>now()->addMonths($n),
+                            'money_request_id'=>$school->id,          
+                            ])
+                        );
+                    }
+                    
+            }
+            //create bus bill sections if found
+            if($bus){
+                $n=random_int(2,6);
+                $price = $bus->value / $n;
+                while($n--){
+                    $this->try(
+                        fn()=>MoneySubRequest::create([
+                            'value'=>$price,
+                            'final_date'=>now()->addMonths($n),
+                            'money_request_id'=>$bus->id,          
+                            ])
+                        );
+                    }
+                    
+            }
+            
         }
-        //bills_sections
-        $this->try(
-            fn() => MoneySubRequest::factory(300)->create()
-        );
-        MoneyRequest::whereDoesntHave('moneySubRequests')->delete();
         //student payments
         foreach(Student::all() as $student){
             foreach($student->moneyRequests as $mr){
