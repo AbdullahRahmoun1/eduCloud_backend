@@ -148,7 +148,10 @@ class ChatController extends Controller
             continue;
             $result[$message['student_id']]=$message;
         }
-        return $result->values();
+        return [
+            'conversations'=>$result->values(),
+            'employee_id'=>request()->user()->owner_id
+        ];
 
         //TODO: add this filter in future!!
             // $data=request()->validate([
