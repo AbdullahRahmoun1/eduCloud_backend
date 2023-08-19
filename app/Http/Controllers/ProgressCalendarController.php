@@ -55,8 +55,11 @@ class ProgressCalendarController extends Controller
         }
 
         $grade = $g_class->grade;
-        $calendar = BaseCalendar::where('grade_id',$grade->id)
-        ->orderBy('date')->get();
+        $calendar = BaseCalendar::where('grade_id',$grade->id);
+        if(request()->has('subject_id')){
+            $calendar = $calendar->where('subject_id',request()->subject_id);
+        }
+        $calendar = $calendar->orderBy('date')->get();
 
         $progress = ProgressCalendar::where('g_class_id', $g_class_id);
         $ids = $progress->pluck('base_calendar_id')->toArray();
