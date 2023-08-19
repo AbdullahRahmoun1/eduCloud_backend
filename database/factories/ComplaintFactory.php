@@ -20,7 +20,7 @@ class ComplaintFactory extends Factory
         return [
             'student_id' => Student::all()->random()->id,
             'body' => fake()->realText(35),
-            'date_time' => now()->addDay(random_int(1,200))
+            'date_time' => now()
         ];
     }
 }

@@ -140,12 +140,12 @@ class DatabaseSeeder extends Seeder
         }
         //complaints
         $this->try(
-            fn() => Complaint::factory(60)->create()
+            fn() => Complaint::factory(500)->create()
         );
         //replies
         $this
         ->try(
-            fn() => Reply::factory(60)->create()
+            fn() => Reply::factory(500)->create()
         );
         //FIXME types
         Type::create(['name'=>'سبر']);
