@@ -105,4 +105,19 @@ class BusController extends Controller
         }
         res::success();
     }
+    public function getTransportationSubscribers(){
+        $students=Student::with('bus','grade:id,name','g_class:id,name')
+        ->where('transportation_subscriber',true)
+        ->select([
+            'id','first_name','last_name','grade_id','g_class_id','transportation_subscriber'
+        ])->get();
+        $students=$students->sortBy(fn($s)=>$s->bus->count());
+        foreach($students as $student){
+            $student->makeHidden(['grade_id','g_class_id']);
+            $sBus=$student->bus;
+            unset($student->bus);
+            $student->bus=$sBus->count()==0?null:$sBus[0];
+        }
+        res::success(data:$students);
+    }
 }
