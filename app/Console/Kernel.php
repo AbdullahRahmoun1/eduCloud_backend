@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         ->runInBackground()
         ->everyMinute()
         ->withoutOverlapping();
+        
         $schedule->command('backup:run')
         ->runInBackground()
         ->everyMinute()
@@ -24,7 +25,7 @@ class Kernel extends ConsoleKernel
         ->sendOutputTo(storage_path('logs/backup.log'));
 
         $schedule->job(new NotifyParentsToPayBills())
-        ->everyMinute();
+        ->everyFiveMinutes();
         // ->weekly()
         // ->days([0,2,4])->at('10:00');
     }

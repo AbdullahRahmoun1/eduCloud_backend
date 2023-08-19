@@ -140,12 +140,12 @@ class DatabaseSeeder extends Seeder
         }
         //complaints
         $this->try(
-            fn() => Complaint::factory(60)->create()
+            fn() => Complaint::factory(500)->create()
         );
         //replies
         $this
         ->try(
-            fn() => Reply::factory(60)->create()
+            fn() => Reply::factory(500)->create()
         );
         //FIXME types
         Type::create(['name'=>'سبر']);
@@ -158,7 +158,7 @@ class DatabaseSeeder extends Seeder
         );
         // ability tests
         $this->try(
-            fn() => AbilityTest::factory(50)->create()
+            fn() => AbilityTest::factory(300)->create()
         );
         //ability test section
         foreach(AbilityTest::all() as $at){
@@ -256,7 +256,7 @@ class DatabaseSeeder extends Seeder
                     $this->try(
                         fn()=>MoneySubRequest::create([
                             'value'=>$price,
-                            'final_date'=>now()->addMonths($n),
+                            'final_date'=>random_int(0,1)?now()->addMonths($n):now()->subMonths($n),
                             'money_request_id'=>$school->id,          
                             ])
                         );

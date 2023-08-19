@@ -22,7 +22,7 @@ class ReplyFactory extends Factory
             'student_id' => Student::all()->random()->id,
             'employee_id' => Employee::all()->random()->id,
             'body' => fake()->realText(35),
-            'date_time' => now()->addDay(random_int(1,200))
+            'date_time' => now()
         ];
     }
 }
