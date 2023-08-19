@@ -133,7 +133,11 @@ class ChatController extends Controller
         ->get();
         foreach($complaints as $c)$c->complaint=true;
         //get replies
-        $replies=Reply::whereIn('student_id',$allowedToViewStudents)->get();
+        $replies=Reply::with([
+            'student:id,first_name,last_name,grade_id,g_class_id',
+            'student.grade:id,name',
+            'student.g_class:id,name'
+        ])->whereIn('student_id',$allowedToViewStudents)->get();
         foreach($replies as $r)$r->complaint=false;
         //merge them together
         $messages=array_merge($complaints->toArray(),$replies->toArray());
