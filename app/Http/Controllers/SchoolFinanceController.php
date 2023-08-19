@@ -100,7 +100,7 @@ class SchoolFinanceController extends Controller
         }
     }
 
-    private static function checkBill($bill,$student,&$shouldBeWarned,$dayInterval=7){
+    private static function checkBill($bill,$student,&$shouldBeWarned,$dayInterval=300){
         $today = new DateTime();
         $bill=$bill->moneySubRequests;
                 foreach($bill as $bill){
