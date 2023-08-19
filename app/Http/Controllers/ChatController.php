@@ -124,53 +124,55 @@ class ChatController extends Controller
         }else {
             res::error("You have to be a principal or supervisor to call this route!!");
         }
-        $complaints=Complaint::whereIn('student_id',$allowedToViewStudents)->get();;
-        $replies=Reply::whereIn('student_id',$allowedToViewStudents)->get();;
-        $messages=$complaints->merge($replies);
-        $messages=$messages->sortByDesc('date_time');
-        return $messages;
-        // $messages->sortBy
+        //get complaints
+        $complaints=Complaint::with([
+            'student:id,first_name,last_name,grade_id,g_class_id',
+            'student.grade:id,name',
+            'student.g_class:id,name'
+        ])->whereIn('student_id',$allowedToViewStudents)
+        ->get();
+        foreach($complaints as $c)$c->complaint=true;
+        //get replies
+        $replies=Reply::whereIn('student_id',$allowedToViewStudents)->get();
+        foreach($replies as $r)$r->complaint=false;
+        //merge them together
+        $messages=array_merge($complaints->toArray(),$replies->toArray());
+        $messages=collect($messages)->sortByDesc('date_time');
         $result=collect();
         foreach($messages as $message){
-            if($result->has($message->student_id))
+            if($result->has($message['student_id']))
             continue;
-            $message->load([
-                'student:id,first_name,last_name,grade_id,g_class_id',
-                'student.grade:id,name',
-                'student.g_class:id,name'
-            ]);
-            $message['complaint?']=$message instanceof Reply;
-            $result[$message->student_id]=$message;
+            $result[$message['student_id']]=$message;
         }
         return $result->values();
 
         //TODO: add this filter in future!!
-        // $data=request()->validate([
-        //     'grade_id'=>['exists:grades,id'],
-        //     'class_id'=>'exists:g_classes,id',
-        // ]);
-        // $owner=request()->user()->owner;
-        // if($owner->hasRole(config('roles.principal'))){
-        //     $allowedGrades = Grade::all()->pluck('id');
-        //     $allowedClasses = GClass::all()->pluck('id');
-        // }else if($owner->hasRole(config('roles.supervisor'))){
-        //     $classes=$owner->g_classes_sup;
-        //     $allowedClasses=$classes->pluck('id');
-        //     $allowedGrades = $classes->pluck('grade_id')->unique();
-        // }else {
-        //     res::error("You can't call this route!!");
-        // }
-        // if(isset($data['grade_id']) && !$allowedGrades->contains('grade_id')){   
-        //     res::error(
-        //         "You don't have the access to view "
-        //         ."this grade student conversations."
-        //     );
-        // }
-        // if(isset($data['grade_id']) && !$allowedGrades->contains('grade_id')){   
-        //     res::error(
-        //         "You don't have the access to view "
-        //         ."this grade student conversations."
-        //     );
-        // }
+            // $data=request()->validate([
+            //     'grade_id'=>['exists:grades,id'],
+            //     'class_id'=>'exists:g_classes,id',
+            // ]);
+            // $owner=request()->user()->owner;
+            // if($owner->hasRole(config('roles.principal'))){
+            //     $allowedGrades = Grade::all()->pluck('id');
+            //     $allowedClasses = GClass::all()->pluck('id');
+            // }else if($owner->hasRole(config('roles.supervisor'))){
+            //     $classes=$owner->g_classes_sup;
+            //     $allowedClasses=$classes->pluck('id');
+            //     $allowedGrades = $classes->pluck('grade_id')->unique();
+            // }else {
+            //     res::error("You can't call this route!!");
+            // }
+            // if(isset($data['grade_id']) && !$allowedGrades->contains('grade_id')){   
+            //     res::error(
+            //         "You don't have the access to view "
+            //         ."this grade student conversations."
+            //     );
+            // }
+            // if(isset($data['grade_id']) && !$allowedGrades->contains('grade_id')){   
+            //     res::error(
+            //         "You don't have the access to view "
+            //         ."this grade student conversations."
+            //     );
+            // }
     }
 }

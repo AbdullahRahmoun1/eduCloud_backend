@@ -302,7 +302,8 @@ class DatabaseSeeder extends Seeder
         );
         //distribute students to buses
         foreach(Student::all() as $student){
-            if($student->transportation_subscriber){
+            $n=random_int(1,100);
+            if($n<=60&&$student->transportation_subscriber){
                 $this->try(fn () =>
                     StudentBus::create([
                         'student_id'=>$student->id,

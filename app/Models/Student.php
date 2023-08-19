@@ -88,7 +88,6 @@ class Student extends Model
     public function bus(){
         return $this->belongsToMany(Bus::class, 'student_bus', 'student_id', 'bus_id');
         //TODO: make return only one directly 
-        //TODO: check bus factory
     }
 
     public function replies() {
