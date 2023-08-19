@@ -197,7 +197,7 @@ class DatabaseSeeder extends Seeder
         }
         //tests
         $this->try(
-            fn() => Test::factory(400)->create()
+            fn() => Test::factory(800)->create()
         );
         foreach(ProgressCalendar::all() as $pc){
             $this->try(
