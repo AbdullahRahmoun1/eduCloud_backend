@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create('tests', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('image_url');
+            $table->string('image_url')->nullable();
             $table->integer('min_mark');
             $table->integer('max_mark');
             $table->date('date');

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\MarkController;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 
 class TestController extends Controller
 {
@@ -51,7 +52,7 @@ class TestController extends Controller
 
         $data = request()->validate([
             'title' => ['required', 'min:2', 'max:25', $unique],
-            'image_url' => 'required',
+            'image' => ['image', 'mimes:jpeg,png,jpg,', 'max:2048'],
             'min_mark' => ['required', 'numeric', 'gt:0'],
             'max_mark' => ['required', 'numeric', 'gt:min_mark'],
             'date' => ['required', 'date'],
@@ -65,6 +66,7 @@ class TestController extends Controller
             'subject_id.exists' => 'this class is not studying this subject'
         ]);
 
+        $data['image'] = request()->file('image');
         return $data;
     }
 
@@ -74,6 +76,14 @@ class TestController extends Controller
 
         $test = Helper::lazyQueryTry(fn()=>Test::create($data));
 
+        if(isset($data['image'])){
+            $image = $data['image'];
+            $fileName = $test->id.('.').$image->getClientOriginalExtension();
+            $image->storeAs('public/images', $fileName);
+
+            $test->image_url = "storage/images/$fileName";
+            $test->save();
+        }
         res::success('test created successfully', $test);
     }
 
@@ -105,18 +115,17 @@ class TestController extends Controller
     
     public function test(Request $request)
     {   
-        $class = GClass::all()->random();
-        $controller = new ProgressCalendarController();
-        $plan = $controller->getProgressOfClass($class->id, false)
-        ->where('done',false)->random()->id;
-        return $plan;
-        try{
-        return Helper::sendNotificationToOneStudent(1,'asdsa',5,true,false);
-        }
-        catch(Exception $e){
-            return $e->getMessage();
-        }
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+        $image=request()->file('image');
+        $fileName = request()->num . '.' .$image->getClientOriginalExtension();
+        $image->storeAs('public/images', $fileName);
+        $contents = Storage::get("public/images/$fileName");
+
+        return $contents;
     }
+    
 
     public function getTestMarks(Test $test, $abort = true){
         Helper::tryToRead($test->g_class_id);
