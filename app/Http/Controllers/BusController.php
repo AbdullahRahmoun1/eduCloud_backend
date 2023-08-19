@@ -9,6 +9,7 @@ use App\Helpers\ResponseFormatter as res;
 use App\Models\Bus;
 use App\Models\Student;
 use App\Models\StudentBus;
+use App\Models\SupervisorOfBus;
 
 class BusController extends Controller
 {
@@ -119,5 +120,44 @@ class BusController extends Controller
             $student->bus=$sBus->count()==0?null:$sBus[0];
         }
         res::success(data:$students);
+    }
+    public function addBusToSupervisor() {
+        $data=request()->validate([
+            'supervisor_id'=>['required','exists:employees,id'],
+            'bus_id'=>['required','exists:buses,id']
+        ]);
+        $sup=Employee::with('buses')
+        ->find($data['supervisor_id']);
+        $bus=Bus::find($data['bus_id']);
+        if(!$sup->hasRole(config('roles.busSupervisor'))){
+            res::error(
+                "This employee isn't a bus supervisor.",
+                code:422
+            );
+        }
+        $supBusesIds=$sup->buses->pluck('id');
+        if($supBusesIds->contains($bus->id)){
+            res::error(
+                "This employee is already a supervisor of this bus.",
+                code:422
+            );
+        }
+        Helper::lazyQueryTry(
+            fn()=>SupervisorOfBus::create([
+                'employee_id'=>$sup->id,
+                'bus_id'=>$bus->id ,
+                'start_date'=>now(),
+                'end_date'=>now()->addYear()
+                ])
+        );
+        res::success();
+    }
+    public function getEmployeesWithBusSupRole() {
+        return Employee::with('buses')
+        ->whereHas(
+            'roles',
+            fn($query)=>$query
+            ->whereName(config('roles.busSupervisor'))
+        )->get();
     }
 }
