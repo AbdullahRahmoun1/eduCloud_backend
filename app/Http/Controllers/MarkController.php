@@ -21,8 +21,8 @@ class MarkController extends Controller
         $class = $test->g_class;
         $max_mark = $test->max_mark;
         //is this employee allowed to add marks for this class?
-        if(Gate::denies('editClassInfo', [GClass::class, $class->id])){
-            res::error('you are not a supervisor of the class that took this test',code:403);
+        if(Gate::denies('teacherEditClassInfo', [GClass::class, $class->id])){
+            res::error('you are not a supervisor or teacher of the class that took this test',code:403);
         }
         
         $data = request()->validate([

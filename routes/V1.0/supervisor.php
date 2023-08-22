@@ -24,7 +24,6 @@ Route::middleware('auth:sanctum', 'hasRoles:supervisor,secretary')->group(functi
     
     Route::get('getGClass/{g_class}', [GClassController::class, 'getGClass']);
     
-    Route::post('addTestMarks/{test}', [MarkController::class, 'addTestMarks']);
     Route::post('editMark/{mark_id}', [MarkController::class, 'editMark']);
     Route::get('testMarks/{test}',[TestController::class,'getTestMarks']);
     Route::get('searchTests', [TestController::class, 'searchTests']);
@@ -45,4 +44,8 @@ Route::middleware('auth:sanctum', 'hasRoles:supervisor,secretary')->group(functi
     
 
     Route::get('getUnsentNotifications', [NotificationController::class, 'getUnsentNotifications']);
+});
+
+Route::middleware('auth:sanctum', 'hasRoles:supervisor,secretary,teacher')->group(function(){
+    Route::post('addTestMarks/{test}', [MarkController::class, 'addTestMarks']);
 });
