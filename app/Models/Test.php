@@ -44,7 +44,7 @@ class Test extends Model
         $count = count($marks);
 
         if($count == 0){
-            return -1;
+            return 0;
         }
 
         foreach($marks as $mark){
