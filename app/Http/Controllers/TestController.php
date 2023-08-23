@@ -158,15 +158,16 @@ class TestController extends Controller
             'g_class_id' => 'exists:g_classes,id',
             'start_date' => 'date',
             'end_date' => 'date|after_or_equal:start_date',
-            'type_id' => 'exists:types,id',
+            'type_ids' => 'array',
+            'type_ids.*' => 'exists:types,id'
         ]);
     
         $query = Test::query();
     
         $query->where('title', 'like', '%' . $request->title . '%');
     
-        if ($request->has('type_id')) {
-            $query->where('type_id', $request->type_id);
+        if ($request->has('type_ids')) {
+            $query->whereIn('type_id', $request->type_ids);
         }
     
         if ($request->has('start_date')) {
