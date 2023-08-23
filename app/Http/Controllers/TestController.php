@@ -115,6 +115,8 @@ class TestController extends Controller
     
     public function test(Request $request)
     {   
+
+        return Test::first()->avg;
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);

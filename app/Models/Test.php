@@ -11,6 +11,7 @@ class Test extends Model
     use HasFactory;
     protected $hidden=['created_at','updated_at'];
     protected $guarded =['created_at','updated_at'];
+    protected $appends = ['avg'];
     public function type()
     {
         return $this->belongsTo(Type::class);
@@ -36,4 +37,22 @@ class Test extends Model
         return $this->hasMany(Mark::class);
     }
     
+    public function getAvgAttribute(){
+
+        $marks = $this->marks;
+        $sum = 0;
+        $count = count($marks);
+
+        if($count == 0){
+            return -1;
+        }
+
+        foreach($marks as $mark){
+            $sum += $mark->mark;
+        }
+
+        $result = $sum/$count;
+
+        return number_format($result, 2);
+    }
 }
