@@ -115,6 +115,8 @@ class TestController extends Controller
     
     public function test(Request $request)
     {   
+
+        return Test::first()->avg;
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
@@ -152,19 +154,22 @@ class TestController extends Controller
     public function searchTests(Request $request){
 
         $request->validate([
-            'subject_id' => 'exists:subjects,id',
-            'g_class_id' => 'exists:g_classes,id',
+            'subject_ids' => 'array',
+            'subject_ids.*' => 'exists:subjects,id',
+            'g_class_ids' => 'array', 
+            'g_class_ids.*' => 'exists:g_classes,id',
             'start_date' => 'date',
             'end_date' => 'date|after_or_equal:start_date',
-            'type_id' => 'exists:types,id',
+            'type_ids' => 'array',
+            'type_ids.*' => 'exists:types,id'
         ]);
     
         $query = Test::query();
     
         $query->where('title', 'like', '%' . $request->title . '%');
     
-        if ($request->has('type_id')) {
-            $query->where('type_id', $request->type_id);
+        if ($request->has('type_ids')) {
+            $query->whereIn('type_id', $request->type_ids);
         }
     
         if ($request->has('start_date')) {
@@ -175,14 +180,14 @@ class TestController extends Controller
             $query->where('date', '<=', $request->end_date);
         }
     
-        if ($request->has('subject_id')) {
-            $query->where('subject_id', $request->subject_id);
+        if ($request->has('subject_ids')) {
+            $query->whereIn('subject_id', $request->subject_ids);
         }
     
-        if ($request->has('g_class_id')) {
-            $query->where('g_class_id', $request->g_class_id);
+        if ($request->has('g_class_ids')) {
+            $query->whereIn('g_class_id', $request->g_class_ids);
         }
-        
+
         if($request->has('page'))
             $tests = $query->orderBy('date', 'desc')->simplePaginate(10);
         else

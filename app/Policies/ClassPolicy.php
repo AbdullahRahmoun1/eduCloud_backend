@@ -24,4 +24,11 @@ class ClassPolicy
         && in_array($class_id, $owner->g_classes_sup->pluck('id')->toArray()))
         || $owner->hasRole(config('roles.secretary'));
     }
+
+    public function teacherEditClassInfo(Account $account,$class_id){
+        $teacher = $account->owner;
+        $classes_id = $teacher->g_classes_teacher->pluck('id')->toArray();
+        
+        return self::editClassInfo($account, $class_id) || in_array($class_id, $classes_id);
+    }
 }
