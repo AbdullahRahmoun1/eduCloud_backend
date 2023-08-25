@@ -56,7 +56,7 @@ class DatabaseSeeder extends Seeder
         );
         //grade , subjects , classes
         $this->try(function(){
-            for($i=1;$i<=12;$i++){
+            for($i=1;$i<=5;$i++){
                 //create grade
                 $grade=Grade::create([
                     'name'=>"{$i}th grade"
@@ -84,7 +84,7 @@ class DatabaseSeeder extends Seeder
         );
         //students
         $this->try(
-            fn() => Student::factory(90)->create()
+            fn() => Student::factory(200)->create()
         );
         //roles
         $this->try(
@@ -197,8 +197,10 @@ class DatabaseSeeder extends Seeder
         }
         //tests
         $this->try(
-            fn() => Test::factory(800)->create()
+            fn() => Test::factory(2000)->create()
         );
+        
+
         foreach(ProgressCalendar::all() as $pc){
             $this->try(
                 fn()=>Test::factory()->create([
