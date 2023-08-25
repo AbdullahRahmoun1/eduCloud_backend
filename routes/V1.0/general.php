@@ -29,4 +29,6 @@ Route::middleware('auth:sanctum')->group(function(){
     
     Route::get('getMarksOfStudent/{student_id}', [MarkController::class, 'getMarksOfStudent']);
     Route::get('viewStudent/{student}', [StudentController::class, 'view']);
+
+    
 });

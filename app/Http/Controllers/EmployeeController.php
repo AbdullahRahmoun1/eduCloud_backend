@@ -14,6 +14,7 @@ use Illuminate\Validation\Rule;
 use App\Helpers\ResponseFormatter as res;
 use Illuminate\Support\Facades\DB;
 use App\Models\ClassTeacherSubject;
+use App\Models\Student;
 
 use function PHPUnit\Framework\isEmpty;
 use Illuminate\Database\QueryException;
@@ -194,7 +195,18 @@ class EmployeeController extends Controller
         res::success('results found successfully.', $result);
     }
     
-    public function viewEmployee(Employee $employee){
+    public function viewEmployee($employee){
+        if($employee<=0){
+            $employee=request()->user()->owner;
+            if($employee instanceof Student){
+                res::error(
+                    "You aren't call this route. you don't have the right permissions.",
+                    code:403
+                );
+            }
+            $employee=$employee->id;
+        }
+        $employee=Employee::findOrFail($employee);
         Helper::tryToReadEmployee($employee->id);
      //Roles....  
         $roles=$employee->getRoleNames()->toArray();
