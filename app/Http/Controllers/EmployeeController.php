@@ -200,7 +200,7 @@ class EmployeeController extends Controller
             $employee=request()->user()->owner;
             if($employee instanceof Student){
                 res::error(
-                    "You aren't call this route. you don't have the right permissions.",
+                    "You can't call this route. you don't have the right permissions.",
                     code:403
                 );
             }
