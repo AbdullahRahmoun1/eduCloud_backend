@@ -16,23 +16,23 @@ class ResponseFormatter{
      */
     public static function success($message = 'Success!', $data = null,$commit=false)
     {
-        self::$response['message'] = $message;
-        self::$response['data'] = $data;
+        // self::$response['message'] = $message;
+        // self::$response['data'] = $data;
         if($commit)
         DB::commit();
-        abort(response()->json(self::$response,200));
+        abort(response()->json($data??['message'=>$message],200));
     }
 
     /**
      * Give error response.
      */
-    public static function error($message = null, $data = null, $code = 400,$rollback=false)
+    public static function error($message = "Something went wrong", $data = null, $code = 400,$rollback=false)
     {
-        self::$response['message'] = $message;
-        self::$response['data'] = $data;
+        // self::$response['message'] = $message;
+        // self::$response['data'] = $data;
         if($rollback)
         DB::rollBack();
-        abort(response()->json(self::$response, $code));
+        abort(response()->json($message, $code));
     }
 
     public static function queryError(QueryException $error,
@@ -44,7 +44,7 @@ class ResponseFormatter{
         if($rollback)
         DB::rollBack();
         abort(
-            ResponseFormatter::error($msg,[
+            self::error($msg,[
                 'errorInfo'=>$error->errorInfo[2]
             ],422)
         );
