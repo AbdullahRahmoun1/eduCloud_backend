@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum', 'hasRoles:supervisor,secretary')->group(functi
     Route::get('getRemainingStudentsForTest/{test}', [MarkController::class, 'getRemainingStudents']);
 
     Route::post('addAchievement', [ProgressCalendarController::class, 'addAchievement']);
-    Route::get('getCalendarOfSubject/{subject_id}', [BaseCalendarController::class, 'getCalendarOfSubject']);
+    Route::get('getCalendar', [BaseCalendarController::class, 'getCalendar']);
     Route::get('getProgressOfClass/{class_id}', [ProgressCalendarController::class, 'getProgressOfClass']);
 
     Route::post('todaysAbsences',[AbsenceController::class,'addAbsences']);

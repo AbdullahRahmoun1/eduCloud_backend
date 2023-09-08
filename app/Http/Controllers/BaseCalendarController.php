@@ -109,15 +109,26 @@ class BaseCalendarController extends Controller
 
     //---------------------------------------------------------
 
-    public function getCalendarOfSubject($subject_id){
+    public function getCalendar(){
 
-        if(!Subject::find($subject_id)){
-            res::error('this subject id is not valid', code:422);
+        request()->validate([
+            'subject_ids' => 'array',
+            'subject_ids.*' => 'exists:subjects,id',
+            'grade_ids' => 'array',
+            'grade_ids.*' => 'exists:grades,id',
+        ]);
+
+        $query = BaseCalendar::query();
+
+        if(request()->has('subject_ids')){
+            $query->whereIn('subject_id', request()->subject_ids);
         }
 
-        $calendars = BaseCalendar::where('subject_id', $subject_id)
-            ->orderBy('date', 'asc')
-            ->get();
+        if(request()->has('grade_ids')){
+            $query->whereIn('grade_id', request()->grade_ids);
+        }
+
+        $calendars = $query->orderBy('date', 'asc')->get();
             
             return res::success('calendar retrieved successfully', $calendars);
         }

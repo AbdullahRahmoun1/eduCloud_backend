@@ -46,6 +46,11 @@ class ProgressCalendarController extends Controller
 
     public function getProgressOfClass($g_class_id, $abort = true){
         
+        request()->validate([
+            'subject_ids' => 'array',
+            'subject_ids.*' => 'exists:subjects,id',
+        ]);
+
         if($abort)
         Helper::tryToRead($g_class_id);
         
@@ -56,8 +61,8 @@ class ProgressCalendarController extends Controller
 
         $grade = $g_class->grade;
         $calendar = BaseCalendar::where('grade_id',$grade->id);
-        if(request()->has('subject_id')){
-            $calendar = $calendar->where('subject_id',request()->subject_id);
+        if(request()->has('subject_ids')){
+            $calendar = $calendar->whereIn('subject_id',request()->subject_ids);
         }
         $calendar = $calendar->orderBy('date')->get();
 
@@ -75,4 +80,45 @@ class ProgressCalendarController extends Controller
         
         return $calendar;
     }
+
+    // public function getProgress(){
+
+    //     request()->validate([
+    //         'subject_ids' => 'array',
+    //         'subject_ids.*' => 'exists:subjects,id',
+    //         'g_class_ids' => 'array',
+    //         'g_class_ids.*' => 'exists:g_classes,id',
+    //         'grade_ids' => 'array',
+    //         'grade_ids.*' => 'exists:grades,id',
+    //     ]);
+
+    //     $result = [];
+    //     if(request()->has('g_class_ids')){
+
+    //         $g_classes = GClass::whereIn('id', request()->g_class_ids)->get();
+    //         $g_classes->map(function($g_class){
+    //             return $g_class->progress = self::getProgressOfClass($g_class->id);
+    //         });
+                
+    //         $result['progress of classes'] = $g_classes;
+    //     }
+
+    //     $query = BaseCalendar::query();
+
+    //     if(request()->has('subject_ids')){
+    //         $query->whereIn('subject_id', request()->subject_ids);
+    //     }
+
+    //     if(request()->has('g_class_ids')){
+    //         $ids = $g_classes->pluck('grade_id');
+    //         $query->whereIn('grade_id', $ids);
+    //     }
+
+    //     if(request()->has('grade_ids')){
+    //         $query->whereIn('grade_id', request()->grade_ids);
+    //     }
+    //     $result['bases'] = $query->get();
+
+    //     return $result;
+    // }
 }
