@@ -10,9 +10,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class BaseCalendar extends Model
 {
     use HasFactory;
-    protected $hidden=['created_at','updated_at'];
+    protected $hidden=['created_at','updated_at', 'grade'];
     protected $guarded =['created_at','updated_at'];
-
+    protected $appends=['finished'];
+    
     /**
      * Get the grade that owns the BaseCalendar
      *
@@ -31,5 +32,12 @@ class BaseCalendar extends Model
     public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
+    }
+
+    public function getFinishedAttribute(){
+        
+        $g_classes = $this->grade->g_classes->count();
+        $done_classes = ProgressCalendar::where('base_calendar_id',$this->id)->count();
+        return $done_classes >= $g_classes ? true : false;
     }
 }

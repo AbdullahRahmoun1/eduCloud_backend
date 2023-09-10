@@ -64,7 +64,7 @@ class ProgressCalendarController extends Controller
         if(request()->has('subject_ids')){
             $calendar = $calendar->whereIn('subject_id',request()->subject_ids);
         }
-        $calendar = $calendar->orderBy('date')->get();
+        $calendar = $calendar->orderBy('date')->get()->makeHidden('finished');
 
         $progress = ProgressCalendar::where('g_class_id', $g_class_id);
         $ids = $progress->pluck('base_calendar_id')->toArray();
